@@ -1,5 +1,10 @@
 Flask
-web3
+flask_cors
+flask_mail
+mysql-connector-python
+pandas
 python-dotenv
-reportlab
 qrcode
+reportlab
+web3
+Werkzeug
