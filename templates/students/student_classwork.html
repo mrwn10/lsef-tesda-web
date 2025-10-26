@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ classwork.title }}</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .card { border: 1px solid #ccc; padding: 15px; border-radius: 6px; margin-bottom: 20px; }
+    form { border: 1px solid #ddd; padding: 15px; border-radius: 6px; }
+    label { display: block; margin-top: 10px; }
+    input[type="file"] { margin-top: 5px; }
+    button { margin-top: 10px; padding: 10px 15px; background: #007bff; color: #fff; border: none; border-radius: 4px; }
+    button:hover { background: #0056b3; }
+    iframe, img { margin-top: 10px; border: 1px solid #ddd; border-radius: 4px; }
+    .file-links { margin-top: 10px; }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h1>{{ classwork.title }}</h1>
+    <p><b>Instructor:</b> {{ classwork.instructor_name }}</p>
+    <p><b>Class:</b> {{ classwork.class_title }}</p>
+    <p><b>Date:</b> {{ classwork.date_uploaded }}</p>
+    <p><b>Description:</b> {{ classwork.description }}</p>
+
+    {% if classwork.stored_filename %}
+      {% set file_url = url_for('static', filename='uploads/materials/' ~ classwork.stored_filename) %}
+      <div class="file-links">
+        <a href="{{ file_url }}" download>Download</a>
+      </div>
+      {% if classwork.stored_filename.endswith('.pdf') %}
+        <iframe src="{{ file_url }}" width="100%" height="400px"></iframe>
+      {% elif classwork.stored_filename.endswith('.jpg') or classwork.stored_filename.endswith('.png') %}
+        <img src="{{ file_url }}" alt="Preview" style="max-width:100%;height:auto;">
+      {% elif classwork.stored_filename.endswith('.doc') or classwork.stored_filename.endswith('.docx')
+             or classwork.stored_filename.endswith('.ppt') or classwork.stored_filename.endswith('.pptx')
+             or classwork.stored_filename.endswith('.xls') or classwork.stored_filename.endswith('.xlsx') %}
+        <iframe src="https://docs.google.com/gview?url={{ request.host_url }}static/uploads/materials/{{ classwork.stored_filename }}&embedded=true"
+                style="width:100%; height:400px;" frameborder="0"></iframe>
+      {% endif %}
+    {% endif %}
+  </div>
+
+  <h2>Submit Your Work</h2>
+  <form method="POST" enctype="multipart/form-data">
+    <label for="submission">Upload File (pdf, doc, docx, jpg, png)</label>
+    <input type="file" name="submission" required>
+    <button type="submit">Submit</button>
+  </form>
+
+  <h2>Your Submissions</h2>
+  {% if submissions %}
+    <ul>
+      {% for s in submissions %}
+        <li>{{ s.original_filename }} - Submitted on {{ s.date_submitted }}</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>You haven’t submitted anything yet.</p>
+  {% endif %}
+
+</body>
+</html>

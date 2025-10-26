@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verification Result - TESDA LSEF</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/verify_results.css') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/lsef_logo.png') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="page-container">
+        <!-- Top Navigation Bar -->
+        <nav class="top-nav">
+            <div class="container">
+                <div class="social-links">
+                    <a href="https://www.facebook.com/lsef.tesda" target="_blank" aria-label="Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" target="_blank" aria-label="Twitter">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" target="_blank" aria-label="YouTube">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                </div>
+                <div class="utility-links">
+                    <a href="{{ url_for('landing') }}">Home</a>
+                    <a href="{{ url_for('program') }}">Programs</a>
+                    <a href="{{ url_for('verify_cert') }}">Certificate Verification</a>
+                    <a href="{{ url_for('register') }}">Register</a>
+                    <a href="{{ url_for('login.login') }}" class="login-link">Login</a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Navigation Bar -->
+        <nav class="main-nav">
+            <div class="container">
+                <div class="brand">
+                    <img src="{{ url_for('static', filename='img/lsef_logo.png') }}" alt="TESDA Logo" class="logo">
+                    <img src="{{ url_for('static', filename='img/tesda_logo.png') }}" alt="TESDA Logo" class="logo">
+                    <span>TESDA LSEF</span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Results Section -->
+        <main class="results-section">
+            <div class="container">
+                <div class="results-card">
+                    {% if certificate %}
+                    <div class="verification-success">
+                        <div class="success-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h1>Certificate Verified Successfully</h1>
+                        <p class="success-message">This certificate has been successfully verified and is authentic. The details below confirm the validity of this TESDA certification.</p>
+                        
+                        <div class="certificate-details">
+                            <h2><i class="fas fa-user-graduate"></i> Graduate Information</h2>
+                            <div class="details-grid">
+                                <div class="detail-item">
+                                    <span class="detail-label">Name:</span>
+                                    <span class="detail-value">{{ certificate.name }}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Course:</span>
+                                    <span class="detail-value">{{ certificate.course }}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Completion Date:</span>
+                                    <span class="detail-value">{{ certificate.date }}</span>
+                                </div>
+                            </div>
+                            
+                            <h2><i class="fas fa-shield-alt"></i> Verification Details</h2>
+                            <div class="details-grid">
+                                <div class="detail-item">
+                                    <span class="detail-label">Certificate Hash:</span>
+                                    <span class="detail-value hash-value">{{ certificate.cert_hash }}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Blockchain Tx Hash:</span>
+                                    <span class="detail-value hash-value">{{ certificate.tx_hash }}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Verification Date:</span>
+                                    <span class="detail-value">{{ now }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% if certificate.file_path %}
+                        <div class="certificate-preview">
+                            <h2><i class="fas fa-file-certificate"></i> Certificate Preview</h2>
+                            <div class="preview-container">
+                                <iframe src="{{ url_for('static', filename=certificate.file_path) }}" width="100%" height="500px" frameborder="0"></iframe>
+                            </div>
+                            <div class="preview-actions">
+                                <a href="{{ url_for('static', filename=certificate.file_path) }}" target="_blank" class="btn btn-secondary">
+                                    <i class="fas fa-external-link-alt"></i> Open in New Tab
+                                </a>
+                                <button onclick="window.print()" class="btn btn-primary">
+                                    <i class="fas fa-print"></i> Print Verification
+                                </button>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <div class="verification-actions">
+                            <a href="{{ url_for('verify_cert') }}" class="btn btn-secondary">
+                                <i class="fas fa-redo"></i> Verify Another Certificate
+                            </a>
+                            <a href="{{ url_for('landing') }}" class="btn btn-primary">
+                                <i class="fas fa-home"></i> Return to Home
+                            </a>
+                        </div>
+                    </div>
+                    {% elif error %}
+                    <div class="verification-error">
+                        <div class="error-icon">
+                            <i class="fas fa-exclamation-circle"></i>
+                        </div>
+                        <h1>Verification Failed</h1>
+                        <p class="error-message">{{ error }}</p>
+                        
+                        <div class="troubleshooting">
+                            <h3><i class="fas fa-question-circle"></i> Troubleshooting Tips</h3>
+                            <ul>
+                                <li>Check that you entered the certificate hash correctly</li>
+                                <li>Ensure there are no extra spaces before or after the hash</li>
+                                <li>If the problem persists, contact our support team</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="error-actions">
+                            <a href="{{ url_for('verify_cert') }}" class="btn btn-primary">
+                                <i class="fas fa-redo"></i> Try Again
+                            </a>
+                            <a href="{{ url_for('landing') }}" class="btn btn-secondary">
+                                <i class="fas fa-home"></i> Return to Home
+                            </a>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-about">
+                        <div class="footer-brand">
+                            <img src="{{ url_for('static', filename='img/tesda_logo.png') }}" alt="TESDA Logo" class="footer-logo">
+                            <span>TESDA LSEF</span>
+                        </div>
+                        <p>Empowering individuals through quality technical education and skills development.</p>
+                        <div class="footer-social">
+                            <a href="https://www.facebook.com/lsef.tesda" target="_blank" aria-label="Facebook">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" target="_blank" aria-label="Twitter">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" target="_blank" aria-label="Instagram">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="#" target="_blank" aria-label="YouTube">
+                                <i class="fab fa-youtube"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="footer-links">
+                        <h3>Programs</h3>
+                        <ul>
+                            <li><a href="#">Bookkeeping NC III</a></li>
+                            <li><a href="#">Food and Beverages Services NC II</a></li>
+                            <li><a href="#">Bread and Pastry Production NC II</a></li>
+                            <li><a href="#">Housekeeping NC II</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-links">
+                        <h3>FAQs</h3>
+                        <ul>
+                            <li><a href="#">How to enroll?</a></li>
+                            <li><a href="#">What are the requirements?</a></li>
+                            <li><a href="#">How long are the programs?</a></li>
+                            <li><a href="#">Is financial aid available?</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-contact">
+                        <h3>Contact Us</h3>
+                        <ul>
+                            <li>
+                                <i class="fas fa-phone-alt"></i>
+                                <span>0942 808 5733</span>
+                            </li>
+                            <li>
+                                <i class="fas fa-envelope"></i>
+                                <a href="mailto:lseftesda@gmail.com">lseftesda@gmail.com</a>
+                            </li>
+                            <li>
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>A. Mabini St. Poblacion II Sta. Cruz, Laguna</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="container">
+                    <p>&copy; 2025 TESDA LSEF. All rights reserved.</p>
+                    <div class="legal-links">
+                        <a href="#">Privacy Policy</a>
+                        <span>•</span>
+                        <a href="#">Terms of Service</a>
+                        <span>•</span>
+                        <a href="#">Sitemap</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Back to Top Button -->
+    <button id="backToTop" class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script>
+        // Back to top button functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const backToTopButton = document.getElementById('backToTop');
+            
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    backToTopButton.classList.add('visible');
+                } else {
+                    backToTopButton.classList.remove('visible');
+                }
+            });
+            
+            backToTopButton.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+
+            // Copy hash values on click
+            document.querySelectorAll('.hash-value').forEach(element => {
+                element.addEventListener('click', function() {
+                    const textToCopy = this.textContent;
+                    navigator.clipboard.writeText(textToCopy).then(() => {
+                        const originalText = this.textContent;
+                        this.textContent = 'Copied to clipboard!';
+                        setTimeout(() => {
+                            this.textContent = originalText;
+                        }, 2000);
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

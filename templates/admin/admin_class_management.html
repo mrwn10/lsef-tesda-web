@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class Management</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin/admin_class_management.css') }}" />
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/lsef_logo.png') }}" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <!-- New Navigation Start -->
+    <div class="nav-container">
+        <!-- Top Navigation -->
+        <div class="top-nav">
+            <div class="nav-left">
+                <a href="{{ url_for('admin_homepage') }}"><i class="fas fa-home"></i> Home</a>
+                <a href="{{ url_for('admin_user_management') }}"><i class="fas fa-users-cog"></i> User Management</a>
+                <a href="{{ url_for('admin_class_management.view_active_classes') }}"><i class="fas fa-users"></i> Class Management</a>
+                <a href="{{ url_for('admin_courses_approval.view_pending_courses') }}"><i class="fas fa-book"></i> Courses</a>
+                <a href="{{ url_for('admin_verified_req.view_requirements') }}"><i class="fas fa-user-check"></i> Verify Account</a>
+            </div>
+            <div class="nav-right"></div>
+        </div>
+        
+        <!-- Brand Section -->
+        <div class="brand-section">
+            <div class="brand-content">
+                <div class="brand-name">LSEF TESDA</div>
+                <div class="logo-container">
+                    <img src="{{ url_for('static', filename='img/lsef_logo.png') }}" alt="LSEF Logo">
+                    <img src="{{ url_for('static', filename='img/tesda_logo.png') }}" alt="TESDA Logo">
+                </div>
+            </div>
+            
+            <div class="user-section">
+                <div class="profile-dropdown">
+                    <img src="{{ url_for('static', filename='uploads/profile_pictures/' + (profile_picture or 'default.png')) }}" alt="Profile" class="profile-img">
+                    <div class="dropdown-menu">
+                        <a href="{{ url_for('admin_profile') }}"><i class="fas fa-user-circle"></i> My Profile</a>
+                        <a href="#"><i class="fas fa-bookmark"></i> Contact Us</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="logout-btn" id="logout-trigger"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Class Management Subnav -->
+        <nav class="courses-subnav">
+            <div class="subnav-right">
+                <a href="{{ url_for('admin_class_management.view_active_classes') }}" class="active"><i class="fas fa-users"></i> Class Management</a>
+                <a href="{{ url_for('admin_class_creation.create_class') }}"><i class="fas fa-plus-circle"></i> Class Creation</a>
+                <a href="{{ url_for('admin_edit_class.view_editable_classes') }}"><i class="fas fa-edit"></i> Edit Class</a>
+                <a href="{{ url_for('admin_class_approval.view_pending_classes') }}"><i class="fas fa-check-circle"></i> Class Approval</a>
+                <a href="{{ url_for('admin_class_edit_req.view_class_edit_requests') }}"><i class="fas fa-pencil-alt"></i> Class Edit Request</a>
+            </div>
+        </nav>
+    </div>
+    <!-- New Navigation End -->
+
+    <!-- Logout Confirmation Modal -->
+    <div class="modal" id="logout-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-sign-out-alt"></i> Confirm Logout</h3>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to logout?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-yes" id="confirm-logout">Yes</button>
+                <button class="btn btn-no close-modal">No</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Class Details Modal -->
+    <div class="modal" id="class-details-modal">
+        <div class="modal-content class-details-modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-info-circle"></i> Class Details</h3>
+            </div>
+            <div class="modal-body">
+                <div class="class-details-grid">
+                    <div class="detail-group">
+                        <label>Class ID:</label>
+                        <span id="detail-class-id">-</span>
+                    </div>
+                    <div class="detail-group">
+                        <label>Class Title:</label>
+                        <span id="detail-class-title">-</span>
+                    </div>
+                    <div class="detail-group">
+                        <label>Course Title:</label>
+                        <span id="detail-course-title">-</span>
+                    </div>
+                    <div class="detail-group">
+                        <label>Schedule:</label>
+                        <span id="detail-schedule">-</span>
+                    </div>
+                    <div class="detail-group">
+                        <label>Venue:</label>
+                        <span id="detail-venue">-</span>
+                    </div>
+                    <div class="detail-group">
+                        <label>Max Students:</label>
+                        <span id="detail-max-students">-</span>
+                    </div>
+                    <div class="detail-group">
+                        <label>Start Date:</label>
+                        <span id="detail-start-date">-</span>
+                    </div>
+                    <div class="detail-group">
+                        <label>End Date:</label>
+                        <span id="detail-end-date">-</span>
+                    </div>
+                    <div class="detail-group">
+                        <label>Status:</label>
+                        <span id="detail-status">-</span>
+                    </div>
+                    <div class="detail-group">
+                        <label>Date Created:</label>
+                        <span id="detail-date-created">-</span>
+                    </div>
+                    <div class="detail-group full-width">
+                        <label>Instructor Name:</label>
+                        <span id="detail-instructor-name">-</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-no close-modal">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="container">
+            <div class="page-header">
+                <h1>Active Classes - Admin View</h1>
+                <div class="search-filter">
+                    <label for="courseFilter">Filter by Course Title:</label>
+                    <select id="courseFilter" onchange="filterTable()">
+                        <option value="All">All Courses</option>
+                        {% set course_titles = [] %}
+                        {% for cls in classes %}
+                            {% if cls.course_title not in course_titles %}
+                                <option value="{{ cls.course_title }}">{{ cls.course_title }}</option>
+                                {% set _ = course_titles.append(cls.course_title) %}
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="table-wrapper">
+                <table id="classTable">
+                    <thead>
+                        <tr>
+                            <th>Class ID</th>
+                            <th>Class Title</th>
+                            <th>Course Title</th>
+                            <th>Duration</th>
+                            <th>Students</th>
+                            <th>Status</th>
+                            <th>Instructor</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if classes %}
+                            {% for cls in classes %}
+                            <tr>
+                                <td>{{ cls.class_id }}</td>
+                                <td>{{ cls.class_title }}</td>
+                                <td>{{ cls.course_title }}</td>
+                                <td>{{ cls.start_date }} to {{ cls.end_date }}</td>
+                                <td>{{ cls.current_students or 0 }}/{{ cls.max_students }}</td>
+                                <td>
+                                    <span class="status-badge status-{{ cls.status|lower }}">
+                                        {{ cls.status }}
+                                    </span>
+                                </td>
+                                <td>{{ cls.instructor_name }}</td>
+                                <td>
+                                    <button class="btn-view-details" onclick="viewClassDetails({
+                                        'class_id': '{{ cls.class_id }}',
+                                        'class_title': '{{ cls.class_title }}',
+                                        'course_title': '{{ cls.course_title }}',
+                                        'schedule': '{{ cls.schedule }}',
+                                        'venue': '{{ cls.venue }}',
+                                        'max_students': '{{ cls.max_students }}',
+                                        'start_date': '{{ cls.start_date }}',
+                                        'end_date': '{{ cls.end_date }}',
+                                        'status': '{{ cls.status }}',
+                                        'date_created': '{{ cls.date_created }}',
+                                        'instructor_name': '{{ cls.instructor_name }}'
+                                    })">
+                                        <i class="fas fa-eye"></i> View Details
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="8" class="no-data">No active classes found.</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function filterTable() {
+            const filter = document.getElementById("courseFilter").value;
+            const table = document.getElementById("classTable");
+            const trs = table.getElementsByTagName("tr");
+
+            for (let i = 1; i < trs.length; i++) {
+                const courseCell = trs[i].getElementsByTagName("td")[2];
+                if (courseCell) {
+                    const courseText = courseCell.textContent || courseCell.innerText;
+                    if (filter === "All" || courseText === filter) {
+                        trs[i].style.display = "";
+                    } else {
+                        trs[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+        function viewClassDetails(classData) {
+            // Populate modal with class data
+            document.getElementById('detail-class-id').textContent = classData.class_id;
+            document.getElementById('detail-class-title').textContent = classData.class_title;
+            document.getElementById('detail-course-title').textContent = classData.course_title;
+            document.getElementById('detail-schedule').textContent = classData.schedule;
+            document.getElementById('detail-venue').textContent = classData.venue;
+            document.getElementById('detail-max-students').textContent = classData.max_students;
+            document.getElementById('detail-start-date').textContent = classData.start_date;
+            document.getElementById('detail-end-date').textContent = classData.end_date;
+            document.getElementById('detail-status').textContent = classData.status;
+            document.getElementById('detail-date-created').textContent = classData.date_created;
+            document.getElementById('detail-instructor-name').textContent = classData.instructor_name;
+
+            // Add status class for styling
+            const statusElement = document.getElementById('detail-status');
+            statusElement.className = 'status-badge status-' + classData.status.toLowerCase();
+
+            // Show modal
+            $('#class-details-modal').fadeIn();
+            $('body').addClass('modal-open');
+        }
+
+        function closeModals() {
+            $('.modal').fadeOut();
+            $('body').removeClass('modal-open');
+        }
+
+        // Logout Modal Functionality
+        $(document).ready(function() {
+            // Open modal when logout is clicked
+            $('#logout-trigger').click(function(e) {
+                e.preventDefault();
+                $('#logout-modal').fadeIn();
+                $('body').addClass('modal-open');
+            });
+            
+            // Close modal when No is clicked or close button
+            $('.close-modal').click(function() {
+                closeModals();
+            });
+            
+            // Close modal when clicking outside
+            $(window).click(function(e) {
+                if ($(e.target).is('.modal')) {
+                    closeModals();
+                }
+            });
+            
+            // Confirm logout
+            $('#confirm-logout').click(function() {
+                window.location.href = "{{ url_for('login.logout') }}";
+            });
+
+            // Close modal with Escape key
+            $(document).keyup(function(e) {
+                if (e.keyCode === 27) { // Escape key
+                    closeModals();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Courses Edit Request</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/staff/staff_courses_edit_req.css') }}" />
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/lsef_logo.png') }}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <!-- New Navigation Start -->
+    <div class="nav-container">
+        <!-- Top Navigation -->
+        <div class="top-nav">
+            <div class="nav-left">
+                <a href="{{ url_for('staff_homepage') }}"><i class="fas fa-home"></i> Home</a>
+                <a href="{{ url_for('staff_class_management') }}"><i class="fas fa-users"></i> Class Management</a>
+                <a href="{{ url_for('staff_courses_creation') }}"><i class="fas fa-book-open"></i> Courses</a>
+                <a href="{{ url_for('staff_materials.materials') }}"><i class="fas fa-tasks"></i> Materials</a>
+            </div>
+            <div class="nav-right"></div>
+        </div>
+        
+        <!-- Sub Navigation -->
+        <div class="sub-nav">
+            <div class="brand-section">
+                <div class="brand-name">LSEF TESDA</div>
+                <div class="logo-container">
+                    <img src="{{ url_for('static', filename='img/lsef_logo.png') }}" alt="LSEF Logo">
+                    <img src="{{ url_for('static', filename='img/tesda_logo.png') }}" alt="TESDA Logo">
+                </div>
+            </div>
+            
+            <div class="user-section">
+                <div class="profile-dropdown">
+                    <img src="{{ url_for('static', filename='uploads/profile_pictures/' + (profile_picture or 'default.png')) }}" alt="Profile" class="profile-img">
+
+                    <div class="dropdown-menu">
+                        <a href="{{ url_for('staff_profile') }}"><i class="fas fa-user-circle"></i> My Profile</a>
+                        <a href="#"><i class="fas fa-bookmark"></i> Contact Us</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="logout-btn" id="logout-trigger"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- New Navigation End -->
+
+    <!-- Logout Confirmation Modal -->
+    <div class="modal" id="logout-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-sign-out-alt"></i> Confirm Logout</h3>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to logout?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-yes" id="confirm-logout">Yes</button>
+                <button class="btn btn-no close-modal">No</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Courses Sub Navigation -->
+    <nav class="courses-subnav">
+        <div class="subnav-right">
+            <a href="{{ url_for('staff_courses_creation') }}">Courses Creation</a>
+            <a href="{{ url_for('staff_courses_edit_req.view_active_courses') }}" class="active">Courses Edit Request</a>
+            <a href="{{ url_for('staff_courses_view.view_staff_active_courses') }}">Courses View</a>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <div class="header-container">
+            <h1>Active Courses</h1>
+            <p class="subtitle">Manage and edit existing course offerings</p>
+        </div>
+
+        <div class="table-container">
+            <table class="courses-table">
+                <thead>
+                    <tr>
+                        <th>Course Code</th>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Fee</th>
+                        <th>Max Students</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for course in courses %}
+                    <tr>
+                        <td>{{ course.course_code }}</td>
+                        <td>{{ course.course_title }}</td>
+                        <td><span class="category-badge">{{ course.course_category }}</span></td>
+                        <td>₱{{ course.course_fee }}</td>
+                        <td>{{ course.max_students }}</td>
+                        <td>{{ course.course_status }}</td>
+                        <td>
+                            <button class="btn-edit" onclick="openEditModal('{{ course.course_id }}')">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Course</h2>
+                <span class="close" onclick="closeEditModal()">&times;</span>
+            </div>
+            <form id="editCourseForm" class="modal-form">
+                <input type="hidden" id="editCourseId" name="course_id">
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="editCourseCode">Course Code</label>
+                        <input type="text" id="editCourseCode" name="course_code" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editCourseTitle">Course Title</label>
+                        <input type="text" id="editCourseTitle" name="course_title" required>
+                    </div>
+                    
+                    <div class="form-group span-2">
+                        <label for="editCourseDescription">Description</label>
+                        <textarea id="editCourseDescription" name="course_description" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editCourseCategory">Category</label>
+                        <select id="editCourseCategory" name="course_category" required>
+                            <option value="">Select Category</option>
+                            <option value="Technical">Technical</option>
+                            <option value="Vocational">Vocational</option>
+                            <option value="Skills">Skills</option>
+                            <option value="Safety">Safety</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editTargetAudience">Target Audience</label>
+                        <select id="editTargetAudience" name="target_audience" required>
+                            <option value="">Select Audience</option>
+                            <option value="Beginner">Beginner</option>
+                            <option value="Intermediate">Intermediate</option>
+                            <option value="Advanced">Advanced</option>
+                            <option value="All Levels">All Levels</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group span-2">
+                        <label for="editPrerequisites">Prerequisites</label>
+                        <textarea id="editPrerequisites" name="prerequisites" rows="2"></textarea>
+                    </div>
+                    
+                    <div class="form-group span-2">
+                        <label for="editLearningOutcomes">Learning Outcomes</label>
+                        <textarea id="editLearningOutcomes" name="learning_outcomes" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editDurationHours">Duration (Hours)</label>
+                        <input type="number" id="editDurationHours" name="duration_hours" min="1" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editCourseFee">Course Fee (₱)</label>
+                        <input type="number" id="editCourseFee" name="course_fee" min="0" step="0.01" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editMaxStudents">Max Students</label>
+                        <input type="number" id="editMaxStudents" name="max_students" value="25" min="25" max="25" readonly required>
+                        <small class="form-text">Maximum students is fixed at 25</small>
+                    </div>
+
+                    <div class="form-group span-2">
+                        <label for="editReason">Reason for Edit <span style="color:red;">*</span></label>
+                        <textarea id="editReason" name="reason" rows="2" required></textarea>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="closeEditModal()">Cancel</button>
+                    <button type="button" class="btn-save" onclick="saveCourseEdits()">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Logout Modal Functionality
+        $(document).ready(function() {
+            // Open modal when logout is clicked
+            $('#logout-trigger').click(function(e) {
+                e.preventDefault();
+                $('#logout-modal').fadeIn();
+            });
+            
+            // Close modal when X or No is clicked
+            $('.close-modal').click(function() {
+                $('#logout-modal').fadeOut();
+            });
+            
+            // Close modal when clicking outside
+            $(window).click(function(e) {
+                if ($(e.target).is('#logout-modal')) {
+                    $('#logout-modal').fadeOut();
+                }
+            });
+            
+            // Confirm logout
+            $('#confirm-logout').click(function() {
+                window.location.href = "{{ url_for('login.logout') }}";
+            });
+        });
+    </script>
+    
+    <script src="{{ url_for('static', filename='js/staff/staff_course_edit_req.js') }}"></script>
+</body>
+</html>

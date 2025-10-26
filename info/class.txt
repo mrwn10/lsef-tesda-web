@@ -1,0 +1,8 @@
+courses (table)
+classess (table)
+enrollments (table)
+schedule (table or pwede nakasama na sa ibang table para di nakakaduling mabasa)
+attendance (table)
+grades(table)
+graduated(table)
+z index stacking to make css less but effective

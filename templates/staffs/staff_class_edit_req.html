@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class Edit Request</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/staff/staff_class_edit_req.css') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/lsef_logo.png') }}" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <!-- New Navigation Start -->
+    <div class="nav-container">
+        <!-- Top Navigation -->
+        <div class="top-nav">
+            <div class="nav-left">
+                <a href="{{ url_for('staff_homepage') }}"><i class="fas fa-home"></i> Home</a>
+                <a href="{{ url_for('staff_class_management') }}"><i class="fas fa-users"></i> Class Management</a>
+                <a href="{{ url_for('staff_courses_creation') }}"><i class="fas fa-book-open"></i> Courses</a>
+                <a href="{{ url_for('staff_materials.materials') }}"><i class="fas fa-tasks"></i> Materials</a>
+            </div>
+            <div class="nav-right"></div>
+        </div>
+        
+        <!-- Sub Navigation -->
+        <div class="sub-nav">
+            <div class="brand-section">
+                <div class="brand-name">LSEF TESDA</div>
+                <div class="logo-container">
+                    <img src="{{ url_for('static', filename='img/lsef_logo.png') }}" alt="LSEF Logo">
+                    <img src="{{ url_for('static', filename='img/tesda_logo.png') }}" alt="TESDA Logo">
+                </div>
+            </div>
+            
+            <div class="user-section">
+                <div class="profile-dropdown">
+                    <img src="{{ url_for('static', filename='uploads/profile_pictures/' + (profile_picture or 'default.png')) }}" alt="Profile" class="profile-img">
+                    <div class="dropdown-menu">
+                        <a href="{{ url_for('staff_profile') }}"><i class="fas fa-user-circle"></i> My Profile</a>
+                        <a href="#"><i class="fas fa-bookmark"></i> Contact Us</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="logout-btn" id="logout-trigger"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- New Navigation End -->
+
+    <!-- Class Management Subnav -->
+    <nav class="courses-subnav">
+        <div class="subnav-right">
+            <a href="{{ url_for('staff_class_management') }}">Class Management</a>
+            <a href="{{ url_for('staff_class_creation.create_class') }}">Class Creation</a>
+            <a href="{{ url_for('staff_class_edit_req') }}" class="active">Class Edit Request</a>
+            <a href="{{ url_for('staff_enrollment_acceptance.view_enrollment_requests') }}">Enrollment Acceptance</a>
+            <a href="{{ url_for('staff_class_student_management') }}">Student Management</a>
+        </div>
+    </nav>
+
+    <!-- Logout Confirmation Modal -->
+    <div class="modal" id="logout-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-sign-out-alt"></i> Confirm Logout</h3>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to logout?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-yes" id="confirm-logout">Yes</button>
+                <button class="btn btn-no close-modal">No</button>
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <div class="page-header">
+            <h1><i class="fas fa-edit"></i> Class Edit Requests</h1>
+            <div class="breadcrumb">
+                <span>Class Management</span> / <span>Edit Requests</span>
+            </div>
+        </div>
+        
+        <div id="message-container">
+            <div id="message-content" class="message"></div>
+        </div>
+
+        <div class="content-container">
+            <div class="table-container">
+                <div class="table-header">
+                    <h2><i class="fas fa-chalkboard-teacher"></i> Active Classes</h2>
+                    <div class="table-actions">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="search-input" placeholder="Search classes...">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Course</th>
+                                <th>Class Title</th>
+                                <th>School Year</th>
+                                <th>Batch</th>
+                                <th>Schedule</th>
+                                <th>Venue</th>
+                                <th>Instructor</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cls in classes %}
+                            <tr data-class-id="{{ cls.class_id }}">
+                                <td>{{ cls.course_title }}</td>
+                                <td>{{ cls.class_title }}</td>
+                                <td>{{ cls.school_year }}</td>
+                                <td>{{ cls.batch }}</td>
+                                <td>{{ cls.schedule }}</td>
+                                <td>{{ cls.venue }}</td>
+                                <td>{{ cls.instructor_name }}</td>
+                                <td>{{ cls.status }}</td>
+                                <td>
+                                    <button class="btn edit-btn" data-class='{{ cls|tojson|safe }}'>
+                                        <i class="fas fa-pencil-alt"></i> Edit
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Class Modal -->
+        <div id="editModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-edit"></i> Edit Class Details</h3>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="class_id">
+                    
+                    <div class="form-section">
+                        <h4><i class="fas fa-info-circle"></i> Basic Information</h4>
+                        <div class="form-group">
+                            <label for="class_title" class="required-field">Class Title</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-heading"></i>
+                                <input type="text" id="class_title" class="form-control">
+                            </div>
+                            <div class="error-message" id="class_title_error"></div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="school_year" class="required-field">School Year</label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <input type="text" id="school_year" class="form-control">
+                                </div>
+                                <div class="error-message" id="school_year_error"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="batch">Batch</label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-layer-group"></i>
+                                    <input type="text" id="batch" class="form-control">
+                                </div>
+                                <div class="error-message" id="batch_error"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h4><i class="fas fa-user-tie"></i> Instructor Information</h4>
+                        <div class="form-group">
+                            <label for="instructor_name" class="required-field">Instructor Name</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-user"></i>
+                                <input type="text" id="instructor_name" class="form-control">
+                            </div>
+                            <div class="error-message" id="instructor_name_error"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h4><i class="fas fa-map-marker-alt"></i> Location Information</h4>
+                        <div class="form-group">
+                            <label for="venue" class="required-field">Venue</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-building"></i>
+                                <input type="text" id="venue" class="form-control">
+                            </div>
+                            <div class="error-message" id="venue_error"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="max_students" class="required-field">Max Students</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-users"></i>
+                                <input type="number" id="max_students" class="form-control" min="1">
+                            </div>
+                            <div class="error-message" id="max_students_error"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h4><i class="fas fa-calendar-check"></i> Schedule Information</h4>
+                        <div class="form-group">
+                            <label class="required-field">Select Days</label>
+                            <div class="day-checkboxes">
+                                <div class="day-checkbox">
+                                    <input type="checkbox" id="edit-monday" name="days" value="Monday" class="d-none day-selector">
+                                    <label for="edit-monday"><i class="fas fa-calendar-day"></i> Mon</label>
+                                </div>
+                                <div class="day-checkbox">
+                                    <input type="checkbox" id="edit-tuesday" name="days" value="Tuesday" class="d-none day-selector">
+                                    <label for="edit-tuesday"><i class="fas fa-calendar-day"></i> Tue</label>
+                                </div>
+                                <div class="day-checkbox">
+                                    <input type="checkbox" id="edit-wednesday" name="days" value="Wednesday" class="d-none day-selector">
+                                    <label for="edit-wednesday"><i class="fas fa-calendar-day"></i> Wed</label>
+                                </div>
+                                <div class="day-checkbox">
+                                    <input type="checkbox" id="edit-thursday" name="days" value="Thursday" class="d-none day-selector">
+                                    <label for="edit-thursday"><i class="fas fa-calendar-day"></i> Thu</label>
+                                </div>
+                                <div class="day-checkbox">
+                                    <input type="checkbox" id="edit-friday" name="days" value="Friday" class="d-none day-selector">
+                                    <label for="edit-friday"><i class="fas fa-calendar-day"></i> Fri</label>
+                                </div>
+                                <div class="day-checkbox">
+                                    <input type="checkbox" id="edit-saturday" name="days" value="Saturday" class="d-none day-selector">
+                                    <label for="edit-saturday"><i class="fas fa-calendar-day"></i> Sat</label>
+                                </div>
+                                <div class="day-checkbox">
+                                    <input type="checkbox" id="edit-sunday" name="days" value="Sunday" class="d-none day-selector">
+                                    <label for="edit-sunday"><i class="fas fa-calendar-day"></i> Sun</label>
+                                </div>
+                            </div>
+                            <div class="error-message" id="days_error"></div>
+                        </div>
+
+                        <!-- Day Time Slots Container -->
+                        <div class="day-time-slots" id="dayTimeSlots">
+                            <div class="no-days-selected">
+                                <i class="far fa-calendar-plus"></i>
+                                <p>Select days above to add time slots</p>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group date-range-group">
+                            <label class="required-field">Class Date Range</label>
+                            <div class="date-inputs">
+                                <div class="form-group">
+                                    <label for="start_date">Start Date</label>
+                                    <div class="input-with-icon">
+                                        <i class="fas fa-calendar-plus"></i>
+                                        <input type="date" id="start_date" class="form-control">
+                                    </div>
+                                    <div class="error-message" id="start_date_error"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="end_date">End Date</label>
+                                    <div class="input-with-icon">
+                                        <i class="fas fa-calendar-minus"></i>
+                                        <input type="date" id="end_date" class="form-control">
+                                    </div>
+                                    <div class="error-message" id="end_date_error"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h4><i class="fas fa-comment-alt"></i> Edit Request Details</h4>
+                        <div class="form-group">
+                            <label for="reason" class="required-field">Reason for Editing</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-pen"></i>
+                                <textarea id="reason" class="form-control" placeholder="Please explain the reason for these changes..." rows="4"></textarea>
+                            </div>
+                            <div class="error-message" id="reason_error"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Hidden field for days_of_week JSON -->
+                    <input type="hidden" id="days_of_week" name="days_of_week">
+                </div>
+                <div class="modal-footer">
+                    <button id="cancel-btn" class="btn cancel-btn">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button id="save-btn" class="btn save-btn">
+                        <i class="fas fa-paper-plane"></i> <span class="btn-text">Submit Request</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Logout Modal Functionality
+            $('#logout-trigger').click(function(e) {
+                e.preventDefault();
+                $('#logout-modal').fadeIn();
+            });
+            
+            $('.close-modal').click(function() {
+                $('#logout-modal').fadeOut();
+            });
+            
+            $(window).click(function(e) {
+                if ($(e.target).is('#logout-modal')) {
+                    $('#logout-modal').fadeOut();
+                }
+            });
+            
+            $('#confirm-logout').click(function() {
+                window.location.href = "{{ url_for('login.logout') }}";
+            });
+        });
+    </script>
+    <script src="{{ url_for('static', filename='js/staff/staff_class_edit_req.js') }}"></script>
+</body>
+</html>

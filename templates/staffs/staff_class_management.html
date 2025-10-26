@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class Management</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/staff/staff_class_management.css') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/lsef_logo.png') }}" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <!-- New Navigation Start -->
+    <div class="nav-container">
+        <!-- Top Navigation -->
+        <div class="top-nav">
+            <div class="nav-left">
+                <a href="{{ url_for('staff_homepage') }}"><i class="fas fa-home"></i> Home</a>
+                <a href="{{ url_for('staff_class_management') }}"><i class="fas fa-users"></i> Class Management</a>
+                <a href="{{ url_for('staff_courses_creation') }}"><i class="fas fa-book-open"></i> Courses</a>
+                <a href="{{ url_for('staff_materials.materials') }}"><i class="fas fa-tasks"></i> Materials</a>
+            </div>
+            <div class="nav-right"></div>
+        </div>
+        
+        <!-- Sub Navigation -->
+        <div class="sub-nav">
+            <div class="brand-section">
+                <div class="brand-name">LSEF TESDA</div>
+                <div class="logo-container">
+                    <img src="{{ url_for('static', filename='img/lsef_logo.png') }}" alt="LSEF Logo">
+                    <img src="{{ url_for('static', filename='img/tesda_logo.png') }}" alt="TESDA Logo">
+                </div>
+            </div>
+            
+            <div class="user-section">
+                <div class="profile-dropdown">
+                    <img src="{{ url_for('static', filename='uploads/profile_pictures/' + (profile_picture or 'default.png')) }}" alt="Profile" class="profile-img">
+                    <div class="dropdown-menu">
+                        <a href="{{ url_for('staff_profile') }}"><i class="fas fa-user-circle"></i> My Profile</a>
+                        <a href="#"><i class="fas fa-bookmark"></i> Contact Us</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="logout-btn" id="logout-trigger"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- New Navigation End -->
+
+    <!-- Class Management Subnav - Updated to match Courses subnav -->
+    <nav class="courses-subnav">
+        <div class="subnav-right">
+            <a href="{{ url_for('staff_class_management') }}" class="active">Class Management</a>
+            <a href="{{ url_for('staff_class_creation.create_class') }}">Class Creation</a>
+            <a href="{{ url_for('staff_class_edit_req') }}">Class Edit Request</a>
+            <a href="{{ url_for('staff_enrollment_acceptance.view_enrollment_requests') }}">Enrollment Acceptance</a>
+            <a href="{{ url_for('staff_class_student_management') }}">Student Management</a>
+        </div>
+    </nav>
+
+    <!-- Logout Confirmation Modal -->
+    <div class="modal" id="logout-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-sign-out-alt"></i> Confirm Logout</h3>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to logout?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-yes" id="confirm-logout">Yes</button>
+                <button class="btn btn-no close-modal">No</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container py-4">
+        <div class="header-section">
+            <h1>Class Management</h1>
+            <div class="search-filter">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="search-input" placeholder="Search classes...">
+                </div>
+                <select class="filter-dropdown" id="status-filter">
+                    <option value="all">All Status</option>
+                    <option value="active">Active</option>
+                    <option value="upcoming">Upcoming</option>
+                    <option value="completed">Completed</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Class List Table -->
+        <div class="table-container">
+            <table class="class-table">
+                <thead>
+                    <tr>
+                        <th>Class ID <i class="fas fa-sort"></i></th>
+                        <th>Class Title</th>
+                        <th>Course Title</th>
+                        <th>Schedule</th>
+                        <th>Venue</th>
+                        <th>Students</th>
+                        <th>Status</th>
+                        <th>Dates</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if classes %}
+                        {% for cls in classes %}
+                        <tr>
+                            <td>{{ cls.class_id }}</td>
+                            <td class="class-title">{{ cls.class_title }}</td>
+                            <td>{{ cls.course_title }}</td>
+                            <td>{{ cls.schedule }}</td>
+                            <td>{{ cls.venue }}</td>
+                            <td>
+                                <div class="student-count">
+                                    <span class="current">{{ cls.current_students|default(0) }}</span>
+                                    <span class="separator">/</span>
+                                    <span class="max">{{ cls.max_students }}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="status-badge {{ cls.status|lower }}">{{ cls.status }}</span>
+                            </td>
+                            <td>
+                                <div class="date-range">
+                                    <div class="start-date">{{ cls.start_date }}</div>
+                                    <div class="end-date">{{ cls.end_date }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <a href="{{ url_for('staff_class_student_management.view_class_students', class_id=cls.class_id) }}" class="action-btn manage-btn" title="Manage Students">
+                                        <i class="fas fa-users"></i>
+                                    </a>
+                                    <a href="{{ url_for('staff_class_edit_req') }}" class="action-btn edit-btn" title="Edit Class">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <button class="action-btn delete-btn" title="Delete Class">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="9" class="no-classes">
+                                <div class="empty-state">
+                                    <i class="fas fa-book-open"></i>
+                                    <p>No active classes found</p>
+                                    <a href="{{ url_for('staff_class_creation.create_class') }}" class="create-class-btn">Create New Class</a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination">
+            <button class="pagination-btn" disabled>
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="pagination-btn active">1</button>
+            <button class="pagination-btn">2</button>
+            <button class="pagination-btn">3</button>
+            <button class="pagination-btn">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+
+        <!-- Quick Action Buttons -->
+        <div class="quick-actions">
+            <a href="{{ url_for('staff_class_creation.create_class') }}" class="quick-action-btn primary">
+                <i class="fas fa-plus"></i> Create New Class
+            </a>
+            <a href="{{ url_for('staff_class_edit_req') }}" class="quick-action-btn secondary">
+                <i class="fas fa-pencil-alt"></i> Edit Class Request
+            </a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Logout Modal Functionality
+            $('#logout-trigger').click(function(e) {
+                e.preventDefault();
+                $('#logout-modal').fadeIn();
+            });
+            
+            $('.close-modal').click(function() {
+                $('#logout-modal').fadeOut();
+            });
+            
+            $(window).click(function(e) {
+                if ($(e.target).is('#logout-modal')) {
+                    $('#logout-modal').fadeOut();
+                }
+            });
+            
+            $('#confirm-logout').click(function() {
+                window.location.href = "{{ url_for('login.logout') }}";
+            });
+
+            // Search and filter functionality
+            const searchInput = document.getElementById('search-input');
+            const statusFilter = document.getElementById('status-filter');
+            
+            if (searchInput && statusFilter) {
+                searchInput.addEventListener('input', filterClasses);
+                statusFilter.addEventListener('change', filterClasses);
+            }
+
+            function filterClasses() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const statusValue = statusFilter.value.toLowerCase();
+                
+                const rows = document.querySelectorAll('.class-table tbody tr');
+                
+                rows.forEach(row => {
+                    if (row.classList.contains('no-classes')) return;
+                    
+                    const classTitle = row.querySelector('.class-title').textContent.toLowerCase();
+                    const status = row.querySelector('.status-badge').textContent.toLowerCase();
+                    
+                    const matchesSearch = classTitle.includes(searchTerm);
+                    const matchesStatus = statusValue === 'all' || status === statusValue;
+                    
+                    row.style.display = (matchesSearch && matchesStatus) ? '' : 'none';
+                });
+            }
+        });
+    </script>
+</body>
+</html>

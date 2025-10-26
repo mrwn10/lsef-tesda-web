@@ -1,0 +1,763 @@
+/* ===== New Navigation Styles ===== */
+:root {
+    --tesda-blue: #003366;
+    --tesda-maroon: #800000;
+    --tesda-gold: #FFD700;
+    --tesda-white: #FFFFFF;
+    --tesda-light-blue: #E6F0FA;
+    --tesda-dark-blue: #002244;
+}
+
+/* Navigation Container */
+.nav-container {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Top Navigation */
+.top-nav {
+    background: linear-gradient(to right, var(--tesda-blue), var(--tesda-dark-blue));
+    padding: 0 5%;
+    display: flex;
+    align-items: center;
+    color: var(--tesda-white);
+    height: 60px;
+}
+
+.nav-left, .nav-right {
+    display: flex;
+    align-items: center;
+}
+
+.nav-right {
+    margin-left: auto;
+}
+
+.top-nav a {
+    color: var(--tesda-white);
+    text-decoration: none;
+    padding: 0 20px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+    position: relative;
+    margin: 0 2px;
+}
+
+.top-nav a:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 4px 4px 0 0;
+}
+
+.top-nav a.active {
+    background-color: rgba(255, 255, 255, 0.25);
+    border-radius: 4px 4px 0 0;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+}
+
+.top-nav a i {
+    margin-right: 8px;
+    font-size: 1rem;
+}
+
+/* Sub Navigation */
+.sub-nav {
+    background: var(--tesda-white);
+    padding: 15px 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.brand-section {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.brand-name {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: var(--tesda-blue);
+    display: flex;
+    align-items: center;
+}
+
+.brand-name::before {
+    content: "";
+    display: inline-block;
+    width: 3px;
+    height: 35px;
+    background-color: var(--tesda-gold);
+    margin-right: 15px;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    padding: 5px 15px;
+    background-color: rgba(0, 0, 0, 0.02);
+    border-radius: 4px;
+    border-left: 3px solid var(--tesda-gold);
+}
+
+.logo-container img {
+    height: 40px;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.logo-container img:hover {
+    transform: scale(1.05);
+}
+
+.user-section {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+/* Profile Dropdown */
+.profile-dropdown {
+    position: relative;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.profile-img {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--tesda-gold);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: var(--tesda-white);
+    min-width: 220px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    display: none;
+    z-index: 1000;
+}
+
+.profile-dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+.dropdown-menu a {
+    color: #333;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+.dropdown-menu a:hover {
+    background-color: var(--tesda-light-blue);
+    color: var(--tesda-blue);
+}
+
+.dropdown-menu i {
+    width: 20px;
+    text-align: center;
+    color: var(--tesda-blue);
+}
+
+.dropdown-divider {
+    height: 1px;
+    background-color: #eee;
+    margin: 5px 0;
+}
+
+.logout-btn {
+    color: var(--tesda-maroon) !important;
+}
+
+.logout-btn i {
+    color: var(--tesda-maroon) !important;
+}
+
+/* Courses Sub Navigation */
+.courses-subnav {
+    background: var(--tesda-white);
+    padding: 15px 5%;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.courses-subnav .subnav-right {
+    display: flex;
+    gap: 15px;
+}
+
+.courses-subnav .subnav-right a {
+    color: #475569;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 8px 15px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.courses-subnav .subnav-right a:hover {
+    color: var(--tesda-blue);
+    background-color: #f1f5f9;
+}
+
+.courses-subnav .subnav-right a.active {
+    color: var(--tesda-blue);
+    background-color: #e0f2fe;
+}
+
+.courses-subnav .subnav-right a.active:after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: var(--tesda-blue);
+    border-radius: 3px 3px 0 0;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    overflow: auto;
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 20px auto;
+    padding: 0;
+    width: 400px;
+    max-width: 90%;
+    max-height: 90vh;
+    border-radius: 8px;
+    overflow-y: auto;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+    padding: 15px 20px;
+    background-color: var(--tesda-blue);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.close-modal {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0 5px;
+}
+
+.modal-body {
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.modal-body p {
+    margin: 0;
+    font-size: 1rem;
+    color: #333;
+}
+
+.modal-footer {
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    flex: 1;
+    text-align: center;
+    font-size: 1rem;
+}
+
+.btn-yes {
+    background-color: var(--tesda-maroon);
+    color: white;
+    order: 1;
+}
+
+.btn-yes:hover {
+    background-color: #6b0000;
+}
+
+.btn-no {
+    background-color: #f1f5f9;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+    order: 2;
+}
+
+.btn-no:hover {
+    background-color: #e2e8f0;
+}
+
+/* ===== Original Courses View Styles ===== */
+/* Base Styles */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8fafc;
+    line-height: 1.6;
+    color: #333;
+}
+
+/* Content styles */
+.content {
+    padding: 30px;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding-top: 140px; /* Added space for new navigation */
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.header-container h1 {
+    color: #0033A0;
+    margin: 0;
+    font-size: 28px;
+    font-weight: 600;
+    flex: 1 1 100%;
+    min-width: 300px;
+}
+
+.search-filter-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    width: 100%;
+    justify-content: flex-end;
+}
+
+.search-box {
+    flex: 1 1 300px;
+    position: relative;
+    min-width: 200px;
+    max-width: 500px;
+    margin-right: 50px;
+}
+
+.search-box i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #64748b;
+}
+
+.search-box input {
+    padding: 10px 15px 10px 40px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    width: 100%;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    background-color: #fff;
+}
+
+.search-box input:focus {
+    outline: none;
+    border-color: #0033A0;
+    box-shadow: 0 0 0 3px rgba(0, 51, 160, 0.1);
+}
+
+.filter-dropdown {
+    flex: 0 0 150px;
+    min-width: 150px;
+}
+
+.filter-dropdown select {
+    padding: 10px 15px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.filter-dropdown select:focus {
+    outline: none;
+    border-color: #0033A0;
+    box-shadow: 0 0 0 3px rgba(0, 51, 160, 0.1);
+}
+
+.table-container {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    margin-bottom: 30px;
+}
+
+.courses-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.courses-table th {
+    background-color: #f1f5f9;
+    color: #334155;
+    font-weight: 600;
+    text-align: left;
+    padding: 12px 15px;
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+}
+
+.courses-table th i {
+    margin-left: 5px;
+    color: #94a3b8;
+    font-size: 12px;
+}
+
+.courses-table th:hover {
+    background-color: #e2e8f0;
+}
+
+.courses-table th.asc i.fa-sort {
+    display: none;
+}
+
+.courses-table th.desc i.fa-sort {
+    display: none;
+}
+
+.courses-table th.asc::after {
+    content: '\f0de';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    margin-left: 5px;
+    color: #0033A0;
+}
+
+.courses-table th.desc::after {
+    content: '\f0dd';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    margin-left: 5px;
+    color: #0033A0;
+}
+
+.courses-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #f1f5f9;
+    color: #475569;
+}
+
+.courses-table tr:last-child td {
+    border-bottom: none;
+}
+
+.courses-table tr:hover td {
+    background-color: #f8fafc;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.status-active {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.status-inactive {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+.pagination-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-top: 1px solid #e2e8f0;
+    background-color: #f8fafc;
+}
+
+.pagination-info {
+    color: #64748b;
+    font-size: 14px;
+}
+
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.pagination-btn {
+    background-color: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.pagination-btn:not(:disabled):hover {
+    background-color: #f1f5f9;
+    border-color: #cbd5e1;
+}
+
+.pagination-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.current-page {
+    font-weight: 600;
+    color: #0033A0;
+}
+
+.no-data-message {
+    text-align: center;
+    padding: 50px 20px;
+    color: #64748b;
+}
+
+.no-data-message i {
+    font-size: 50px;
+    color: #cbd5e1;
+    margin-bottom: 20px;
+}
+
+.no-data-message p {
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+.btn-create-course {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #0033A0;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.btn-create-course:hover {
+    background-color: #00257a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .header-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .search-filter-container {
+        margin-top: 15px;
+    }
+    
+    .header-container h1 {
+        margin-bottom: 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .search-box,
+    .filter-dropdown {
+        flex: 1 1 100%;
+        min-width: 100%;
+        max-width: 100%;
+    }
+    
+    .search-box {
+        margin-bottom: 10px;
+    }
+    
+    .courses-table {
+        display: block;
+        overflow-x: auto;
+    }
+    
+    .courses-subnav .subnav-right {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .courses-subnav .subnav-right a {
+        margin-bottom: 5px;
+    }
+    
+    .courses-subnav .subnav-right a.active:after {
+        bottom: -5px;
+    }
+}
+
+/* Logout Modal Styles - Consistent across all pages */
+#logout-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+}
+
+#logout-modal .modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 0;
+    width: 400px;
+    max-width: 90%;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+#logout-modal .modal-header {
+    padding: 15px 20px;
+    background-color: var(--tesda-blue);
+    color: white;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    align-items: center;
+}
+
+#logout-modal .modal-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#logout-modal .modal-body {
+    padding: 20px;
+    text-align: center;
+}
+
+#logout-modal .modal-footer {
+    padding: 15px 20px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    border-top: 1px solid #eee;
+}
+
+#logout-modal .btn {
+    padding: 8px 20px;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    min-width: 80px;
+}
+
+#logout-modal .btn-yes {
+    background-color: var(--tesda-maroon);
+    color: white;
+    border: none;
+}
+
+#logout-modal .btn-yes:hover {
+    background-color: #6b0000;
+}
+
+#logout-modal .btn-no {
+    background-color: #f1f5f9;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+}
+
+#logout-modal .btn-no:hover {
+    background-color: #e2e8f0;
+}
+
+/* Animation */
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#logout-modal[style*="display: flex"] .modal-content {
+    animation: modalFadeIn 0.3s ease-out;
+}

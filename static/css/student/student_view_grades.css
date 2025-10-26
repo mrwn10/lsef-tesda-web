@@ -1,0 +1,617 @@
+/* ===== Global Styles ===== */
+:root {
+    --tesda-blue: #003366;
+    --tesda-maroon: #800000;
+    --tesda-gold: #FFD700;
+    --tesda-white: #FFFFFF;
+    --tesda-light-blue: #E6F0FA;
+    --tesda-dark-blue: #002244;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8fafc;
+    line-height: 1.6;
+    color: #333;
+}
+
+body.modal-open {
+    overflow: hidden;
+}
+
+/* ===== Navigation Styles ===== */
+.nav-container {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.top-nav {
+    background: linear-gradient(to right, var(--tesda-blue), var(--tesda-dark-blue));
+    padding: 0 5%;
+    display: flex;
+    align-items: center;
+    color: var(--tesda-white);
+    height: 60px;
+}
+
+.nav-left, .nav-right {
+    display: flex;
+    align-items: center;
+}
+
+.nav-right {
+    margin-left: auto;
+}
+
+.top-nav a {
+    color: var(--tesda-white);
+    text-decoration: none;
+    padding: 0 20px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+    position: relative;
+    margin: 0 2px;
+}
+
+.top-nav a:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 4px 4px 0 0;
+}
+
+.top-nav a.active {
+    background-color: rgba(255, 255, 255, 0.25);
+    border-radius: 4px 4px 0 0;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+}
+
+.top-nav a i {
+    margin-right: 8px;
+    font-size: 1rem;
+}
+
+.sub-nav {
+    background: var(--tesda-white);
+    padding: 15px 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.brand-section {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.brand-name {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: var(--tesda-blue);
+    display: flex;
+    align-items: center;
+}
+
+.brand-name::before {
+    content: "";
+    display: inline-block;
+    width: 3px;
+    height: 35px;
+    background-color: var(--tesda-gold);
+    margin-right: 15px;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    padding: 5px 15px;
+    background-color: rgba(0, 0, 0, 0.02);
+    border-radius: 4px;
+    border-left: 3px solid var(--tesda-gold);
+}
+
+.logo-container img {
+    height: 40px;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.logo-container img:hover {
+    transform: scale(1.05);
+}
+
+.user-section {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.profile-dropdown {
+    position: relative;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.profile-img {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--tesda-gold);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: var(--tesda-white);
+    min-width: 220px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    display: none;
+    z-index: 1000;
+}
+
+.profile-dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+.dropdown-menu a {
+    color: #333;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+.dropdown-menu a:hover {
+    background-color: var(--tesda-light-blue);
+    color: var(--tesda-blue);
+}
+
+.dropdown-menu i {
+    width: 20px;
+    text-align: center;
+    color: var(--tesda-blue);
+}
+
+.dropdown-divider {
+    height: 1px;
+    background-color: #eee;
+    margin: 5px 0;
+}
+
+.logout-btn {
+    color: var(--tesda-maroon) !important;
+}
+
+.logout-btn i {
+    color: var(--tesda-maroon) !important;
+}
+
+/* ===== Main Content Styles ===== */
+main {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-top: 140px;
+}
+
+.page-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.page-header h1 {
+    color: #0033A0;
+    margin: 0 0 0.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 28px;
+}
+
+.breadcrumb {
+    color: #64748b;
+    font-size: 14px;
+}
+
+.breadcrumb span {
+    color: #0033A0;
+    font-weight: 500;
+}
+
+.summary-cards {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.summary-card {
+    flex: 1;
+    min-width: 180px;
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.summary-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card-icon {
+    font-size: 1.75rem;
+    color: var(--tesda-blue);
+    margin-bottom: 0.75rem;
+}
+
+.card-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--tesda-blue);
+    margin-bottom: 0.25rem;
+}
+
+.card-label {
+    font-size: 0.9rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.grades-table-container {
+    overflow-x: auto;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.grades-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.grades-table th {
+    background-color: #f1f5f9;
+    color: #334155;
+    font-weight: 600;
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.grades-table th i {
+    margin-right: 8px;
+    color: var(--tesda-blue);
+}
+
+.grades-table td {
+    padding: 1rem;
+    border-bottom: 1px solid #e2e8f0;
+    vertical-align: middle;
+}
+
+.grades-table tr:last-child td {
+    border-bottom: none;
+}
+
+.grades-table tr:hover {
+    background-color: #f8fafc;
+}
+
+.grade-available {
+    color: #16a34a;
+    font-weight: 600;
+}
+
+.grade-missing {
+    color: #64748b;
+    font-style: italic;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.35rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.status-completed {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.status-ongoing {
+    background-color: #e0f2fe;
+    color: #075985;
+}
+
+.no-grades-message {
+    background-color: white;
+    border-radius: 8px;
+    padding: 3rem;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    color: #64748b;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.no-grades-message i {
+    font-size: 2.5rem;
+    color: #94a3b8;
+}
+
+.no-grades-message p {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    overflow: auto;
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 20px auto;
+    padding: 0;
+    width: 400px;
+    max-width: 90%;
+    max-height: 90vh;
+    border-radius: 8px;
+    overflow-y: auto;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+    padding: 15px 20px;
+    background-color: var(--tesda-blue);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.close-modal {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0 5px;
+}
+
+.modal-body {
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.modal-body p {
+    margin: 0;
+    font-size: 1rem;
+    color: #333;
+}
+
+.modal-footer {
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    flex: 1;
+    text-align: center;
+    font-size: 1rem;
+}
+
+.btn-yes {
+    background-color: var(--tesda-maroon);
+    color: white;
+}
+
+.btn-yes:hover {
+    background-color: #6b0000;
+}
+
+.btn-no {
+    background-color: #f1f5f9;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+}
+
+.btn-no:hover {
+    background-color: #e2e8f0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .form-columns {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 768px) {
+    .profile-picture-controls {
+        flex-direction: column;
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .upload-btn, .remove-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .save-btn {
+        width: 100%;
+    }
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Logout Modal Styles - Consistent across all pages */
+#logout-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+}
+
+#logout-modal .modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 0;
+    width: 400px;
+    max-width: 90%;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+#logout-modal .modal-header {
+    padding: 15px 20px;
+    background-color: var(--tesda-blue);
+    color: white;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    align-items: center;
+}
+
+#logout-modal .modal-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#logout-modal .modal-body {
+    padding: 20px;
+    text-align: center;
+}
+
+#logout-modal .modal-footer {
+    padding: 15px 20px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    border-top: 1px solid #eee;
+}
+
+#logout-modal .btn {
+    padding: 8px 20px;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    min-width: 80px;
+}
+
+#logout-modal .btn-yes {
+    background-color: var(--tesda-maroon);
+    color: white;
+    border: none;
+}
+
+#logout-modal .btn-yes:hover {
+    background-color: #6b0000;
+}
+
+#logout-modal .btn-no {
+    background-color: #f1f5f9;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+}
+
+#logout-modal .btn-no:hover {
+    background-color: #e2e8f0;
+}
+
+/* Animation */
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#logout-modal[style*="display: flex"] .modal-content {
+    animation: modalFadeIn 0.3s ease-out;
+}

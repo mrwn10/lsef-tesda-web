@@ -1,0 +1,834 @@
+/* ===== Global Font Consistency ===== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8fafc;
+    line-height: 1.6;
+    color: #333;
+}
+
+/* Font consistency with staff homepage */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Ensure all text elements use the same font */
+h1, h2, h3, h4, h5, h6,
+p, span, div,
+.btn, .form-select, .form-control,
+table, th, td,
+.modal-title, .modal-body,
+.nav-link, .brand-name,
+.top-nav a,
+.courses-subnav a,
+.header-section h2,
+.search-box input,
+.enrollment-table,
+.student-info,
+.btn-accept, .btn-reject,
+.empty-state h3,
+.empty-state p,
+.flash-message,
+.close-flash {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Specific styling for brand name to match staff homepage */
+.brand-name {
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+/* ===== New Navigation Styles ===== */
+:root {
+    --tesda-blue: #003366;
+    --tesda-maroon: #800000;
+    --tesda-gold: #FFD700;
+    --tesda-white: #FFFFFF;
+    --tesda-light-blue: #E6F0FA;
+    --tesda-dark-blue: #002244;
+    --tesda-medium-gray: #dee2e6;
+    --tesda-dark-gray: #495057;
+    --tesda-light-gray: #f8f9fa;
+}
+
+/* Navigation Container */
+.nav-container {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Top Navigation */
+.top-nav {
+    background: linear-gradient(to right, var(--tesda-blue), var(--tesda-dark-blue));
+    padding: 0 5%;
+    display: flex;
+    align-items: center;
+    color: var(--tesda-white);
+    height: 60px;
+}
+
+.nav-left, .nav-right {
+    display: flex;
+    align-items: center;
+}
+
+.nav-right {
+    margin-left: auto;
+}
+
+.top-nav a {
+    color: var(--tesda-white);
+    text-decoration: none;
+    padding: 0 20px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+    position: relative;
+    margin: 0 2px;
+}
+
+.top-nav a:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 4px 4px 0 0;
+}
+
+.top-nav a.active {
+    background-color: rgba(255, 255, 255, 0.25);
+    border-radius: 4px 4px 0 0;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+}
+
+.top-nav a i {
+    margin-right: 8px;
+    font-size: 1rem;
+}
+
+/* Sub Navigation */
+.sub-nav {
+    background: var(--tesda-white);
+    padding: 15px 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.brand-section {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.brand-name {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: var(--tesda-blue);
+    display: flex;
+    align-items: center;
+}
+
+.brand-name::before {
+    content: "";
+    display: inline-block;
+    width: 3px;
+    height: 35px;
+    background-color: var(--tesda-gold);
+    margin-right: 15px;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    padding: 5px 15px;
+    background-color: rgba(0, 0, 0, 0.02);
+    border-radius: 4px;
+    border-left: 3px solid var(--tesda-gold);
+}
+
+.logo-container img {
+    height: 40px;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.logo-container img:hover {
+    transform: scale(1.05);
+}
+
+.user-section {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+/* Profile Dropdown */
+.profile-dropdown {
+    position: relative;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.profile-img {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--tesda-gold);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: var(--tesda-white);
+    min-width: 220px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    display: none;
+    z-index: 1000;
+}
+
+.profile-dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+.dropdown-menu a {
+    color: #333;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+.dropdown-menu a:hover {
+    background-color: var(--tesda-light-blue);
+    color: var(--tesda-blue);
+}
+
+.dropdown-menu i {
+    width: 20px;
+    text-align: center;
+    color: var(--tesda-blue);
+}
+
+.dropdown-divider {
+    height: 1px;
+    background-color: #eee;
+    margin: 5px 0;
+}
+
+.logout-btn {
+    color: var(--tesda-maroon) !important;
+}
+
+.logout-btn i {
+    color: var(--tesda-maroon) !important;
+}
+
+/* Courses Sub Navigation */
+.courses-subnav {
+    background: var(--tesda-white);
+    padding: 15px 5%;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.courses-subnav .subnav-right {
+    display: flex;
+    gap: 15px;
+}
+
+.courses-subnav .subnav-right a {
+    color: #475569;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 8px 15px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    position: relative;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.courses-subnav .subnav-right a:hover {
+    color: var(--tesda-blue);
+    background-color: #f1f5f9;
+}
+
+.courses-subnav .subnav-right a.active {
+    color: var(--tesda-blue);
+    background-color: #e0f2fe;
+}
+
+.courses-subnav .subnav-right a.active:after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: var(--tesda-blue);
+    border-radius: 3px 3px 0 0;
+}
+
+/* Adjust container padding to account for navigation */
+.container {
+    padding-top: 140px;
+}
+
+@media (max-width: 768px) {
+    .courses-subnav .subnav-right {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .courses-subnav .subnav-right a.active:after {
+        bottom: 0;
+        left: -10px;
+        width: 3px;
+        height: 100%;
+        border-radius: 0 3px 3px 0;
+    }
+    
+    .container {
+        padding-top: 180px; /* Adjusted for mobile navigation height */
+    }
+}
+
+/* ===== Enrollment Acceptance Styles ===== */
+/* Reset and global styles */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8fafc;
+    line-height: 1.6;
+    color: #333;
+}
+
+.enrollment-container {
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.header-section h2 {
+    color: var(--tesda-blue);
+    margin: 0;
+    font-size: 1.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+}
+
+.search-filter {
+    display: flex;
+    gap: 1rem;
+}
+
+.search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-box i {
+    position: absolute;
+    left: 12px;
+    color: #64748b;
+}
+
+.search-box input {
+    padding: 0.5rem 1rem 0.5rem 2.5rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    width: 250px;
+    transition: all 0.3s ease;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.search-box input:focus {
+    outline: none;
+    border-color: var(--tesda-blue);
+    box-shadow: 0 0 0 2px rgba(0, 51, 160, 0.1);
+}
+
+.table-responsive {
+    overflow-x: auto;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    margin-top: 1rem;
+}
+
+.enrollment-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.enrollment-table th {
+    background-color: #f8fafc;
+    color: #334155;
+    font-weight: 600;
+    text-align: left;
+    padding: 1rem;
+    border-bottom: 2px solid #e2e8f0;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.enrollment-table td {
+    padding: 1rem;
+    border-bottom: 1px solid #e2e8f0;
+    vertical-align: middle;
+    color: #475569;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.enrollment-table tr:last-child td {
+    border-bottom: none;
+}
+
+.enrollment-table tr:hover td {
+    background-color: #f8fafc;
+}
+
+.student-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.student-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #e0f2fe;
+    color: #0369a1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+}
+
+.action-form {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-accept, .btn-reject {
+    padding: 0.5rem 0.75rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.btn-accept {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.btn-accept:hover {
+    background-color: #bbf7d0;
+}
+
+.btn-reject {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+.btn-reject:hover {
+    background-color: #fecaca;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    margin-top: 1rem;
+}
+
+.empty-state i {
+    font-size: 3rem;
+    color: #cbd5e1;
+    margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+    color: #334155;
+    margin-bottom: 0.5rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 600;
+}
+
+.empty-state p {
+    color: #64748b;
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.flash-messages {
+    margin-bottom: 1.5rem;
+}
+
+.flash-message {
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.flash-message.success {
+    background-color: #dcfce7;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+}
+
+.flash-message.error {
+    background-color: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+.close-flash {
+    margin-left: auto;
+    cursor: pointer;
+    font-size: 1.1rem;
+    opacity: 0.7;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.close-flash:hover {
+    opacity: 1;
+}
+
+/* Responsive table */
+@media (max-width: 1200px) {
+    .enrollment-table {
+        display: block;
+    }
+
+    .enrollment-table thead {
+        display: none;
+    }
+
+    .enrollment-table tr {
+        display: block;
+        margin-bottom: 1rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+    }
+
+    .enrollment-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid #e2e8f0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .enrollment-table td:last-child {
+        border-bottom: none;
+    }
+
+    .enrollment-table td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #334155;
+        margin-right: 1rem;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .action-form {
+        justify-content: flex-end;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-section {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .search-box input {
+        width: 100%;
+    }
+
+    .action-form {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .btn-accept, .btn-reject {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 20px auto;
+    padding: 0;
+    width: 400px;
+    max-width: 90%;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+    padding: 15px 20px;
+    background-color: var(--tesda-blue);
+    color: white;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.modal-body {
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.modal-body p {
+    margin: 0;
+    font-size: 1rem;
+    color: #333;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.modal-footer {
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    flex: 1;
+    text-align: center;
+    font-size: 1rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.btn-yes {
+    background-color: var(--tesda-maroon);
+    color: white;
+}
+
+.btn-yes:hover {
+    background-color: #6b0000;
+}
+
+.btn-no {
+    background-color: #f1f5f9;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+}
+
+.btn-no:hover {
+    background-color: #e2e8f0;
+}
+
+/* Logout Modal Styles - Consistent across all pages */
+#logout-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+}
+
+#logout-modal .modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 0;
+    width: 400px;
+    max-width: 90%;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+#logout-modal .modal-header {
+    padding: 15px 20px;
+    background-color: var(--tesda-blue);
+    color: white;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    align-items: center;
+}
+
+#logout-modal .modal-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#logout-modal .modal-body {
+    padding: 20px;
+    text-align: center;
+}
+
+#logout-modal .modal-footer {
+    padding: 15px 20px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    border-top: 1px solid #eee;
+}
+
+#logout-modal .btn {
+    padding: 8px 20px;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    min-width: 80px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#logout-modal .btn-yes {
+    background-color: var(--tesda-maroon);
+    color: white;
+    border: none;
+}
+
+#logout-modal .btn-yes:hover {
+    background-color: #6b0000;
+}
+
+#logout-modal .btn-no {
+    background-color: #f1f5f9;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+}
+
+#logout-modal .btn-no:hover {
+    background-color: #e2e8f0;
+}
+
+/* Animation */
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#logout-modal[style*="display: flex"] .modal-content {
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .form-columns {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 768px) {
+    .time-inputs {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .date-inputs {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .save-btn, .reset-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}

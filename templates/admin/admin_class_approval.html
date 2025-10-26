@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class Approval</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin/admin_class_approval.css') }}" />
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/lsef_logo.png') }}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <!-- Define URLs for JavaScript -->
+    <script>
+        window.appUrls = {
+            // Add any specific URLs needed for class approval
+        };
+    </script>
+</head>
+<body>
+    <!-- New Navigation Start -->
+    <div class="nav-container">
+        <!-- Top Navigation -->
+        <div class="top-nav">
+            <div class="nav-left">
+                <a href="{{ url_for('admin_homepage') }}"><i class="fas fa-home"></i> Home</a>
+                <a href="{{ url_for('admin_user_management') }}"><i class="fas fa-users-cog"></i> User Management</a>
+                <a href="{{ url_for('admin_class_management.view_active_classes') }}"><i class="fas fa-users"></i> Class Management</a>
+                <a href="{{ url_for('admin_courses_approval.view_pending_courses') }}"><i class="fas fa-book"></i> Courses</a>
+                <a href="{{ url_for('admin_verified_req.view_requirements') }}"><i class="fas fa-user-check"></i> Verify Account</a>
+            </div>
+            <div class="nav-right"></div>
+        </div>
+        
+        <!-- Brand Section -->
+        <div class="brand-section">
+            <div class="brand-content">
+                <div class="brand-name">LSEF TESDA</div>
+                <div class="logo-container">
+                    <img src="{{ url_for('static', filename='img/lsef_logo.png') }}" alt="LSEF Logo">
+                    <img src="{{ url_for('static', filename='img/tesda_logo.png') }}" alt="TESDA Logo">
+                </div>
+            </div>
+            
+            <div class="user-section">
+                <div class="profile-dropdown">
+                    <img src="{{ url_for('static', filename='uploads/profile_pictures/' + (profile_picture or 'default.png')) }}" alt="Profile" class="profile-img">
+                    <div class="dropdown-menu">
+                        <a href="{{ url_for('admin_profile') }}"><i class="fas fa-user-circle"></i> My Profile</a>
+                        <a href="#"><i class="fas fa-bookmark"></i> Contact Us</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="logout-btn" id="logout-trigger"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Class Management Subnav -->
+        <nav class="courses-subnav">
+            <div class="subnav-right">
+                <a href="{{ url_for('admin_class_management.view_active_classes') }}"><i class="fas fa-users"></i> Class Management</a>
+                <a href="{{ url_for('admin_class_creation.create_class') }}"><i class="fas fa-plus-circle"></i> Class Creation</a>
+                <a href="{{ url_for('admin_edit_class.view_editable_classes') }}"><i class="fas fa-edit"></i> Edit Class</a>
+                <a href="{{ url_for('admin_class_approval.view_pending_classes') }}" class="active"><i class="fas fa-check-circle"></i> Class Approval</a>
+                <a href="{{ url_for('admin_class_edit_req.view_class_edit_requests') }}"><i class="fas fa-pencil-alt"></i> Class Edit Request</a>
+            </div>
+        </nav>
+    </div>
+    <!-- New Navigation End -->
+
+    <!-- Logout Confirmation Modal -->
+    <div class="modal" id="logout-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-sign-out-alt"></i> Confirm Logout</h3>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to logout?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-yes" id="confirm-logout">Yes</button>
+                <button class="btn btn-no close-modal">No</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Details Modal -->
+    <div id="viewDetailsModal" class="modal">
+        <div class="modal-content large-modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-eye"></i> Class Details</h3>
+            </div>
+            <div class="modal-body">
+                <div class="class-details-container">
+                    <div class="details-section">
+                        <h4><i class="fas fa-info-circle"></i> Basic Information</h4>
+                        <div class="details-grid">
+                            <div class="detail-item">
+                                <label>Class Title:</label>
+                                <span id="detail-class-title"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Course:</label>
+                                <span id="detail-course"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>School Year:</label>
+                                <span id="detail-school-year"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Batch:</label>
+                                <span id="detail-batch"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="details-section">
+                        <h4><i class="fas fa-user-tie"></i> Instructor Information</h4>
+                        <div class="details-grid">
+                            <div class="detail-item">
+                                <label>Instructor Name:</label>
+                                <span id="detail-instructor"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="details-section">
+                        <h4><i class="fas fa-map-marker-alt"></i> Location Information</h4>
+                        <div class="details-grid">
+                            <div class="detail-item">
+                                <label>Venue:</label>
+                                <span id="detail-venue"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Max Students:</label>
+                                <span id="detail-max-students"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="details-section">
+                        <h4><i class="fas fa-calendar-check"></i> Schedule Information</h4>
+                        <div class="details-grid">
+                            <div class="detail-item">
+                                <label>Schedule:</label>
+                                <span id="detail-schedule"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Start Date:</label>
+                                <span id="detail-start-date"></span>
+                            </div>
+                            <div class="detail-item">
+                                <label>End Date:</label>
+                                <span id="detail-end-date"></span>
+                            </div>
+                            <div class="detail-item full-width">
+                                <label>Days & Times:</label>
+                                <div id="detail-days-times" class="days-times-container"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="details-section">
+                        <h4><i class="fas fa-clipboard-list"></i> Additional Information</h4>
+                        <div class="details-grid">
+                            <div class="detail-item full-width">
+                                <label>Prerequisites:</label>
+                                <span id="detail-prerequisites"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-approve" id="modal-approve-btn">
+                    <i class="fas fa-check"></i> Approve Class
+                </button>
+                <button class="btn btn-reject" id="modal-reject-btn">
+                    <i class="fas fa-times"></i> Reject Class
+                </button>
+                <button class="btn btn-cancel" id="modal-cancel-btn">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="container">
+            <div class="page-header">
+                <h1><i class="fas fa-check-circle"></i> Pending Class Approvals</h1>
+                <div class="breadcrumb">
+                    <span>Class Management</span> / <span>Class Approval</span>
+                </div>
+                <div class="search-filter">
+                    <label for="courseFilter"><i class="fas fa-filter"></i> Filter by Course:</label>
+                    <select id="courseFilter" onchange="filterTable()">
+                        <option value="All">All Courses</option>
+                        {% set course_titles = [] %}
+                        {% for cls in classes %}
+                            {% if cls.course_title not in course_titles %}
+                                <option value="{{ cls.course_title }}">{{ cls.course_title }}</option>
+                                {% set _ = course_titles.append(cls.course_title) %}
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="table-wrapper">
+                {% if classes %}
+                    <table id="classTable">
+                        <thead>
+                            <tr>
+                                <th>Class Title</th>
+                                <th>Course</th>
+                                <th>Instructor</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cls in classes %}
+                                <tr id="class-{{ cls.class_id }}" data-class='{{ cls|tojson|safe }}'>
+                                    <td>{{ cls.class_title }}</td>
+                                    <td>{{ cls.course_title }}</td>
+                                    <td>{{ cls.first_name }} {{ cls.last_name }}</td>
+                                    <td class="action-buttons">
+                                        <button class="btn-view" data-id="{{ cls.class_id }}">
+                                            <i class="fas fa-eye"></i> View Details
+                                        </button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <div class="no-data">
+                        <i class="fas fa-check-circle"></i>
+                        <p>No pending classes for approval.</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div id="responseMessage" class="response-message"></div>
+        </div>
+    </div>
+
+    <script>
+        // Logout Modal Functionality
+        $(document).ready(function() {
+            // Open modal when logout is clicked
+            $('#logout-trigger').click(function(e) {
+                e.preventDefault();
+                $('#logout-modal').fadeIn();
+            });
+            
+            // Close modal when No is clicked
+            $('.close-modal').click(function() {
+                $('#logout-modal').fadeOut();
+            });
+            
+            // Close modal when clicking outside
+            $(window).click(function(e) {
+                if ($(e.target).is('#logout-modal')) {
+                    $('#logout-modal').fadeOut();
+                }
+                if ($(e.target).is('#viewDetailsModal')) {
+                    closeViewModal();
+                }
+            });
+            
+            // Confirm logout
+            $('#confirm-logout').click(function() {
+                window.location.href = "{{ url_for('login.logout') }}";
+            });
+        });
+    </script>
+    <script src="{{ url_for('static', filename='js/admin/admin_class_approval.js') }}"></script>
+</body>
+</html>

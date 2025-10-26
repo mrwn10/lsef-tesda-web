@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Courses View</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/staff/staff_courses_view.css') }}" />
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/lsef_logo.png') }}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <!-- New Navigation Start -->
+    <div class="nav-container">
+        <!-- Top Navigation -->
+        <div class="top-nav">
+            <div class="nav-left">
+                <a href="{{ url_for('staff_homepage') }}"><i class="fas fa-home"></i> Home</a>
+                <a href="{{ url_for('staff_class_management') }}"><i class="fas fa-users"></i> Class Management</a>
+                <a href="{{ url_for('staff_courses_creation') }}"><i class="fas fa-book-open"></i> Courses</a>
+                <a href="{{ url_for('staff_materials.materials') }}"><i class="fas fa-tasks"></i> Materials</a>
+            </div>
+            <div class="nav-right"></div>
+        </div>
+        
+        <!-- Sub Navigation -->
+        <div class="sub-nav">
+            <div class="brand-section">
+                <div class="brand-name">LSEF TESDA</div>
+                <div class="logo-container">
+                    <img src="{{ url_for('static', filename='img/lsef_logo.png') }}" alt="LSEF Logo">
+                    <img src="{{ url_for('static', filename='img/tesda_logo.png') }}" alt="TESDA Logo">
+                </div>
+            </div>
+            
+            <div class="user-section">
+                <div class="profile-dropdown">
+                    <img src="{{ url_for('static', filename='uploads/profile_pictures/' + (profile_picture or 'default.png')) }}" alt="Profile" class="profile-img">
+
+                    <div class="dropdown-menu">
+                        <a href="{{ url_for('staff_profile') }}"><i class="fas fa-user-circle"></i> My Profile</a>
+                        <a href="#"><i class="fas fa-bookmark"></i> Contact Us</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="logout-btn" id="logout-trigger"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- New Navigation End -->
+
+    <!-- Logout Confirmation Modal -->
+    <div class="modal" id="logout-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-sign-out-alt"></i> Confirm Logout</h3>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to logout?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-yes" id="confirm-logout">Yes</button>
+                <button class="btn btn-no close-modal">No</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Courses Sub Navigation -->
+    <nav class="courses-subnav">
+        <div class="subnav-right">
+            <a href="{{ url_for('staff_courses_creation') }}">Courses Creation</a>
+            <a href="{{ url_for('staff_courses_edit_req.view_active_courses') }}">Courses Edit Request</a>
+            <a href="{{ url_for('staff_courses_view.view_staff_active_courses') }}" class="active">Courses View</a>
+        </div>
+    </nav>
+
+    <main class="content">
+        <div class="header-container">
+            <h1>Active Courses</h1>
+            <div class="search-filter-container">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Search courses...">
+                </div>
+                <div class="filter-dropdown">
+                    <select id="statusFilter">
+                        <option value="">All Status</option>
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <div class="table-container">
+            {% if courses %}
+                <table class="courses-table">
+                    <thead>
+                        <tr>
+                            <th>Course Code <i class="fas fa-sort"></i></th>
+                            <th>Title <i class="fas fa-sort"></i></th>
+                            <th>Category <i class="fas fa-sort"></i></th>
+                            <th>Target Audience <i class="fas fa-sort"></i></th>
+                            <th>Fee <i class="fas fa-sort"></i></th>
+                            <th>Max Students <i class="fas fa-sort"></i></th>
+                            <th>Status <i class="fas fa-sort"></i></th>
+                            <th>Date Created <i class="fas fa-sort"></i></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for course in courses %}
+                            <tr>
+                                <td>{{ course.course_code }}</td>
+                                <td>{{ course.course_title }}</td>
+                                <td>{{ course.course_category }}</td>
+                                <td>{{ course.target_audience }}</td>
+                                <td>₱{{ "{:,.2f}".format(course.course_fee) }}</td>
+                                <td>{{ course.max_students }}</td>
+                                <td>
+                                    <span class="status-badge status-{{ course.course_status.lower() }}">
+                                        {{ course.course_status }}
+                                    </span>
+                                </td>
+                                <td>{{ course.date_created.strftime('%Y-%m-%d') if course.date_created else 'N/A' }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="pagination-container">
+                    <div class="pagination-info">
+                        Showing <span id="showingCount">{{ courses|length }}</span> of {{ courses|length }} entries
+                    </div>
+                    <div class="pagination-controls">
+                        <button class="pagination-btn" disabled><i class="fas fa-chevron-left"></i></button>
+                        <span class="current-page">1</span>
+                        <button class="pagination-btn" disabled><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            {% else %}
+                <div class="no-data-message">
+                    <i class="fas fa-book-open"></i>
+                    <p>No active courses found.</p>
+                    <a href="{{ url_for('staff_courses_creation') }}" class="btn-create-course">
+                        <i class="fas fa-plus"></i> Create New Course
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </main>
+
+    <script>
+        // Logout Modal Functionality
+        $(document).ready(function() {
+            // Open modal when logout is clicked
+            $('#logout-trigger').click(function(e) {
+                e.preventDefault();
+                $('#logout-modal').fadeIn();
+            });
+            
+            // Close modal when X or No is clicked
+            $('.close-modal').click(function() {
+                $('#logout-modal').fadeOut();
+            });
+            
+            // Close modal when clicking outside
+            $(window).click(function(e) {
+                if ($(e.target).is('#logout-modal')) {
+                    $('#logout-modal').fadeOut();
+                }
+            });
+            
+            // Confirm logout
+            $('#confirm-logout').click(function() {
+                window.location.href = "{{ url_for('login.logout') }}";
+            });
+        });
+    </script>
+    
+    <script src="{{ url_for('static', filename='js/staff/staff_course_view.js') }}"></script>
+</body>
+</html>

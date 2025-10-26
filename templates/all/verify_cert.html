@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate Verification - TESDA LSEF</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/verify_cert.css') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/lsef_logo.png') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="page-container">
+        <!-- Top Navigation Bar -->
+        <nav class="top-nav">
+            <div class="container">
+                <div class="social-links">
+                    <a href="https://www.facebook.com/lsef.tesda" target="_blank" aria-label="Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" target="_blank" aria-label="Twitter">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" target="_blank" aria-label="YouTube">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                </div>
+                <div class="utility-links">
+                    <a href="{{ url_for('landing') }}">Home</a>
+                    <a href="{{ url_for('program') }}">Programs</a>
+                    <a href="{{ url_for('verify_cert') }}">Certificate Verification</a>
+                    <a href="{{ url_for('register') }}">Register</a>
+                    <a href="{{ url_for('login.login') }}" class="login-link">Login</a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Navigation Bar -->
+        <nav class="main-nav">
+            <div class="container">
+                <div class="brand">
+                    <img src="{{ url_for('static', filename='img/lsef_logo.png') }}" alt="TESDA Logo" class="logo">
+                    <img src="{{ url_for('static', filename='img/tesda_logo.png') }}" alt="TESDA Logo" class="logo">
+                    <span>TESDA LSEF</span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Verification Section -->
+        <main class="verification-section">
+            <div class="container">
+                <div class="verification-card">
+                    <div class="verification-header">
+                        <i class="fas fa-certificate"></i>
+                        <h1>Certificate Verification</h1>
+                    </div>
+                    <p class="verification-description">Enter the <strong>certificate hash</strong> provided on your certificate to verify its authenticity. This system allows you to confirm that your TESDA certificate is valid and officially recognized.</p>
+                    
+                    <form action="{{ url_for('verify_cert.verify_cert_check') }}" method="POST" class="verification-form">
+                        <div class="form-group">
+                            <label for="cert_hash">Certificate Hash</label>
+                            <input type="text" id="cert_hash" name="cert_hash" placeholder="Enter your certificate hash code" required>
+                            <div class="form-hint">
+                                <i class="fas fa-info-circle"></i>
+                                The hash is typically a 16-64 character code found at the bottom of your certificate
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-check"></i> Verify Certificate
+                        </button>
+                    </form>
+                    
+                    <div class="verification-help">
+                        <h3><i class="fas fa-question-circle"></i> Need Help?</h3>
+                        <p>If you're having trouble locating your certificate hash or experiencing issues with verification, please contact our support team.</p>
+                        <div class="contact-info">
+                            <p><i class="fas fa-envelope"></i> lseftesda@gmail.com</p>
+                            <p><i class="fas fa-phone"></i> 0942 808 5733</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-about">
+                        <div class="footer-brand">
+                            <img src="{{ url_for('static', filename='img/tesda_logo.png') }}" alt="TESDA Logo" class="footer-logo">
+                            <span>TESDA LSEF</span>
+                        </div>
+                        <p>Empowering individuals through quality technical education and skills development.</p>
+                        <div class="footer-social">
+                            <a href="https://www.facebook.com/lsef.tesda" target="_blank" aria-label="Facebook">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" target="_blank" aria-label="Twitter">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" target="_blank" aria-label="Instagram">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="#" target="_blank" aria-label="YouTube">
+                                <i class="fab fa-youtube"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="footer-links">
+                        <h3>Programs</h3>
+                        <ul>
+                            <li><a href="#">Bookkeeping NC III</a></li>
+                            <li><a href="#">Food and Beverages Services NC II</a></li>
+                            <li><a href="#">Bread and Pastry Production NC II</a></li>
+                            <li><a href="#">Housekeeping NC II</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-links">
+                        <h3>FAQs</h3>
+                        <ul>
+                            <li><a href="#">How to enroll?</a></li>
+                            <li><a href="#">What are the requirements?</a></li>
+                            <li><a href="#">How long are the programs?</a></li>
+                            <li><a href="#">Is financial aid available?</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-contact">
+                        <h3>Contact Us</h3>
+                        <ul>
+                            <li>
+                                <i class="fas fa-phone-alt"></i>
+                                <span>0942 808 5733</span>
+                            </li>
+                            <li>
+                                <i class="fas fa-envelope"></i>
+                                <a href="mailto:lseftesda@gmail.com">lseftesda@gmail.com</a>
+                            </li>
+                            <li>
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>A. Mabini St. Poblacion II Sta. Cruz, Laguna</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="container">
+                    <p>&copy; 2025 TESDA LSEF. All rights reserved.</p>
+                    <div class="legal-links">
+                        <a href="#">Privacy Policy</a>
+                        <span>•</span>
+                        <a href="#">Terms of Service</a>
+                        <span>•</span>
+                        <a href="#">Sitemap</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Back to Top Button -->
+    <button id="backToTop" class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script>
+        // Back to top button functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const backToTopButton = document.getElementById('backToTop');
+            
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    backToTopButton.classList.add('visible');
+                } else {
+                    backToTopButton.classList.remove('visible');
+                }
+            });
+            
+            backToTopButton.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

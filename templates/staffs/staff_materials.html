@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Materials</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/staff/staff_materials.css') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/lsef_logo.png') }}" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <!-- Navigation - Same as your other pages -->
+    <div class="nav-container">
+        <div class="top-nav">
+            <div class="nav-left">
+                <a href="{{ url_for('staff_homepage') }}"><i class="fas fa-home"></i> Home</a>
+                <a href="{{ url_for('staff_class_management') }}"><i class="fas fa-users"></i> Class Management</a>
+                <a href="{{ url_for('staff_courses_creation') }}"><i class="fas fa-book-open"></i> Courses</a>
+                <a href="{{ url_for('staff_materials.materials') }}"><i class="fas fa-tasks"></i> Materials</a>
+            </div>
+            <div class="nav-right"></div>
+        </div>
+        
+        <div class="sub-nav">
+            <div class="brand-section">
+                <div class="brand-name">LSEF TESDA</div>
+                <div class="logo-container">
+                    <img src="{{ url_for('static', filename='img/lsef_logo.png') }}" alt="LSEF Logo">
+                    <img src="{{ url_for('static', filename='img/tesda_logo.png') }}" alt="TESDA Logo">
+                </div>
+            </div>
+            
+            <div class="user-section">
+                <div class="profile-dropdown">
+                    <img src="{{ url_for('static', filename='uploads/profile_pictures/' + (profile_picture or 'default.png')) }}" alt="Profile" class="profile-img">
+                    <div class="dropdown-menu">
+                        <a href="{{ url_for('staff_profile') }}"><i class="fas fa-user-circle"></i> My Profile</a>
+                        <a href="#"><i class="fas fa-bookmark"></i> Contact Us</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="logout-btn" id="logout-trigger"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logout Modal -->
+    <div class="modal" id="logout-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-sign-out-alt"></i> Confirm Logout</h3>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to logout?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-yes" id="confirm-logout">Yes</button>
+                <button class="btn btn-no close-modal">No</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content - Your original backend forms and structure with better styling -->
+    <div class="main-container">
+        <div class="content-header">
+            <h1><i class="fas fa-tasks me-2"></i>Materials & Announcements</h1>
+        </div>
+
+        <!-- Your original upload form with better styling -->
+        <div class="content-section">
+            <h2>Upload Materials / Announcements</h2>
+            
+            <form method="POST" action="{{ url_for('staff_materials.materials') }}" enctype="multipart/form-data" class="styled-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" name="title" required class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea name="description" class="form-control"></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Type</label>
+                        <select name="type" required class="form-select">
+                            <option value="classwork">Classwork</option>
+                            <option value="announcement">Announcement</option>
+                            <option value="resource">Resource</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Class (optional for announcement)</label>
+                        <select name="class_id" class="form-select">
+                            <option value="">-- None --</option>
+                            {% for c in classes %}
+                                <option value="{{ c.class_id }}">{{ c.class_title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Upload File (optional)</label>
+                    <input type="file" name="file" class="form-control">
+                </div>
+
+                <button type="submit" class="btn btn-primary">Upload</button>
+            </form>
+        </div>
+
+        <!-- Your original materials list with better styling -->
+        <div class="content-section">
+            <h2>Uploaded Materials & Announcements</h2>
+
+            {% for m in materials %}
+                <div class="material-card">
+                    <div class="material-header">
+                        <h3>
+                            {% if m.type == "classwork" %}
+                                <a href="{{ url_for('staff_materials.check_submissions', material_id=m.material_id) }}" class="material-link">
+                                    {{ m.title }} <span class="check-submissions">(Check Submissions)</span>
+                                </a>
+                            {% else %}
+                                {{ m.title }}
+                            {% endif %}
+                        </h3>
+                        <div class="material-meta">
+                            <span class="material-type type-{{ m.type }}">{{ m.type }}</span>
+                            <span class="instructor">{{ m.instructor_name }}</span>
+                            <span class="date">{{ m.date_uploaded }}</span>
+                            {% if m.class_title %}
+                                <span class="class">{{ m.class_title }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {% if m.description %}
+                        <p class="material-description"><strong>Description:</strong> {{ m.description }}</p>
+                    {% endif %}
+
+                    {% if m.stored_filename %}
+                        <div class="file-actions">
+                            <a href="{{ url_for('static', filename='uploads/materials/' ~ m.stored_filename) }}" download class="btn-download">Download</a>
+                            <button type="button" onclick="togglePreview('preview-{{ loop.index }}')" class="btn-preview">Preview</button>
+                            <button type="button" onclick="toggleEdit('edit-{{ loop.index }}')" class="btn-edit">Edit</button>
+                        </div>
+
+                        <!-- Your original preview section -->
+                        <div id="preview-{{ loop.index }}" class="preview-section">
+                            {% if m.stored_filename.endswith('.pdf') %}
+                                <iframe src="{{ url_for('staff_materials.preview_material', filename=m.stored_filename) }}"
+                                        width="100%" height="400px"></iframe>
+                            {% elif m.stored_filename.endswith('.jpg') or m.stored_filename.endswith('.png') %}
+                                <img src="{{ url_for('staff_materials.preview_material', filename=m.stored_filename) }}"
+                                    alt="Preview" class="preview-image">
+                            {% else %}
+                                <iframe src="https://docs.google.com/gview?url={{ request.host_url }}materials/preview/{{ m.stored_filename }}&embedded=true"
+                                        style="width:100%; height:400px;" frameborder="0"></iframe>
+                            {% endif %}
+                        </div>
+
+                        <!-- Your original edit form -->
+                        <div id="edit-{{ loop.index }}" class="edit-form">
+                            <form method="POST" action="{{ url_for('staff_materials.materials') }}" enctype="multipart/form-data" class="styled-form">
+                                <input type="hidden" name="material_id" value="{{ m.material_id }}">
+                                
+                                <div class="form-group">
+                                    <label>Title</label>
+                                    <input type="text" name="title" value="{{ m.title }}" required class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Description</label>
+                                    <textarea name="description" class="form-control">{{ m.description }}</textarea>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Type</label>
+                                        <select name="type" required class="form-select">
+                                            <option value="classwork" {% if m.type == 'classwork' %}selected{% endif %}>Classwork</option>
+                                            <option value="announcement" {% if m.type == 'announcement' %}selected{% endif %}>Announcement</option>
+                                            <option value="resource" {% if m.type == 'resource' %}selected{% endif %}>Resource</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Class</label>
+                                        <select name="class_id" class="form-select">
+                                            <option value="">-- None --</option>
+                                            {% for c in classes %}
+                                                <option value="{{ c.class_id }}" {% if m.class_id == c.class_id %}selected{% endif %}>{{ c.class_title }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Replace File (optional)</label>
+                                    <input type="file" name="file" class="form-control">
+                                </div>
+
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                            </form>
+                        </div>
+                    {% endif %}
+
+                    {% if m.students %}
+                        <div class="students-section">
+                            <strong>Enrolled Students:</strong>
+                            <ul class="students-list">
+                                {% for s in m.students %}
+                                    <li>{{ s.first_name }} {{ s.last_name }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Your original JavaScript functions
+        function togglePreview(id) {
+            const el = document.getElementById(id);
+            el.style.display = (el.style.display === "none") ? "block" : "none";
+        }
+        
+        function toggleEdit(id) {
+            const el = document.getElementById(id);
+            el.style.display = (el.style.display === "none") ? "block" : "none";
+        }
+
+        // Logout modal functionality (same as your other pages)
+        document.addEventListener('DOMContentLoaded', function() {
+            $('#logout-trigger').click(function(e) {
+                e.preventDefault();
+                $('#logout-modal').fadeIn();
+            });
+            
+            $('.close-modal').click(function() {
+                $('#logout-modal').fadeOut();
+            });
+            
+            $(window).click(function(e) {
+                if ($(e.target).is('#logout-modal')) {
+                    $('#logout-modal').fadeOut();
+                }
+            });
+            
+            $('#confirm-logout').click(function() {
+                window.location.href = "{{ url_for('login.logout') }}";
+            });
+        });
+    </script>
+</body>
+</html>

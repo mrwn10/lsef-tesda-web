@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class Creation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/staff/staff_class_creation.css') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/lsef_logo.png') }}" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <!-- New Navigation Start -->
+    <div class="nav-container">
+        <!-- Top Navigation -->
+        <div class="top-nav">
+            <div class="nav-left">
+                <a href="{{ url_for('staff_homepage') }}"><i class="fas fa-home"></i> Home</a>
+                <a href="{{ url_for('staff_class_management') }}"><i class="fas fa-users"></i> Class Management</a>
+                <a href="{{ url_for('staff_courses_creation') }}"><i class="fas fa-book-open"></i> Courses</a>
+                <a href="{{ url_for('staff_materials.materials') }}"><i class="fas fa-tasks"></i> Materials</a>
+            </div>
+            <div class="nav-right"></div>
+        </div>
+        
+        <!-- Sub Navigation -->
+        <div class="sub-nav">
+            <div class="brand-section">
+                <div class="brand-name">LSEF TESDA</div>
+                <div class="logo-container">
+                    <img src="{{ url_for('static', filename='img/lsef_logo.png') }}" alt="LSEF Logo">
+                    <img src="{{ url_for('static', filename='img/tesda_logo.png') }}" alt="TESDA Logo">
+                </div>
+            </div>
+            
+            <div class="user-section">
+                <div class="profile-dropdown">
+                    <img src="{{ url_for('static', filename='uploads/profile_pictures/' + (profile_picture or 'default.png')) }}" alt="Profile" class="profile-img">
+                    <div class="dropdown-menu">
+                        <a href="{{ url_for('staff_profile') }}"><i class="fas fa-user-circle"></i> My Profile</a>
+                        <a href="#"><i class="fas fa-bookmark"></i> Contact Us</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="logout-btn" id="logout-trigger"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- New Navigation End -->
+
+    <!-- Class Management Subnav -->
+    <nav class="courses-subnav">
+        <div class="subnav-right">
+            <a href="{{ url_for('staff_class_management') }}">Class Management</a>
+            <a href="{{ url_for('staff_class_creation.create_class') }}" class="active">Class Creation</a>
+            <a href="{{ url_for('staff_class_edit_req') }}">Class Edit Request</a>
+            <a href="{{ url_for('staff_enrollment_acceptance.view_enrollment_requests') }}">Enrollment Acceptance</a>
+            <a href="{{ url_for('staff_class_student_management') }}">Student Management</a>
+        </div>
+    </nav>
+
+    <!-- Logout Confirmation Modal -->
+    <div class="modal" id="logout-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-sign-out-alt"></i> Confirm Logout</h3>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to logout?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-yes" id="confirm-logout">Yes</button>
+                <button class="btn btn-no close-modal">No</button>
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <div class="page-header">
+            <h1><i class="fas fa-chalkboard-teacher"></i> Create New Class</h1>
+            <div class="breadcrumb">
+                <span>Class Management</span> / <span>Class Creation</span>
+            </div>
+        </div>
+        
+        <div id="message-container">
+            <div id="message-content" class="message"></div>
+        </div>
+
+        <form id="classCreationForm" class="class-creation-form" enctype="multipart/form-data">
+            <div class="form-columns">
+                <!-- Left Column -->
+                <div class="form-column">
+                    <!-- Course Information -->
+                    <div class="form-section">
+                        <h2><i class="fas fa-book"></i> Course Information</h2>
+                        
+                        <div class="form-group">
+                            <label for="course_id">Course</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-graduation-cap"></i>
+                                <select id="course_id" name="course_id" required>
+                                    <option value="" selected disabled>Select Course</option>
+                                    {% if courses %}
+                                        {% for course in courses %}
+                                            <option value="{{ course.course_id }}">{{ course.course_title }}</option>
+                                        {% endfor %}
+                                    {% else %}
+                                        <option value="" disabled>No active courses available</option>
+                                    {% endif %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="class_title">Class Title</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-heading"></i>
+                                <input type="text" id="class_title" name="class_title" placeholder="Enter class title" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="school_year">School Year</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                                <input type="text" id="school_year" name="school_year" placeholder="e.g. 2023-2024" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="batch">Batch</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-layer-group"></i>
+                                <input type="text" id="batch" name="batch" placeholder="e.g. Batch 2023">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Instructor Information -->
+                    <div class="form-section">
+                        <h2><i class="fas fa-user-tie"></i> Instructor Information</h2>
+                        
+                        <div class="form-group">
+                            <label for="instructor_name">Instructor Name</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-user"></i>
+                                <input type="text" id="instructor_name" name="instructor_name" placeholder="Enter instructor name" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="venue">Venue</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <input type="text" id="venue" name="venue" placeholder="Enter venue" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="max_students">Maximum Students</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-users"></i>
+                                <input type="number" id="max_students" name="max_students" value="25" min="25" max="25" readonly required>
+                            </div>
+                            <small class="form-text">Maximum students is fixed at 25</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="form-column">
+                    <!-- Schedule Information -->
+                    <div class="form-section">
+                        <h2><i class="fas fa-calendar-check"></i> Schedule Information</h2>
+                        
+                        <div class="form-group">
+                            <label>Select Days</label>
+                            <div class="day-checkboxes">
+                                <div class="day-checkbox">
+                                    <input type="checkbox" id="monday" name="days" value="Monday" class="d-none day-selector">
+                                    <label for="monday"><i class="fas fa-calendar-day"></i> Mon</label>
+                                </div>
+                                <div class="day-checkbox">
+                                    <input type="checkbox" id="tuesday" name="days" value="Tuesday" class="d-none day-selector">
+                                    <label for="tuesday"><i class="fas fa-calendar-day"></i> Tue</label>
+                                </div>
+                                <div class="day-checkbox">
+                                    <input type="checkbox" id="wednesday" name="days" value="Wednesday" class="d-none day-selector">
+                                    <label for="wednesday"><i class="fas fa-calendar-day"></i> Wed</label>
+                                </div>
+                                <div class="day-checkbox">
+                                    <input type="checkbox" id="thursday" name="days" value="Thursday" class="d-none day-selector">
+                                    <label for="thursday"><i class="fas fa-calendar-day"></i> Thu</label>
+                                </div>
+                                <div class="day-checkbox">
+                                    <input type="checkbox" id="friday" name="days" value="Friday" class="d-none day-selector">
+                                    <label for="friday"><i class="fas fa-calendar-day"></i> Fri</label>
+                                </div>
+                                <div class="day-checkbox">
+                                    <input type="checkbox" id="saturday" name="days" value="Saturday" class="d-none day-selector">
+                                    <label for="saturday"><i class="fas fa-calendar-day"></i> Sat</label>
+                                </div>
+                                <div class="day-checkbox">
+                                    <input type="checkbox" id="sunday" name="days" value="Sunday" class="d-none day-selector">
+                                    <label for="sunday"><i class="fas fa-calendar-day"></i> Sun</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="day-time-slots" id="dayTimeSlots">
+                            <div class="no-days-selected">
+                                <i class="far fa-calendar-plus"></i>
+                                <p>Select days above to add time slots</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group date-range-group">
+                            <label>Class Date Range</label>
+                            <div class="date-inputs">
+                                <div class="form-group">
+                                    <label for="start_date">Start Date</label>
+                                    <div class="input-with-icon">
+                                        <i class="fas fa-calendar-plus"></i>
+                                        <input type="date" id="start_date" name="start_date" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="end_date">End Date</label>
+                                    <div class="input-with-icon">
+                                        <i class="fas fa-calendar-minus"></i>
+                                        <input type="date" id="end_date" name="end_date" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Information -->
+                    <div class="form-section">
+                        <h2><i class="fas fa-info-circle"></i> Additional Information</h2>
+                        
+                        <div class="form-group">
+                            <label for="prerequisites">Prerequisites</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-clipboard-list"></i>
+                                <textarea id="prerequisites" name="prerequisites" rows="3" placeholder="Optional prerequisites"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hidden fields -->
+            <input type="hidden" id="days_of_week" name="days_of_week">
+            <input type="hidden" id="schedule" name="schedule">
+
+            <div class="form-actions">
+                <button type="reset" class="reset-btn">
+                    <i class="fas fa-undo"></i> Reset Form
+                </button>
+                <button type="submit" class="save-btn">
+                    <i class="fas fa-save"></i> Create Class
+                </button>
+            </div>
+        </form>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Logout Modal Functionality
+            $('#logout-trigger').click(function(e) {
+                e.preventDefault();
+                $('#logout-modal').fadeIn();
+            });
+            
+            $('.close-modal').click(function() {
+                $('#logout-modal').fadeOut();
+            });
+            
+            $(window).click(function(e) {
+                if ($(e.target).is('#logout-modal')) {
+                    $('#logout-modal').fadeOut();
+                }
+            });
+            
+            $('#confirm-logout').click(function() {
+                window.location.href = "{{ url_for('login.logout') }}";
+            });
+        });
+    </script>
+    <script src="{{ url_for('static', filename='js/staff/staff_class_creation.js') }}"></script>
+</body>
+</html>

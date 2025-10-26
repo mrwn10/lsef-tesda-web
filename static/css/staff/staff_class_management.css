@@ -1,0 +1,943 @@
+/* ===== Global Font Consistency ===== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8fafc;
+    line-height: 1.6;
+    color: #333;
+}
+
+/* Font consistency with staff homepage */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Ensure all text elements use the same font */
+h1, h2, h3, h4, h5, h6,
+p, span, div,
+.btn, .form-select, .form-control,
+table, th, td,
+.modal-title, .modal-body,
+.nav-link, .brand-name,
+.top-nav a,
+.courses-subnav a,
+.header-section h1,
+.search-box input,
+.filter-dropdown,
+.class-table,
+.status-badge,
+.action-btn,
+.empty-state p,
+.create-class-btn,
+.pagination-btn,
+.quick-action-btn {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Specific styling for brand name to match staff homepage */
+.brand-name {
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+/* Ensure table content uses consistent font */
+.class-table {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Modal content font consistency */
+.modal-content {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* ===== New Navigation Styles ===== */
+:root {
+    --tesda-blue: #003366;
+    --tesda-maroon: #800000;
+    --tesda-gold: #FFD700;
+    --tesda-white: #FFFFFF;
+    --tesda-light-blue: #E6F0FA;
+    --tesda-dark-blue: #002244;
+    --tesda-medium-gray: #dee2e6;
+    --tesda-dark-gray: #495057;
+    --tesda-light-gray: #f8f9fa;
+}
+
+/* Navigation Container */
+.nav-container {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Top Navigation */
+.top-nav {
+    background: linear-gradient(to right, var(--tesda-blue), var(--tesda-dark-blue));
+    padding: 0 5%;
+    display: flex;
+    align-items: center;
+    color: var(--tesda-white);
+    height: 60px;
+}
+
+.nav-left, .nav-right {
+    display: flex;
+    align-items: center;
+}
+
+.nav-right {
+    margin-left: auto;
+}
+
+.top-nav a {
+    color: var(--tesda-white);
+    text-decoration: none;
+    padding: 0 20px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+    position: relative;
+    margin: 0 2px;
+}
+
+.top-nav a:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 4px 4px 0 0;
+}
+
+.top-nav a.active {
+    background-color: rgba(255, 255, 255, 0.25);
+    border-radius: 4px 4px 0 0;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+}
+
+.top-nav a i {
+    margin-right: 8px;
+    font-size: 1rem;
+}
+
+/* Sub Navigation */
+.sub-nav {
+    background: var(--tesda-white);
+    padding: 15px 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.brand-section {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.brand-name {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: var(--tesda-blue);
+    display: flex;
+    align-items: center;
+}
+
+.brand-name::before {
+    content: "";
+    display: inline-block;
+    width: 3px;
+    height: 35px;
+    background-color: var(--tesda-gold);
+    margin-right: 15px;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    padding: 5px 15px;
+    background-color: rgba(0, 0, 0, 0.02);
+    border-radius: 4px;
+    border-left: 3px solid var(--tesda-gold);
+}
+
+.logo-container img {
+    height: 40px;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.logo-container img:hover {
+    transform: scale(1.05);
+}
+
+.user-section {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+/* Profile Dropdown */
+.profile-dropdown {
+    position: relative;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.profile-img {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--tesda-gold);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: var(--tesda-white);
+    min-width: 220px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    display: none;
+    z-index: 1000;
+}
+
+.profile-dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+.dropdown-menu a {
+    color: #333;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+.dropdown-menu a:hover {
+    background-color: var(--tesda-light-blue);
+    color: var(--tesda-blue);
+}
+
+.dropdown-menu i {
+    width: 20px;
+    text-align: center;
+    color: var(--tesda-blue);
+}
+
+.dropdown-divider {
+    height: 1px;
+    background-color: #eee;
+    margin: 5px 0;
+}
+
+.logout-btn {
+    color: var(--tesda-maroon) !important;
+}
+
+.logout-btn i {
+    color: var(--tesda-maroon) !important;
+}
+
+/* Class Management Subnav */
+.class-subnav {
+    background-color: white;
+    padding: 0 5%;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 120px; /* Adjusted for the main nav height */
+    z-index: 90;
+    height: 50px;
+    border-top: 1px solid #f1f5f9;
+}
+
+.subnav-container {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.subnav-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    height: 100%;
+}
+
+.class-subnav a {
+    color: #475569;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 0 15px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.class-subnav a:hover {
+    color: var(--tesda-blue);
+    background-color: #f1f5f9;
+}
+
+.class-subnav a.active {
+    color: var(--tesda-blue);
+    background-color: #e0f2fe;
+}
+
+.class-subnav a.active:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: var(--tesda-blue);
+    border-radius: 3px 3px 0 0;
+}
+
+/* ===== Class Management Styles ===== */
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 30px 20px 40px;
+}
+
+.header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.header-section h1 {
+    color: var(--tesda-blue);
+    font-size: 28px;
+    margin: 0;
+    font-weight: 600;
+}
+
+/* Search and filter styles */
+.search-filter {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-box i {
+    position: absolute;
+    left: 12px;
+    color: #94a3b8;
+}
+
+.search-box input {
+    padding: 10px 15px 10px 40px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    width: 250px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.search-box input:focus {
+    outline: none;
+    border-color: var(--tesda-blue);
+    box-shadow: 0 0 0 3px rgba(0, 51, 160, 0.1);
+}
+
+.filter-dropdown {
+    padding: 10px 15px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #334155;
+    background-color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.filter-dropdown:focus {
+    outline: none;
+    border-color: var(--tesda-blue);
+}
+
+/* Table styles */
+.table-container {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    overflow-x: auto;
+    margin-bottom: 20px;
+}
+
+.class-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.class-table th {
+    background-color: #f8fafc;
+    color: #64748b;
+    font-weight: 600;
+    text-align: left;
+    padding: 15px;
+    border-bottom: 1px solid #e2e8f0;
+    white-space: nowrap;
+}
+
+.class-table td {
+    padding: 15px;
+    border-bottom: 1px solid #e2e8f0;
+    vertical-align: middle;
+}
+
+.class-table tr:last-child td {
+    border-bottom: none;
+}
+
+.class-table tr:hover {
+    background-color: #f8fafc;
+}
+
+.class-title {
+    font-weight: 600;
+    color: var(--tesda-blue);
+}
+
+.student-count {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.student-count .current {
+    font-weight: 600;
+    color: var(--tesda-blue);
+}
+
+.student-count .separator {
+    color: #cbd5e1;
+}
+
+.student-count .max {
+    color: #64748b;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.status-badge.active {
+    background-color: #e0f2fe;
+    color: #0369a1;
+}
+
+.status-badge.upcoming {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.status-badge.completed {
+    background-color: #ecfdf5;
+    color: #065f46;
+}
+
+.date-range {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.start-date, .end-date {
+    font-size: 13px;
+    color: #64748b;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.action-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    color: white;
+    font-size: 12px;
+    text-decoration: none;
+}
+
+.action-btn.manage-btn {
+    background-color: var(--tesda-blue);
+}
+
+.action-btn.edit-btn {
+    background-color: #f59e0b;
+}
+
+.action-btn.delete-btn {
+    background-color: #ef4444;
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Empty state styles */
+.no-classes {
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.empty-state i {
+    font-size: 48px;
+    color: #cbd5e1;
+}
+
+.empty-state p {
+    color: #64748b;
+    margin: 0;
+}
+
+.create-class-btn {
+    padding: 10px 20px;
+    background-color: var(--tesda-blue);
+    color: white;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.create-class-btn:hover {
+    background-color: var(--tesda-dark-blue);
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Pagination styles */
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    margin: 30px 0;
+}
+
+.pagination-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    border: 1px solid #e2e8f0;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background-color: #f1f5f9;
+}
+
+.pagination-btn.active {
+    background-color: var(--tesda-blue);
+    color: white;
+    border-color: var(--tesda-blue);
+}
+
+.pagination-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Quick action buttons */
+.quick-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.quick-action-btn {
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.quick-action-btn.primary {
+    background-color: var(--tesda-blue);
+    color: white;
+}
+
+.quick-action-btn.secondary {
+    background-color: white;
+    color: var(--tesda-blue);
+    border: 1px solid var(--tesda-blue);
+}
+
+.quick-action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 20px auto;
+    padding: 0;
+    width: 400px;
+    max-width: 90%;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+    padding: 15px 20px;
+    background-color: var(--tesda-blue);
+    color: white;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.modal-body {
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.modal-body p {
+    margin: 0;
+    font-size: 1rem;
+    color: #333;
+}
+
+.modal-footer {
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    flex: 1;
+    text-align: center;
+    font-size: 1rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.btn-yes {
+    background-color: var(--tesda-maroon);
+    color: white;
+}
+
+.btn-yes:hover {
+    background-color: #6b0000;
+}
+
+.btn-no {
+    background-color: #f1f5f9;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+}
+
+.btn-no:hover {
+    background-color: #e2e8f0;
+}
+
+/* Courses Sub Navigation - Added to match the styling */
+.courses-subnav {
+    background: var(--tesda-white);
+    padding: 15px 5%;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.courses-subnav .subnav-right {
+    display: flex;
+    gap: 15px;
+}
+
+.courses-subnav .subnav-right a {
+    color: #475569;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 8px 15px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    position: relative;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.courses-subnav .subnav-right a:hover {
+    color: var(--tesda-blue);
+    background-color: #f1f5f9;
+}
+
+.courses-subnav .subnav-right a.active {
+    color: var(--tesda-blue);
+    background-color: #e0f2fe;
+}
+
+.courses-subnav .subnav-right a.active:after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: var(--tesda-blue);
+    border-radius: 3px 3px 0 0;
+}
+
+/* Adjust container padding to account for navigation */
+.container {
+    padding-top: 140px;
+}
+
+@media (max-width: 768px) {
+    .courses-subnav .subnav-right {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .courses-subnav .subnav-right a.active:after {
+        bottom: 0;
+        left: -10px;
+        width: 3px;
+        height: 100%;
+        border-radius: 0 3px 3px 0;
+    }
+    
+    .container {
+        padding-top: 180px; /* Adjusted for mobile navigation height */
+    }
+}
+
+/* Logout Modal Styles - Consistent across all pages */
+#logout-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+}
+
+#logout-modal .modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 0;
+    width: 400px;
+    max-width: 90%;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+#logout-modal .modal-header {
+    padding: 15px 20px;
+    background-color: var(--tesda-blue);
+    color: white;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    align-items: center;
+}
+
+#logout-modal .modal-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#logout-modal .modal-body {
+    padding: 20px;
+    text-align: center;
+}
+
+#logout-modal .modal-footer {
+    padding: 15px 20px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    border-top: 1px solid #eee;
+}
+
+#logout-modal .btn {
+    padding: 8px 20px;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    min-width: 80px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#logout-modal .btn-yes {
+    background-color: var(--tesda-maroon);
+    color: white;
+    border: none;
+}
+
+#logout-modal .btn-yes:hover {
+    background-color: #6b0000;
+}
+
+#logout-modal .btn-no {
+    background-color: #f1f5f9;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+}
+
+#logout-modal .btn-no:hover {
+    background-color: #e2e8f0;
+}
+
+/* Animation */
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#logout-modal[style*="display: flex"] .modal-content {
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .header-section {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .search-filter {
+        width: 100%;
+    }
+    
+    .search-box input {
+        width: 100%;
+    }
+    
+    .quick-actions {
+        flex-direction: column;
+        align-items: flex-end;
+    }
+
+    .class-subnav {
+        top: 120px; /* Adjusted for mobile if needed */
+    }
+
+    .subnav-left {
+        gap: 10px;
+        overflow-x: auto;
+        padding-bottom: 5px;
+    }
+
+    .class-subnav a {
+        font-size: 13px;
+        padding: 0 10px;
+        white-space: nowrap;
+    }
+    
+    .container {
+        padding-top: 180px;
+    }
+}

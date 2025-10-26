@@ -1,0 +1,20 @@
+user id:
+username:
+password:
+email:
+role:
+account_status:
+province:
+municipality:
+baranggay:
+contact number:
+first name
+middle name(optional):
+last name:
+date of birth:
+gender:
+profile picture:
+terms and condition checkbox:
+date registered:
+
+I will use foreign key seperated the login table, personal information table, admin, 

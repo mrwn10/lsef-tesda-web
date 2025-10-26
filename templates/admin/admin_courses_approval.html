@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Courses Approval</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin/admin_courses_approval.css') }}" />
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/lsef_logo.png') }}" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <!-- New Navigation Start -->
+    <div class="nav-container">
+        <!-- Top Navigation -->
+        <div class="top-nav">
+            <div class="nav-left">
+                <a href="{{ url_for('admin_homepage') }}"><i class="fas fa-home"></i> Home</a>
+                <a href="{{ url_for('admin_user_management') }}"><i class="fas fa-users-cog"></i> User Management</a>
+                <a href="{{ url_for('admin_class_management.view_active_classes') }}"><i class="fas fa-users"></i> Class Management</a>
+                <a href="{{ url_for('admin_courses_approval.view_pending_courses') }}"><i class="fas fa-book"></i> Courses</a>
+                <a href="{{ url_for('admin_verified_req.view_requirements') }}"><i class="fas fa-user-check"></i> Verify Account</a>
+            </div>
+            <div class="nav-right"></div>
+        </div>
+        
+        <!-- Brand Section -->
+        <div class="brand-section">
+            <div class="brand-content">
+                <div class="brand-name">LSEF TESDA</div>
+                <div class="logo-container">
+                    <img src="{{ url_for('static', filename='img/lsef_logo.png') }}" alt="LSEF Logo">
+                    <img src="{{ url_for('static', filename='img/tesda_logo.png') }}" alt="TESDA Logo">
+                </div>
+            </div>
+            
+            <div class="user-section">
+                <div class="profile-dropdown">
+                    <img src="{{ url_for('static', filename='uploads/profile_pictures/' + (profile_picture or 'default.png')) }}" alt="Profile" class="profile-img">
+                    <div class="dropdown-menu">
+                        <a href="{{ url_for('admin_profile') }}"><i class="fas fa-user-circle"></i> My Profile</a>
+                        <a href="#"><i class="fas fa-bookmark"></i> Contact Us</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="logout-btn" id="logout-trigger"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Courses Subnav -->
+        <nav class="courses-subnav">
+            <div class="subnav-right">
+                <a href="{{ url_for('admin_courses_approval.view_pending_courses') }}" class="active"><i class="fas fa-clipboard-check"></i> Courses Approval</a>
+                <a href="{{ url_for('admin_create_course.create_course') }}"><i class="fas fa-plus-circle"></i> Create Course</a>
+                <a href="{{ url_for('admin_edit_course.view_editable_courses') }}"><i class="fas fa-edit"></i> Edit Course</a>
+                <a href="{{ url_for('admin_courses_avail.view_available_courses') }}"><i class="fas fa-list"></i> Courses Available</a>
+                <a href="{{ url_for('admin_courses_edit_req.view_edit_requests') }}"><i class="fas fa-pen-fancy"></i> Courses Edit Request</a>
+            </div>
+        </nav>
+    </div>
+    <!-- New Navigation End -->
+
+    <!-- Logout Confirmation Modal -->
+    <div class="modal" id="logout-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-sign-out-alt"></i> Confirm Logout</h3>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to logout?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-yes" id="confirm-logout">Yes</button>
+                <button class="btn btn-no close-modal">No</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Course Review Modal -->
+    <div id="courseModal" class="modal">
+        <div class="modal-overlay"></div>
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3><i class="fas fa-clipboard-check"></i> Course Review</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body" id="courseDetails">
+                <!-- Course details will be dynamically inserted here -->
+            </div>
+            <div class="modal-footer">
+                <button id="approveBtn" class="modal-btn approve-btn">
+                    <i class="fas fa-check"></i> Approve
+                </button>
+                <button id="rejectBtn" class="modal-btn reject-btn">
+                    <i class="fas fa-times"></i> Reject
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <main class="content">
+        <div class="container">
+            <div class="dashboard-header">
+                <div class="header-content">
+                    <h1><i class="fas fa-clipboard-check"></i> Pending Courses Approval</h1>
+                    <p>Review and approve new course submissions from instructors</p>
+                </div>
+                <div class="header-actions">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search courses..." class="search-input">
+                    </div>
+                    <div class="filter-dropdown">
+                        <select class="filter-select">
+                            <option value="all">All Categories</option>
+                            <option value="technical">Technical</option>
+                            <option value="vocational">Vocational</option>
+                            <option value="skills">Skills</option>
+                            <option value="other">Other</option>
+                        </select>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+            </div>
+            
+            {% if courses %}
+                <div class="card-container">
+                    <div class="responsive-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Staff ID</th>
+                                    <th>Role</th>
+                                    <th>Instructor</th>
+                                    <th>Course Code</th>
+                                    <th>Title</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for course in courses %}
+                                    <tr id="course-{{ course.course_id }}">
+                                        <td data-label="Staff ID">{{ course.user_id }}</td>
+                                        <td data-label="Role"><span class="role-badge">{{ course.role }}</span></td>
+                                        <td data-label="Instructor">
+                                            <div class="instructor-info">
+                                                <div class="avatar">{{ course.first_name|first }}{{ course.last_name|first }}</div>
+                                                <div>
+                                                    <div class="instructor-name">{{ course.first_name }} {{ course.last_name }}</div>
+                                                    <div class="instructor-email">{{ course.email }}</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td data-label="Course Code"><span class="code-badge">{{ course.course_code }}</span></td>
+                                        <td data-label="Title" class="course-title">
+                                            <div class="course-title-text">{{ course.course_title }}</div>
+                                            <div class="course-category">{{ course.course_category }}</div>
+                                        </td>
+                                        <td data-label="Status">
+                                            <div class="status-container">
+                                                <span class="status-badge status-pending">
+                                                    <i class="fas fa-clock"></i> {{ course.course_status }}
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td data-label="Actions" class="actions-cell">
+                                            <button class="action-btn view-btn" data-course-id="{{ course.course_id }}">
+                                                <i class="fas fa-eye"></i> Review
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="pagination-container">
+                        <div class="pagination-info">Showing 1 to {{ courses|length }} of {{ courses|length }} entries</div>
+                        <div class="pagination-controls">
+                            <button class="pagination-btn" disabled>
+                                <i class="fas fa-chevron-left"></i> Previous
+                            </button>
+                            <button class="pagination-btn active">1</button>
+                            <button class="pagination-btn" disabled>
+                                Next <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-content">
+                        <div class="empty-icon">
+                            <i class="fas fa-clipboard-list"></i>
+                        </div>
+                        <h3>No Pending Courses</h3>
+                        <p>There are currently no courses waiting for approval.</p>
+                        <div class="empty-actions">
+                            <button class="refresh-btn" onclick="location.reload()">
+                                <i class="fas fa-sync-alt"></i> Refresh
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/admin/admin_courses_approval.js') }}"></script>
+</body>
+</html>

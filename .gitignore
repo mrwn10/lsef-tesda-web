@@ -1,0 +1,25 @@
+# Ignore Python cache files
+__pycache__/
+*.pyc
+
+# Ignore virtual environments
+venv/
+env/
+
+# Ignore environment/secret files
+.env
+
+# Ignore IDE/project settings
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Ignore OS-generated files
+.DS_Store
+Thumbs.db
+
+# Ignore local databases and logs
+*.sqlite3
+*.log
+instance/

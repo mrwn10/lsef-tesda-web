@@ -1,0 +1,9 @@
+pupunta sa TESDA LSEF
+- to get Certificates Templates
+- System Checking
+- Get data for manuscript
+
+Mga gagawin kung overnight
+- full system flow (kahit isulat muna)
+- gagawa ng gantt chart para maka gawa quota everyday
+- lilinisin code

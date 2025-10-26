@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Course Creation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin/admin_create_course.css') }}" />
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/lsef_logo.png') }}" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <!-- New Navigation Start -->
+    <div class="nav-container">
+        <!-- Top Navigation -->
+        <div class="top-nav">
+            <div class="nav-left">
+                <a href="{{ url_for('admin_homepage') }}"><i class="fas fa-home"></i> Home</a>
+                <a href="{{ url_for('admin_user_management') }}"><i class="fas fa-users-cog"></i> User Management</a>
+                <a href="{{ url_for('admin_class_management.view_active_classes') }}"><i class="fas fa-users"></i> Class Management</a>
+                <a href="{{ url_for('admin_courses_approval.view_pending_courses') }}"><i class="fas fa-book"></i> Courses</a>
+                <a href="{{ url_for('admin_verified_req.view_requirements') }}"><i class="fas fa-user-check"></i> Verify Account</a>
+            </div>
+            <div class="nav-right"></div>
+        </div>
+        
+        <!-- Brand Section -->
+        <div class="brand-section">
+            <div class="brand-content">
+                <div class="brand-name">LSEF TESDA</div>
+                <div class="logo-container">
+                    <img src="{{ url_for('static', filename='img/lsef_logo.png') }}" alt="LSEF Logo">
+                    <img src="{{ url_for('static', filename='img/tesda_logo.png') }}" alt="TESDA Logo">
+                </div>
+            </div>
+            
+            <div class="user-section">
+                <div class="profile-dropdown">
+                    <img src="{{ url_for('static', filename='uploads/profile_pictures/' + (profile_picture or 'default.png')) }}" alt="Profile" class="profile-img">
+                    <div class="dropdown-menu">
+                        <a href="{{ url_for('admin_profile') }}"><i class="fas fa-user-circle"></i> My Profile</a>
+                        <a href="#"><i class="fas fa-bookmark"></i> Contact Us</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="logout-btn" id="logout-trigger"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Courses Subnav -->
+        <nav class="courses-subnav">
+            <div class="subnav-right">
+                <a href="{{ url_for('admin_courses_approval.view_pending_courses') }}"><i class="fas fa-clipboard-check"></i> Courses Approval</a>
+                <a href="{{ url_for('admin_create_course.create_course') }}" class="active"><i class="fas fa-plus-circle"></i> Create Course</a>
+                <a href="{{ url_for('admin_edit_course.view_editable_courses') }}"><i class="fas fa-edit"></i> Edit Course</a>
+                <a href="{{ url_for('admin_courses_avail.view_available_courses') }}"><i class="fas fa-list"></i> Courses Available</a>
+                <a href="{{ url_for('admin_courses_edit_req.view_edit_requests') }}"><i class="fas fa-pen-fancy"></i> Courses Edit Request</a>
+            </div>
+        </nav>
+    </div>
+    <!-- New Navigation End -->
+
+    <!-- Logout Confirmation Modal -->
+    <div class="modal" id="logout-modal" data-logout-url="{{ url_for('login.logout') }}">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-sign-out-alt"></i> Confirm Logout</h3>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to logout?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-yes" id="confirm-logout">Yes</button>
+                <button class="btn btn-no close-modal">No</button>
+            </div>
+        </div>
+    </div>
+
+    <main class="content">
+        <div class="container">
+            <div class="dashboard-header">
+                <div class="header-content">
+                    <h1><i class="fas fa-plus-circle"></i> Create New Course</h1>
+                    <p>Fill in the details below to create a new course</p>
+                    <div class="admin-note">
+                        <i class="fas fa-shield-alt"></i> Note: Courses created by admins are automatically approved.
+                    </div>
+                </div>
+            </div>
+            
+            <form id="courseForm" class="course-form" data-redirect-url="{{ url_for('admin_create_course.create_course') }}">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="course_code">Course Code <span class="required">*</span></label>
+                        <input type="text" id="course_code" name="course_code" required placeholder="e.g. COOK-101">
+                        <small class="input-hint">Unique identifier for the course</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="course_title">Course Title <span class="required">*</span></label>
+                        <input type="text" id="course_title" name="course_title" required placeholder="e.g. Professional Cooking">
+                    </div>
+
+                    <div class="form-group span-2">
+                        <label for="course_description">Course Description <span class="required">*</span></label>
+                        <textarea id="course_description" name="course_description" required rows="3" placeholder="Brief description of what the course covers"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="course_category">Course Category <span class="required">*</span></label>
+                        <select id="course_category" name="course_category" required>
+                            <option value="">Select Category</option>
+                            <option value="Technical">Technical</option>
+                            <option value="Vocational">Vocational</option>
+                            <option value="Skills">Skills</option>
+                            <option value="Safety">Safety</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="target_audience">Target Audience <span class="required">*</span></label>
+                        <select id="target_audience" name="target_audience" required>
+                            <option value="">Select Audience</option>
+                            <option value="Beginner">Beginner</option>
+                            <option value="Intermediate">Intermediate</option>
+                            <option value="Advanced">Advanced</option>
+                            <option value="All Levels">All Levels</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group span-2">
+                        <label for="prerequisites">Prerequisites</label>
+                        <textarea id="prerequisites" name="prerequisites" rows="2" placeholder="Any requirements or prior knowledge needed"></textarea>
+                    </div>
+
+                    <div class="form-group span-2">
+                        <label for="learning_outcomes">Learning Outcomes</label>
+                        <textarea id="learning_outcomes" name="learning_outcomes" rows="3" placeholder="What students will learn from this course"></textarea>
+                        <small class="input-hint">Separate outcomes with bullet points or numbers</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="duration_hours">Duration (Hours) <span class="required">*</span></label>
+                        <input type="number" id="duration_hours" name="duration_hours" required min="1" placeholder="e.g. 40">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="course_fee">Course Fee (₱)</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-peso-sign"></i>
+                            <input type="number" step="0.01" id="course_fee" name="course_fee" min="0" placeholder="0.00">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="max_students">Max Students</label>
+                        <div class="fixed-value-display">
+                            <input type="number" id="max_students" name="max_students" value="25" readonly>
+                            <small class="input-hint">Fixed at 25 students per class</small>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="published">Publication Status</label>
+                        <select id="published" name="published">
+                            <option value="0">Draft</option>
+                            <option value="1">Published</option>
+                        </select>
+                    </div>
+                </div>
+
+                <input type="hidden" id="created_by" name="created_by" value="{{ session['user_id'] }}">
+
+                <div class="form-actions">
+                    <button type="reset" class="btn-secondary">Clear Form</button>
+                    <button type="submit" class="btn-primary">Create Course <i class="fas fa-plus-circle"></i></button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/admin/admin_create_course.js') }}"></script>
+</body>
+</html>

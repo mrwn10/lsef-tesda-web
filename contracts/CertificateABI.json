@@ -1,0 +1,134 @@
+[
+	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "bytes32",
+				"name": "certHash",
+				"type": "bytes32"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "studentName",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "course",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "issuedAt",
+				"type": "uint256"
+			}
+		],
+		"name": "CertificateRegistered",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "bytes32",
+				"name": "certHash",
+				"type": "bytes32"
+			}
+		],
+		"name": "CertificateRevoked",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "studentName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "course",
+				"type": "string"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "certHash",
+				"type": "bytes32"
+			}
+		],
+		"name": "registerCertificate",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "certHash",
+				"type": "bytes32"
+			}
+		],
+		"name": "revokeCertificate",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "owner",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "certHash",
+				"type": "bytes32"
+			}
+		],
+		"name": "verifyCertificate",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "studentName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "course",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "issuedAt",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bool",
+				"name": "isValid",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+]
