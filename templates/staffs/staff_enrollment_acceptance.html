@@ -78,6 +78,19 @@
         </div>
     </div>
 
+    <div class="modal" id="student-details-modal">
+        <div class="modal-content large-modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-user-graduate"></i> Student Details</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="student-details-content">
+                </div>
+            </div>
+        </div>
+    </div>
+
     <main class="enrollment-container">
         <div class="header-section">
             <h2><i class="fas fa-user-graduate"></i> Pending Enrollment Requests</h2>
@@ -115,7 +128,7 @@
                         <th>Schedule</th>
                         <th>Venue</th>
                         <th>Start Date</th>
-                        <th>End Date</th>
+                        <th>Requirements Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -123,7 +136,7 @@
                     {% for enroll in enrollments %}
                     <tr>
                         <td data-label="Student Name">
-                            <div class="student-info">
+                            <div class="student-info clickable" data-enrollment-id="{{ enroll.enrollment_id }}">
                                 <div class="student-avatar">
                                     <i class="fas fa-user-circle"></i>
                                 </div>
@@ -137,18 +150,29 @@
                         <td data-label="Class Title">{{ enroll.class_title }}</td>
                         <td data-label="Schedule">{{ enroll.schedule }}</td>
                         <td data-label="Venue">{{ enroll.venue }}</td>
-                        <td data-label="Start Date">{{ enroll.start_date }}</td>
-                        <td data-label="End Date">{{ enroll.end_date }}</td>
+                        <td data-label="Start Date">{{ enroll.start_date.strftime('%b %d, %Y') if enroll.start_date else 'N/A' }}</td>
+                        <td data-label="Requirements Status">
+                            {% if enroll.birth_certificate and enroll.educational_credentials and enroll.id_photos %}
+                                <span class="status-badge completed"><i class="fas fa-check-circle"></i> Complete</span>
+                            {% else %}
+                                <span class="status-badge incomplete"><i class="fas fa-exclamation-circle"></i> Incomplete</span>
+                            {% endif %}
+                        </td>
                         <td data-label="Actions">
-                            <form action="{{ url_for('staff_enrollment_acceptance.handle_enrollment_action') }}" method="POST" class="action-form">
-                                <input type="hidden" name="enrollment_id" value="{{ enroll.enrollment_id }}">
-                                <button type="submit" name="action" value="accept" class="btn-accept">
-                                    <i class="fas fa-check"></i> Accept
+                            <div class="action-buttons">
+                                <button class="btn-view-details" data-enrollment-id="{{ enroll.enrollment_id }}" data-tooltip="View Details">
+                                    <i class="fas fa-eye"></i>
                                 </button>
-                                <button type="submit" name="action" value="reject" class="btn-reject">
-                                    <i class="fas fa-times"></i> Reject
-                                </button>
-                            </form>
+                                <form action="{{ url_for('staff_enrollment_acceptance.handle_enrollment_action') }}" method="POST" class="action-form">
+                                    <input type="hidden" name="enrollment_id" value="{{ enroll.enrollment_id }}">
+                                    <button type="submit" name="action" value="accept" class="btn-accept" data-tooltip="Accept Enrollment">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                    <button type="submit" name="action" value="reject" class="btn-reject" data-tooltip="Reject Enrollment">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                     {% endfor %}
@@ -167,7 +191,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Logout Modal Functionality
+            
             $('#logout-trigger').click(function(e) {
                 e.preventDefault();
                 $('#logout-modal').fadeIn();
@@ -175,11 +199,12 @@
             
             $('.close-modal').click(function() {
                 $('#logout-modal').fadeOut();
+                $('#student-details-modal').fadeOut();
             });
             
             $(window).click(function(e) {
-                if ($(e.target).is('#logout-modal')) {
-                    $('#logout-modal').fadeOut();
+                if ($(e.target).is('.modal')) {
+                    $('.modal').fadeOut();
                 }
             });
             

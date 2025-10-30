@@ -86,6 +86,8 @@
                             <th>Student Name</th>
                             <th>Email</th>
                             <th>Current Grade (Avg)</th>
+                            <th>Auto Remarks</th>
+                            <th>Current Remarks</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -101,8 +103,14 @@
                                     <span class="grade-na">N/A</span>
                                 {% endif %}
                             </td>
+                            <td>
+                                <span class="auto-remarks {{ student.auto_remarks|lower }}">{{ student.auto_remarks }}</span>
+                            </td>
+                            <td>
+                                <span class="current-remarks {{ student.remarks|lower if student.remarks else 'incomplete' }}">{{ student.remarks or 'Not Set' }}</span>
+                            </td>
                             <td class="action-buttons">
-                                <button class="edit-btn" onclick="openEditModal('{{ student.enrollment_id }}', '{{ student.prelim_grade }}', '{{ student.midterm_grade }}', '{{ student.final_grade }}', '{{ student.remarks }}')">
+                                <button class="edit-btn" onclick="openEditModal('{{ student.enrollment_id }}', '{{ student.prelim_grade }}', '{{ student.midterm_grade }}', '{{ student.final_grade }}', '{{ student.remarks }}', '{{ student.auto_remarks }}')">
                                     <i class="fas fa-edit"></i> Edit Grade
                                 </button>
                                 <button class="profile-btn" onclick="openProfileModal('{{ student.user_id }}')">
@@ -160,18 +168,30 @@
                 <input type="hidden" id="editEnrollmentId">
                 <div class="form-group">
                     <label for="prelimGrade">Prelim Grade:</label>
-                    <input type="number" step="0.01" id="prelimGrade" class="form-input" placeholder="Enter prelim grade">
+                    <input type="number" step="0.01" min="0" max="100" id="prelimGrade" class="form-input" placeholder="Enter prelim grade" oninput="calculateAutoRemarks()">
                 </div>
                 <div class="form-group">
                     <label for="midtermGrade">Midterm Grade:</label>
-                    <input type="number" step="0.01" id="midtermGrade" class="form-input" placeholder="Enter midterm grade">
+                    <input type="number" step="0.01" min="0" max="100" id="midtermGrade" class="form-input" placeholder="Enter midterm grade" oninput="calculateAutoRemarks()">
                 </div>
                 <div class="form-group">
                     <label for="finalGrade">Final Grade:</label>
-                    <input type="number" step="0.01" id="finalGrade" class="form-input" placeholder="Enter final grade">
+                    <input type="number" step="0.01" min="0" max="100" id="finalGrade" class="form-input" placeholder="Enter final grade" oninput="calculateAutoRemarks()">
                 </div>
+                
+                <!-- Auto Remarks Display -->
+                <div class="form-group auto-remarks-section">
+                    <label>Automatic Remarks:</label>
+                    <div id="autoRemarksDisplay" class="auto-remarks-display">
+                        <span id="autoRemarksText">Enter grades to see automatic remarks</span>
+                    </div>
+                    <small class="form-text text-muted">
+                        <i class="fas fa-info-circle"></i> Automatic remarks are calculated based on all three grades (Average ≥ 75 = Passed, < 75 = Failed, missing grades = Incomplete)
+                    </small>
+                </div>
+
                 <div class="form-group">
-                    <label for="remarks">Remarks:</label>
+                    <label for="remarks">Final Remarks:</label>
                     <select id="remarks" class="form-input">
                         <option value="Passed">Passed</option>
                         <option value="Failed">Failed</option>
@@ -179,6 +199,20 @@
                         <option value="Incomplete">Incomplete</option>
                         <option value="Dropped">Dropped</option>
                     </select>
+                </div>
+
+                <!-- Auto Remarks Toggle -->
+                <div class="form-group auto-remarks-toggle">
+                    <div class="toggle-container">
+                        <input type="checkbox" id="useAutoRemarks" checked>
+                        <label for="useAutoRemarks" class="toggle-label">
+                            <span class="toggle-text">Use Automatic Remarks</span>
+                            <span class="toggle-switch"></span>
+                        </label>
+                    </div>
+                    <small class="form-text text-muted">
+                        When enabled, remarks will be automatically calculated. Uncheck to manually select remarks.
+                    </small>
                 </div>
             </div>
             <div class="modal-footer">

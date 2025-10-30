@@ -23,3 +23,5 @@ Thumbs.db
 *.sqlite3
 *.log
 instance/
+static/uploads/
+static/certs/
