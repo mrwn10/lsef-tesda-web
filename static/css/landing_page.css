@@ -2,6 +2,7 @@
     --primary-color: #003366; /* TESDA Blue */
     --primary-hover: #002244;
     --secondary-color: #FFD700; /* TESDA Gold */
+    --secondary-hover: #e6c200;
     --accent-color: #00b9f1;
     --success-color: #28a745;
     --error-color: #dc3545;
@@ -16,7 +17,7 @@
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    --transition: all 0.2s ease-in-out;
+    --transition: all 0.3s ease-in-out;
     --radius: 8px;
 }
 
@@ -32,7 +33,7 @@ html {
 }
 
 body {
-    font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+    font-family: 'Poppins', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
     background-color: var(--bg-color);
     color: var(--text-color);
     line-height: 1.6;
@@ -53,35 +54,41 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: 700;
     line-height: 1.2;
     color: var(--primary-color);
+    font-family: 'Poppins', sans-serif;
 }
 
 h1 {
     font-size: 2.5rem;
     margin-bottom: 1rem;
+    font-weight: 700;
 }
 
 h2 {
     font-size: 2rem;
     margin-bottom: 1.5rem;
+    font-weight: 700;
 }
 
 h3 {
     font-size: 1.5rem;
     margin-bottom: 1rem;
+    font-weight: 600;
 }
 
 p {
     margin-bottom: 1rem;
+    font-weight: 400;
 }
 
 a {
     color: var(--primary-color);
     text-decoration: none;
     transition: var(--transition);
+    font-family: 'Poppins', sans-serif;
 }
 
 a:hover {
-    color: var(--primary-hover);
+    color: var(--primary-color);
 }
 
 /* Buttons */
@@ -94,6 +101,9 @@ a:hover {
     cursor: pointer;
     transition: var(--transition);
     border: none;
+    font-size: 0.95rem;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
 }
 
 .btn-primary {
@@ -102,6 +112,17 @@ a:hover {
 }
 
 .btn-primary:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+}
+
+.btn-primary {
+    color: var(--white);
+}
+
+.btn-primary:hover {
+    color: var(--white); /* Keep text white on hover */
     background-color: var(--primary-hover);
     transform: translateY(-2px);
     box-shadow: var(--shadow);
@@ -167,7 +188,7 @@ a:hover {
 }
 
 .utility-links a:hover {
-    color: var(--secondary-color);
+    color: var(--white);
 }
 
 .login-link {
@@ -183,6 +204,12 @@ a:hover {
     z-index: 100;
 }
 
+.main-nav .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .brand {
     display: flex;
     align-items: center;
@@ -190,6 +217,7 @@ a:hover {
     font-size: 1.25rem;
     font-weight: 700;
     color: var(--primary-color);
+    font-family: 'Poppins', sans-serif;
 }
 
 .logo {
@@ -201,9 +229,110 @@ a:hover {
     transform: scale(1.05);
 }
 
+/* Hamburger Menu */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    width: 30px;
+    height: 21px;
+    justify-content: space-between;
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+.hamburger span {
+    display: block;
+    height: 3px;
+    width: 100%;
+    background-color: var(--primary-color);
+    border-radius: 3px;
+    transition: var(--transition);
+}
+
+.hamburger:hover span {
+    background-color: var(--primary-color);
+}
+
+.nav-menu {
+    display: flex;
+}
+
+.close-menu {
+    display: none;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: var(--white);
+    font-size: 1.5rem;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: var(--transition);
+    z-index: 1001;
+    font-weight: 600;
+}
+
+.close-menu:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.nav-links {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.nav-links a {
+    color: var(--text-color);
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    position: relative;
+    border-radius: var(--radius);
+    font-size: 0.95rem;
+    font-family: 'Poppins', sans-serif;
+}
+
+.nav-links a:hover {
+    color: var(--text-color);
+    background-color: var(--gray-light);
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--primary-color);
+    transition: var(--transition);
+}
+
+.nav-links a:hover::after {
+    width: 100%;
+}
+
+/* Active State for Navigation */
+.nav-links a.active {
+    color: var(--primary-color);
+    background-color: var(--gray-light);
+}
+
+.nav-links a.active::after {
+    width: 100%;
+}
+
 /* Hero Section */
 .hero {
-    background: linear-gradient(rgba(0, 51, 102, 0.8), rgba(0, 51, 102, 0.8)), 
+    background: linear-gradient(rgba(0, 51, 102, 0.85), rgba(0, 51, 102, 0.9)), 
                 url('{{ url_for("static", filename="img/hero-bg.jpg") }}') no-repeat center center;
     background-size: cover;
     color: var(--white);
@@ -215,13 +344,19 @@ a:hover {
     color: var(--white);
     font-size: 2.5rem;
     margin-bottom: 1rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    font-weight: 700;
+    font-family: 'Poppins', sans-serif;
 }
 
 .subtitle {
     font-size: 1.25rem;
-    opacity: 0.9;
+    opacity: 0.95;
     max-width: 800px;
     margin: 0 auto;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif;
 }
 
 /* Features Section */
@@ -244,11 +379,14 @@ a:hover {
     gap: 1rem;
     margin-bottom: 1rem;
     font-size: 1.1rem;
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif;
 }
 
 .features-list i {
     color: var(--accent-color);
     margin-top: 0.25rem;
+    flex-shrink: 0;
 }
 
 /* CTA Section */
@@ -273,6 +411,13 @@ a:hover {
 
 .cta-content h2 {
     color: var(--white);
+    font-weight: 700;
+    font-family: 'Poppins', sans-serif;
+}
+
+.cta-content p {
+    font-weight: 400;
+    font-family: 'Poppins', sans-serif;
 }
 
 .cta-image {
@@ -324,6 +469,7 @@ a:hover {
     margin-bottom: 1.5rem;
     font-size: 1.25rem;
     font-weight: 700;
+    font-family: 'Poppins', sans-serif;
 }
 
 .footer-logo {
@@ -333,6 +479,9 @@ a:hover {
 .footer-about p {
     opacity: 0.9;
     margin-bottom: 1.5rem;
+    line-height: 1.7;
+    font-weight: 400;
+    font-family: 'Poppins', sans-serif;
 }
 
 .footer-social {
@@ -362,6 +511,8 @@ a:hover {
     margin-bottom: 1.5rem;
     position: relative;
     padding-bottom: 0.5rem;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
 }
 
 .footer-links h3::after {
@@ -386,10 +537,13 @@ a:hover {
     color: var(--white);
     opacity: 0.9;
     transition: var(--transition);
+    line-height: 1.6;
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif;
 }
 
 .footer-links a:hover {
-    color: var(--secondary-color);
+    color: var(--white);
     padding-left: 5px;
 }
 
@@ -402,20 +556,25 @@ a:hover {
     align-items: flex-start;
     gap: 1rem;
     margin-bottom: 1rem;
+    line-height: 1.6;
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif;
 }
 
 .footer-contact i {
     color: var(--secondary-color);
     margin-top: 0.25rem;
+    flex-shrink: 0;
 }
 
 .footer-contact a {
     color: var(--white);
     opacity: 0.9;
+    font-weight: 500;
 }
 
 .footer-contact a:hover {
-    color: var(--secondary-color);
+    color: var(--white);
 }
 
 .footer-bottom {
@@ -452,10 +611,13 @@ a:hover {
 .legal-links a {
     color: var(--white);
     opacity: 0.9;
+    font-size: 0.9rem;
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif;
 }
 
 .legal-links a:hover {
-    color: var(--secondary-color);
+    color: var(--white);
 }
 
 .legal-links span {
@@ -477,10 +639,12 @@ a:hover {
 @media (max-width: 768px) {
     h1 {
         font-size: 2rem;
+        font-weight: 700;
     }
     
     h2 {
         font-size: 1.75rem;
+        font-weight: 700;
     }
     
     .hero {
@@ -500,24 +664,98 @@ a:hover {
         flex-wrap: wrap;
         justify-content: center;
     }
+    
+    /* Mobile Navigation */
+    .hamburger {
+        display: flex;
+    }
+    
+    .nav-menu {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 85%;
+        max-width: 320px;
+        height: 100vh;
+        background: linear-gradient(135deg, var(--primary-color) 0%, #004080 100%);
+        box-shadow: -5px 0 25px rgba(0, 0, 0, 0.3);
+        transition: var(--transition);
+        z-index: 1000;
+        padding: 3rem 1.5rem 2rem;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .nav-menu.active {
+        right: 0;
+    }
+    
+    .close-menu {
+        display: flex;
+    }
+    
+    .nav-links {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: stretch;
+        margin-top: 1rem;
+        width: 100%;
+    }
+    
+    .nav-links a {
+        display: block;
+        width: 100%;
+        padding: 0.875rem 1rem;
+        border: none;
+        border-radius: var(--radius);
+        color: var(--white);
+        text-align: left;
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+        transition: var(--transition);
+        font-weight: 600;
+        font-family: 'Poppins', sans-serif;
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .nav-links a:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+        transform: translateX(5px);
+        color: var(--white);
+    }
+    
+    .nav-links a::after {
+        display: none;
+    }
+    
+    /* Active State for Mobile Navigation */
+    .nav-links a.active {
+        background-color: rgba(255, 255, 255, 0.3);
+        color: var(--white);
+        transform: translateX(5px);
+    }
+    
+    /* Hide utility links in top nav on mobile */
+    .utility-links {
+        display: none;
+    }
 }
 
 @media (max-width: 576px) {
     h1 {
         font-size: 1.75rem;
+        font-weight: 700;
     }
     
     h2 {
         font-size: 1.5rem;
+        font-weight: 700;
     }
     
     .features-list li {
         font-size: 1rem;
-    }
-    
-    .btn {
-        padding: 0.6rem 1.2rem;
-        font-size: 0.9rem;
+        font-weight: 500;
     }
     
     .footer-grid {
@@ -539,5 +777,35 @@ a:hover {
     
     .footer-links a:hover {
         padding-left: 0;
+    }
+    
+    .brand span {
+        font-size: 1rem;
+        font-weight: 700;
+    }
+    
+    .brand .logo {
+        height: 35px;
+    }
+    
+    .hero h1 {
+        font-size: 1.75rem;
+        font-weight: 700;
+    }
+    
+    .subtitle {
+        font-size: 1rem;
+        font-weight: 500;
+    }
+    
+    .nav-menu {
+        width: 90%;
+        padding: 2.5rem 1.25rem 1.5rem;
+    }
+    
+    .nav-links a {
+        padding: 0.75rem 1rem;
+        font-size: 0.95rem;
+        font-weight: 600;
     }
 }

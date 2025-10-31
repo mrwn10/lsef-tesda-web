@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/verify_results.css') }}">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/lsef_logo.png') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="page-container">
@@ -25,11 +26,6 @@
                     </a>
                 </div>
                 <div class="utility-links">
-                    <a href="{{ url_for('landing') }}">Home</a>
-                    <a href="{{ url_for('program') }}">Programs</a>
-                    <a href="{{ url_for('verify_cert') }}">Certificate Verification</a>
-                    <a href="{{ url_for('register') }}">Register</a>
-                    <a href="{{ url_for('login.login') }}" class="login-link">Login</a>
                 </div>
             </div>
         </nav>
@@ -42,11 +38,28 @@
                     <img src="{{ url_for('static', filename='img/tesda_logo.png') }}" alt="TESDA Logo" class="logo">
                     <span>TESDA LSEF</span>
                 </div>
+                <div class="nav-menu" id="navMenu">
+                    <button class="close-menu" id="closeMenu" aria-label="Close menu">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <div class="nav-links">
+                        <a href="{{ url_for('landing') }}" class="{% if request.endpoint == 'landing' %}active{% endif %}">Home</a>
+                        <a href="{{ url_for('program') }}" class="{% if request.endpoint == 'program' %}active{% endif %}">Programs</a>
+                        <a href="{{ url_for('verify_cert') }}" class="active">Certificate Verification</a>
+                        <a href="{{ url_for('register') }}" class="{% if request.endpoint == 'register' %}active{% endif %}">Register</a>
+                        <a href="{{ url_for('login.login') }}" class="{% if request.endpoint == 'login.login' %}active{% endif %}">Login</a>
+                    </div>
+                </div>
+                <div class="hamburger" id="hamburger" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
             </div>
         </nav>
 
         <!-- Results Section -->
-        <main class="results-section">
+        <main class="main-content">
             <div class="container">
                 <div class="results-card">
                     {% if certificate %}
@@ -177,10 +190,10 @@
                     <div class="footer-links">
                         <h3>Programs</h3>
                         <ul>
-                            <li><a href="#">Bookkeeping NC III</a></li>
-                            <li><a href="#">Food and Beverages Services NC II</a></li>
-                            <li><a href="#">Bread and Pastry Production NC II</a></li>
-                            <li><a href="#">Housekeeping NC II</a></li>
+                            <li><a href="{{ url_for('program') }}">Bookkeeping NC III</a></li>
+                            <li><a href="{{ url_for('program') }}">Food and Beverages Services NC II</a></li>
+                            <li><a href="{{ url_for('program') }}">Bread and Pastry Production NC II</a></li>
+                            <li><a href="{{ url_for('program') }}">Housekeeping NC II</a></li>
                         </ul>
                     </div>
 
@@ -235,6 +248,43 @@
     </button>
 
     <script>
+        // Hamburger menu functionality
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('navMenu');
+        const closeMenu = document.getElementById('closeMenu');
+        
+        hamburger.addEventListener('click', () => {
+            navMenu.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        
+        closeMenu.addEventListener('click', () => {
+            navMenu.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+        
+        document.addEventListener('click', (e) => {
+            if (!hamburger.contains(e.target) && !navMenu.contains(e.target) && navMenu.classList.contains('active')) {
+                navMenu.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+        
+        const navLinks = document.querySelectorAll('.nav-links a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                navMenu.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        });
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && navMenu.classList.contains('active')) {
+                navMenu.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
         // Back to top button functionality
         document.addEventListener('DOMContentLoaded', function() {
             const backToTopButton = document.getElementById('backToTop');
@@ -261,8 +311,12 @@
                     navigator.clipboard.writeText(textToCopy).then(() => {
                         const originalText = this.textContent;
                         this.textContent = 'Copied to clipboard!';
+                        this.style.backgroundColor = 'var(--success-color)';
+                        this.style.color = 'var(--white)';
                         setTimeout(() => {
                             this.textContent = originalText;
+                            this.style.backgroundColor = '';
+                            this.style.color = '';
                         }, 2000);
                     });
                 });
