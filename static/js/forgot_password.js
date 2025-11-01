@@ -1,3 +1,5 @@
+// forgot_password.js - Enhanced Version with Consistent Functionality
+
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize variables
     let currentStep = 1;
@@ -5,8 +7,27 @@ document.addEventListener('DOMContentLoaded', function() {
     let countdownInterval;
     let countdownTime = 60;
 
-    // Initialize the progress indicator
-    updateProgressIndicator();
+    // Initialize form steps
+    function updateFormSteps() {
+        const formSteps = document.querySelectorAll('.form-step');
+        const progressSteps = document.querySelectorAll('.step');
+        
+        formSteps.forEach(step => {
+            if (parseInt(step.dataset.step) === currentStep) {
+                step.classList.add('active');
+            } else {
+                step.classList.remove('active');
+            }
+        });
+
+        progressSteps.forEach(step => {
+            if (parseInt(step.dataset.step) <= currentStep) {
+                step.classList.add('active');
+            } else {
+                step.classList.remove('active');
+            }
+        });
+    }
 
     // Toggle password visibility
     const togglePasswordButtons = document.querySelectorAll('.toggle-password');
@@ -15,15 +36,20 @@ document.addEventListener('DOMContentLoaded', function() {
             const input = this.closest('.input-wrapper').querySelector('input');
             const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
             input.setAttribute('type', type);
-            const icon = this.querySelector('i');
-            icon.classList.toggle('fa-eye');
-            icon.classList.toggle('fa-eye-slash');
+            this.querySelector('i').classList.toggle('fa-eye');
+            this.querySelector('i').classList.toggle('fa-eye-slash');
         });
     });
 
-    // OTP input auto-focus
+    // OTP input auto-focus with COMPLETELY FIXED VISIBILITY
     const otpInputs = document.querySelectorAll('.otp-input');
     otpInputs.forEach(input => {
+        // Ensure proper text display from the start
+        input.style.color = 'var(--text-color)';
+        input.style.fontWeight = '700';
+        input.style.textAlign = 'center';
+        input.style.lineHeight = '1';
+        
         input.addEventListener('input', function() {
             const index = parseInt(this.dataset.index);
             const value = this.value;
@@ -34,9 +60,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
+            // Add typing animation for better visibility
+            this.classList.add('typing');
+            setTimeout(() => this.classList.remove('typing'), 200);
+            
+            // Ensure text is always visible
+            this.style.color = 'var(--text-color)';
+            this.style.fontWeight = '700';
+            
             if (value.length === 1 && index < 6) {
                 const nextInput = document.querySelector(`.otp-input[data-index="${index + 1}"]`);
-                if (nextInput) nextInput.focus();
+                if (nextInput) {
+                    nextInput.focus();
+                    nextInput.classList.add('typing');
+                    setTimeout(() => nextInput.classList.remove('typing'), 200);
+                }
             }
             updateFullOTP();
         });
@@ -45,7 +83,11 @@ document.addEventListener('DOMContentLoaded', function() {
             if (e.key === 'Backspace' && this.value.length === 0) {
                 const prevIndex = parseInt(this.dataset.index) - 1;
                 const prevInput = document.querySelector(`.otp-input[data-index="${prevIndex}"]`);
-                if (prevInput) prevInput.focus();
+                if (prevInput) {
+                    prevInput.focus();
+                    prevInput.classList.add('typing');
+                    setTimeout(() => prevInput.classList.remove('typing'), 200);
+                }
             }
         });
         
@@ -58,11 +100,37 @@ document.addEventListener('DOMContentLoaded', function() {
                     const otpInput = document.querySelector(`.otp-input[data-index="${index + 1}"]`);
                     if (otpInput) {
                         otpInput.value = digit;
-                        otpInput.classList.add('filled');
+                        otpInput.style.color = 'var(--text-color)';
+                        otpInput.style.fontWeight = '700';
+                        otpInput.classList.add('filled', 'typing');
+                        setTimeout(() => otpInput.classList.remove('typing'), 200);
                     }
                 });
                 updateFullOTP();
                 document.getElementById('verify-otp-btn').focus();
+            }
+        });
+        
+        // Improve focus visibility
+        input.addEventListener('focus', function() {
+            this.style.backgroundColor = 'var(--white)';
+            this.style.borderColor = 'var(--primary-color)';
+            this.style.color = 'var(--text-color)';
+            this.style.fontWeight = '700';
+        });
+        
+        input.addEventListener('blur', function() {
+            if (!this.value) {
+                this.style.backgroundColor = 'var(--white)';
+                this.style.borderColor = 'var(--border-color)';
+            }
+        });
+
+        // Ensure text is always visible
+        input.addEventListener('change', function() {
+            if (this.value) {
+                this.style.color = 'var(--text-color)';
+                this.style.fontWeight = '700';
             }
         });
     });
@@ -74,35 +142,15 @@ document.addEventListener('DOMContentLoaded', function() {
             otp += input.value;
             if (input.value) {
                 input.classList.add('filled');
+                // Ensure filled inputs have good contrast
+                input.style.color = 'var(--text-color)';
+                input.style.fontWeight = '700';
             } else {
                 input.classList.remove('filled');
+                input.style.color = 'var(--text-color)';
             }
         });
         document.getElementById('otp').value = otp;
-    }
-
-    // Update progress indicator
-    function updateProgressIndicator() {
-        const progressSteps = document.querySelectorAll('.progress-step');
-        const progressFill = document.querySelector('.progress-fill');
-        
-        progressSteps.forEach((step, index) => {
-            const stepNumber = parseInt(step.dataset.step);
-            
-            if (stepNumber < currentStep) {
-                step.classList.add('completed');
-                step.classList.remove('active');
-            } else if (stepNumber === currentStep) {
-                step.classList.add('active');
-                step.classList.remove('completed');
-            } else {
-                step.classList.remove('active', 'completed');
-            }
-        });
-        
-        // Update progress bar
-        const progressPercentage = ((currentStep - 1) / 3) * 100;
-        progressFill.style.width = `${progressPercentage}%`;
     }
 
     // Show error message
@@ -115,13 +163,13 @@ document.addEventListener('DOMContentLoaded', function() {
         // Add error state to input if applicable
         const input = document.querySelector(`#${elementId.replace('-error', '')}`);
         if (input) {
-            input.closest('.input-wrapper').classList.add('error');
+            input.classList.add('error');
         }
         
         setTimeout(() => {
             element.classList.remove('show');
             if (input) {
-                input.closest('.input-wrapper').classList.remove('error');
+                input.classList.remove('error');
             }
         }, 5000);
     }
@@ -164,12 +212,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Change step
     function goToStep(step) {
         currentStep = step;
-        document.querySelectorAll('.step').forEach(stepEl => {
-            stepEl.classList.remove('active');
-        });
-        document.getElementById(`step${step}`).classList.add('active');
-        
-        updateProgressIndicator();
+        updateFormSteps();
         
         if (step === 2) {
             startCountdown();
@@ -201,21 +244,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 element.classList.remove('valid');
             }
         });
-        
-        // Update strength meter
-        const strengthFill = document.getElementById('strength-fill');
-        const validRules = Object.values(rules).filter(Boolean).length;
-        
-        strengthFill.className = 'strength-fill';
-        if (validRules <= 2) {
-            strengthFill.classList.add('strength-weak');
-        } else if (validRules === 3) {
-            strengthFill.classList.add('strength-fair');
-        } else if (validRules === 4) {
-            strengthFill.classList.add('strength-good');
-        } else if (validRules === 5) {
-            strengthFill.classList.add('strength-strong');
-        }
         
         return Object.values(rules).every(Boolean);
     }
@@ -389,6 +417,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.otp-input').forEach(input => {
             input.value = '';
             input.classList.remove('filled');
+            input.style.color = 'var(--text-color)';
         });
         document.getElementById('otp').value = '';
         document.getElementById('otp-error').classList.remove('show');
@@ -432,7 +461,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Enter key support for forms
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Enter') {
-            const activeStep = document.querySelector('.step.active');
+            const activeStep = document.querySelector('.form-step.active');
             if (activeStep) {
                 const form = activeStep.querySelector('form');
                 if (form) {
@@ -442,22 +471,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Auto-focus first input on step change
-    const observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
-            if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-                const activeStep = document.querySelector('.step.active');
-                if (activeStep) {
-                    const firstInput = activeStep.querySelector('input');
-                    if (firstInput && firstInput.type !== 'hidden') {
-                        setTimeout(() => firstInput.focus(), 300);
-                    }
-                }
-            }
-        });
-    });
+    // Initialize form
+    updateFormSteps();
 
-    document.querySelectorAll('.step').forEach(step => {
-        observer.observe(step, { attributes: true });
-    });
+    // Debug: Log when the script loads
+    console.log('Forgot password JavaScript loaded successfully');
 });

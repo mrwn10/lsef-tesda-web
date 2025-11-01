@@ -110,10 +110,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Special validation for password match (Step 3)
             if (currentStep === 3) {
-                const password = document.getElementById('password');
-                const confirmPassword = document.getElementById('confirm_password');
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirm_password').value;
                 
-                if (password.value !== confirmPassword.value) {
+                if (password !== confirmPassword) {
                     isValid = false;
                     confirmPassword.classList.add('error');
                     document.getElementById('password-match').textContent = 'Passwords do not match';
@@ -473,6 +473,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const termsModal = document.getElementById('termsModal') ? new bootstrap.Modal(document.getElementById('termsModal')) : null;
     const termsLink = document.querySelector('.terms-link');
     const submitBtn = document.querySelector('.submit-btn');
+    const understandBtn = document.getElementById('understandBtn');
     let termsRead = false;
 
     if (termsCheckbox && termsModal) {
@@ -481,21 +482,6 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!termsRead) {
                 e.preventDefault(); // Prevent checkbox from being checked
                 termsModal.show();
-                
-                // When modal is shown, disable closing via backdrop click or escape
-                document.getElementById('termsModal').addEventListener('show.bs.modal', function() {
-                    const modal = this;
-                    modal.style.backgroundColor = 'rgba(0,0,0,0.8)';
-                    
-                    // Remove default close behavior
-                    const backdrop = document.querySelector('.modal-backdrop');
-                    if (backdrop) {
-                        backdrop.style.pointerEvents = 'none';
-                    }
-                    
-                    // Disable escape key
-                    document.addEventListener('keydown', disableEscape);
-                }, { once: true });
             }
         });
 
@@ -504,30 +490,10 @@ document.addEventListener('DOMContentLoaded', function() {
             termsLink.addEventListener('click', function(e) {
                 e.preventDefault();
                 termsModal.show();
-                
-                // For manual opening, allow normal closing behavior
-                document.getElementById('termsModal').addEventListener('show.bs.modal', function() {
-                    document.removeEventListener('keydown', disableEscape);
-                    const backdrop = document.querySelector('.modal-backdrop');
-                    if (backdrop) {
-                        backdrop.style.pointerEvents = 'auto';
-                    }
-                }, { once: true });
             });
         }
 
-        // When modal is hidden, re-enable close behaviors
-        document.getElementById('termsModal').addEventListener('hidden.bs.modal', function() {
-            document.removeEventListener('keydown', disableEscape);
-            
-            const backdrop = document.querySelector('.modal-backdrop');
-            if (backdrop) {
-                backdrop.style.pointerEvents = 'auto';
-            }
-        });
-
         // "I Understand" button in modal
-        const understandBtn = document.querySelector('#termsModal .btn-primary');
         if (understandBtn) {
             understandBtn.addEventListener('click', function() {
                 termsRead = true;
@@ -563,14 +529,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 submitBtn.disabled = !this.checked;
             }
         });
-    }
-
-    // Function to disable escape key
-    function disableEscape(e) {
-        if (e.key === 'Escape') {
-            e.preventDefault();
-            e.stopPropagation();
-        }
     }
 
     // Form submission validation

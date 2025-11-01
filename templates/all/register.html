@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registration</title>
+    <title>Registration - TESDA LSEF</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/lsef_logo.png') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="registration-wrapper">
@@ -333,22 +334,11 @@
                 </div>
             </div>
         </div>
-
-        <div class="registration-footer">
-            <p>© 2025 TESDA LSEF. All rights reserved.</p>
-            <div class="footer-links">
-                <a href="#">Privacy Policy</a>
-                <span>•</span>
-                <a href="#">Terms of Service</a>
-                <span>•</span>
-                <a href="#">Contact Support</a>
-            </div>
-        </div>
     </div>
 
     <!-- Terms and Conditions Modal -->
     <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="termsModalLabel">
@@ -358,31 +348,65 @@
                 </div>
                 <div class="modal-body">
                     <div class="terms-section">
-                        <h6><i class="fas fa-gavel me-2"></i>Terms of Service</h6>
-                        <p>By registering an account, you agree to:</p>
+                        <h6><i class="fas fa-graduation-cap me-2"></i>Enrollment and Training</h6>
                         <ol>
-                            <li>Provide accurate and complete information</li>
-                            <li>Keep your login credentials secure</li>
-                            <li>Use the system only for its intended purposes</li>
-                            <li>Comply with all applicable laws and regulations</li>
+                            <li>All applicants must meet the specific requirements for their chosen program.</li>
+                            <li>Training schedules are fixed and must be strictly followed.</li>
+                            <li>Regular attendance is mandatory (minimum 80% attendance required).</li>
+                            <li>Students must complete all required competencies to receive certification.</li>
                         </ol>
                     </div>
-                    
+
                     <div class="terms-section">
-                        <h6><i class="fas fa-shield-alt me-2"></i>Privacy Policy</h6>
-                        <p>We collect and use your personal information to:</p>
-                        <ul>
-                            <li>Provide and maintain our service</li>
-                            <li>Notify you about changes to our service</li>
-                            <li>Provide customer support</li>
-                            <li>Monitor the usage of our service</li>
-                        </ul>
+                        <h6><i class="fas fa-user me-2"></i>Student Conduct</h6>
+                        <ol>
+                            <li>Maintain proper decorum and respect towards instructors and fellow students.</li>
+                            <li>Proper uniform must be worn during training sessions.</li>
+                            <li>Use of training equipment must follow safety protocols.</li>
+                            <li>Any form of harassment or misconduct will result in disciplinary action.</li>
+                        </ol>
+                    </div>
+
+                    <div class="terms-section">
+                        <h6><i class="fas fa-lock me-2"></i>Data Privacy</h6>
+                        <ol>
+                            <li>Personal information will be used solely for training and employment purposes.</li>
+                            <li>Data will be protected in accordance with the Data Privacy Act.</li>
+                            <li>Photos and videos may be taken for training and promotional purposes.</li>
+                            <li>Students have the right to access and correct their personal information.</li>
+                        </ol>
+                    </div>
+
+                    <div class="terms-section">
+                        <h6><i class="fas fa-money-bill-wave me-2"></i>Fees and Payments</h6>
+                        <ol>
+                            <li>Training fees must be paid according to the scheduled payment plan.</li>
+                            <li>Refunds are subject to TESDA's refund policy.</li>
+                            <li>Additional fees may apply for replacement of IDs or certificates.</li>
+                            <li>Scholarship grants have specific maintenance requirements.</li>
+                        </ol>
+                    </div>
+
+                    <div class="terms-section">
+                        <h6><i class="fas fa-certificate me-2"></i>Certification</h6>
+                        <ol>
+                            <li>Certification is awarded upon successful completion of all requirements.</li>
+                            <li>National Certificates (NC) are valid for 5 years.</li>
+                            <li>Certificates can be verified through the TESDA online system.</li>
+                            <li>Replacement certificates require proper documentation and fees.</li>
+                        </ol>
+                    </div>
+
+                    <div class="alert alert-info mt-4">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Important:</strong> By checking the agreement box, you acknowledge that you have read, understood, and agree to be bound by these Terms and Conditions.
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
-                        <i class="fas fa-check me-2"></i>I Understand
+                    <button type="button" class="btn btn-primary" id="understandBtn">
+                        <i class="fas fa-check me-2"></i>I Understand and Agree
                     </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>

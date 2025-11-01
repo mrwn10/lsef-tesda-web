@@ -1,4 +1,174 @@
 $(document).ready(function() {
+    // Mobile Navigation Functionality
+    const hamburgerMenu = document.getElementById('hamburgerMenu');
+    const mobileNav = document.getElementById('mobileNav');
+    const closeMobileNav = document.getElementById('closeMobileNav');
+    
+    if (hamburgerMenu && mobileNav) {
+        hamburgerMenu.addEventListener('click', function() {
+            mobileNav.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        
+        if (closeMobileNav) {
+            closeMobileNav.addEventListener('click', function() {
+                mobileNav.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        }
+        
+        // Close mobile nav when clicking on links
+        const mobileNavLinks = document.querySelectorAll('.mobile-nav-links a');
+        mobileNavLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                mobileNav.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        });
+        
+        // Close mobile nav when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!hamburgerMenu.contains(e.target) && !mobileNav.contains(e.target) && mobileNav.classList.contains('active')) {
+                mobileNav.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+        
+        // Close mobile nav with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && mobileNav.classList.contains('active')) {
+                mobileNav.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+    }
+
+    // Modal Functions
+    function openModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            document.body.classList.add('modal-open');
+        }
+    }
+
+    function closeModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.style.display = 'none';
+            // Only reset overflow if no other modals are open
+            if (!document.querySelector('.modal[style*="display: flex"]')) {
+                document.body.style.overflow = '';
+                document.body.classList.remove('modal-open');
+            }
+        }
+    }
+
+    // Logout Modal Handling - FIXED VERSION
+    const logoutModal = document.getElementById('logout-modal');
+    const logoutTrigger = document.getElementById('logout-trigger');
+    const mobileLogoutTrigger = document.getElementById('mobile-logout-trigger');
+    const confirmLogout = document.getElementById('confirm-logout');
+    const cancelLogout = document.getElementById('cancel-logout');
+    const closeLogoutModal = document.getElementById('close-logout-modal');
+
+    // Show modal when logout is clicked (desktop)
+    if (logoutTrigger) {
+        logoutTrigger.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            openModal('logout-modal');
+        });
+    }
+
+    // Show modal when logout is clicked (mobile) - FIXED
+    if (mobileLogoutTrigger) {
+        mobileLogoutTrigger.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            // First close mobile nav properly
+            if (mobileNav) {
+                mobileNav.classList.remove('active');
+            }
+            // Then open logout modal
+            setTimeout(() => {
+                openModal('logout-modal');
+            }, 10);
+        });
+    }
+
+    // Hide modal when cancel is clicked - FIXED
+    if (cancelLogout) {
+        cancelLogout.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            closeModal('logout-modal');
+            // Ensure body overflow is properly reset
+            document.body.style.overflow = '';
+            document.body.classList.remove('modal-open');
+        });
+    }
+
+    // Hide modal when close button is clicked
+    if (closeLogoutModal) {
+        closeLogoutModal.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            closeModal('logout-modal');
+            // Ensure body overflow is properly reset
+            document.body.style.overflow = '';
+            document.body.classList.remove('modal-open');
+        });
+    }
+
+    // Handle logout confirmation - FIXED ROUTE
+    if (confirmLogout) {
+        confirmLogout.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Get the logout URL from the data attribute
+            const logoutUrl = document.body.getAttribute('data-logout-url');
+            if (logoutUrl) {
+                window.location.href = logoutUrl;
+            } else {
+                console.error('Logout URL not found');
+                // Fallback to a default URL if needed
+                window.location.href = "/logout";
+            }
+        });
+    }
+
+    // Close modal when clicking outside of it
+    window.addEventListener('click', function(event) {
+        if (event.target === logoutModal) {
+            closeModal('logout-modal');
+            // Ensure body overflow is properly reset
+            document.body.style.overflow = '';
+            document.body.classList.remove('modal-open');
+        }
+    });
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && logoutModal && logoutModal.style.display === 'flex') {
+            closeModal('logout-modal');
+            // Ensure body overflow is properly reset
+            document.body.style.overflow = '';
+            document.body.classList.remove('modal-open');
+        }
+    });
+
+    // Mobile Schedule Accordion
+    const mobileScheduleDays = document.querySelectorAll('.mobile-schedule-day');
+    mobileScheduleDays.forEach(day => {
+        const header = day.querySelector('.mobile-day-header');
+        header.addEventListener('click', function() {
+            day.classList.toggle('active');
+        });
+    });
+
     // Fetch schedule data from the API
     const userId = $('body').data('user-id');
     
@@ -13,6 +183,7 @@ $(document).ready(function() {
         success: function(response) {
             if (response.schedule && response.schedule.length > 0) {
                 populateSchedule(response.schedule);
+                populateMobileSchedule(response.schedule);
             }
         },
         error: function(xhr, status, error) {
@@ -161,6 +332,57 @@ $(document).ready(function() {
                     }
                 }
             });
+        });
+    }
+
+    function populateMobileSchedule(classes) {
+        // Group classes by day
+        const classesByDay = {
+            'Monday': [],
+            'Tuesday': [],
+            'Wednesday': [],
+            'Thursday': [],
+            'Friday': [],
+            'Saturday': [],
+            'Sunday': []
+        };
+
+        // Organize classes by day
+        classes.forEach(function(cls) {
+            cls.days.forEach(function(daySchedule) {
+                const day = daySchedule.day;
+                if (classesByDay[day]) {
+                    classesByDay[day].push({
+                        title: cls.title,
+                        course: cls.course,
+                        venue: cls.venue,
+                        start_time: daySchedule.start_time,
+                        end_time: daySchedule.end_time
+                    });
+                }
+            });
+        });
+
+        // Populate mobile schedule for each day
+        Object.keys(classesByDay).forEach(day => {
+            const dayElement = $(`#mobile${day}`);
+            const scheduleContainer = dayElement.find('.mobile-day-schedule');
+            
+            if (classesByDay[day].length > 0) {
+                classesByDay[day].forEach(classInfo => {
+                    const classHtml = `
+                        <div class="mobile-class-event">
+                            <div class="mobile-class-time">${classInfo.start_time} - ${classInfo.end_time}</div>
+                            <div class="mobile-class-title">${classInfo.title}</div>
+                            <div class="mobile-class-course">${classInfo.course}</div>
+                            <div class="mobile-class-venue">${classInfo.venue}</div>
+                        </div>
+                    `;
+                    scheduleContainer.append(classHtml);
+                });
+            } else {
+                scheduleContainer.html('<div class="mobile-class-event" style="background-color: #f8fafc; color: #94a3b8; text-align: center;">No classes scheduled</div>');
+            }
         });
     }
 

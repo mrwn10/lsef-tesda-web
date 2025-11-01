@@ -1,4 +1,4 @@
-/* login.css - Modern Enhanced Version */
+/* login.css - Modern Enhanced Version with Consistent Styling */
 :root {
     --primary-color: #003366; /* TESDA Blue */
     --primary-hover: #002244; /* Darker TESDA Blue */
@@ -27,16 +27,28 @@
 }
 
 body {
-    font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+    font-family: 'Poppins', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
     background-color: var(--bg-color);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
     color: var(--text-color);
-    line-height: 1.5;
-    padding: 1rem;
-    background-image: linear-gradient(135deg, #f5f7fa 0%, #e4e8ed 100%);
+    line-height: 1.6;
+    background-image: url('../img/register_bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    position: relative;
+    min-height: 100vh;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.85);
+    z-index: -1;
 }
 
 .login-wrapper {
@@ -44,18 +56,21 @@ body {
     flex-direction: column;
     min-height: 100vh;
     width: 100%;
-    max-width: 480px;
     justify-content: center;
+    align-items: center;
+    padding: 1rem;
 }
 
 .login-container {
     width: 100%;
+    max-width: 480px;
     background: var(--white);
     border-radius: var(--radius);
     box-shadow: var(--shadow-md);
     padding: 2.5rem;
-    animation: fadeIn 0.5s ease;
     margin-bottom: 1.5rem;
+    animation: fadeIn 0.5s ease;
+    border: 1px solid var(--border-color);
 }
 
 @keyframes fadeIn {
@@ -76,7 +91,7 @@ body {
 }
 
 .login-header .logo {
-    height: 70px;
+    height: 80px;
     object-fit: contain;
     transition: transform 0.3s ease;
 }
@@ -88,13 +103,16 @@ body {
 .login-header h1 {
     color: var(--primary-color);
     margin-bottom: 0.5rem;
-    font-size: 1.75rem;
+    font-size: 2rem;
     font-weight: 700;
+    font-family: 'Poppins', sans-serif;
 }
 
 .login-header p {
     color: var(--light-text);
-    font-size: 1rem;
+    font-size: 1.1rem;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
 }
 
 /* Flash Messages */
@@ -112,6 +130,7 @@ body {
     animation: slideIn 0.3s ease;
     position: relative;
     box-shadow: var(--shadow-sm);
+    font-family: 'Poppins', sans-serif;
 }
 
 @keyframes slideIn {
@@ -128,6 +147,7 @@ body {
 .flash-text {
     flex: 1;
     padding-right: 1.5rem;
+    font-weight: 500;
 }
 
 .flash-close {
@@ -190,15 +210,15 @@ body {
     width: 100%;
 }
 
-label {
-    display: block;
+.form-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
     margin-bottom: 0.5rem;
     font-weight: 600;
     color: var(--text-color);
     font-size: 0.95rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    font-family: 'Poppins', sans-serif;
 }
 
 .input-wrapper {
@@ -215,6 +235,7 @@ input[type="password"] {
     transition: var(--transition);
     background-color: var(--gray-light);
     color: var(--text-color);
+    font-family: 'Poppins', sans-serif;
 }
 
 input[type="text"]:focus,
@@ -269,6 +290,7 @@ input::placeholder {
     display: inline-flex;
     align-items: center;
     gap: 0.25rem;
+    font-family: 'Poppins', sans-serif;
 }
 
 .forgot-password a:hover {
@@ -295,9 +317,10 @@ input::placeholder {
     justify-content: center;
     align-items: center;
     height: 48px;
+    font-family: 'Poppins', sans-serif;
 }
 
-.login-btn:hover {
+.login-btn:hover:not(:disabled) {
     background-color: var(--primary-hover);
     transform: translateY(-2px);
     box-shadow: var(--shadow);
@@ -306,6 +329,13 @@ input::placeholder {
 .login-btn:active {
     transform: translateY(0);
     box-shadow: var(--shadow-sm);
+}
+
+.login-btn:disabled {
+    background-color: var(--light-text);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
 }
 
 .btn-text {
@@ -337,6 +367,7 @@ input::placeholder {
     color: var(--light-text);
     font-size: 0.9rem;
     font-weight: 500;
+    font-family: 'Poppins', sans-serif;
 }
 
 .divider::before,
@@ -354,22 +385,23 @@ input::placeholder {
     margin-left: 1rem;
 }
 
-/* Register links */
-.register-links {
+/* Auth links */
+.auth-links {
     text-align: center;
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
 }
 
-.register-link {
+.auth-link {
     color: var(--light-text);
     font-size: 0.95rem;
-    margin-bottom: 0.75rem;
+    font-family: 'Poppins', sans-serif;
 }
 
-.register-link:last-child {
-    margin-bottom: 0;
-}
-
-.register-link a {
+.auth-link a {
     color: var(--primary-color);
     text-decoration: none;
     font-weight: 600;
@@ -377,9 +409,10 @@ input::placeholder {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
+    font-family: 'Poppins', sans-serif;
 }
 
-.register-link a:hover {
+.auth-link a:hover {
     text-decoration: underline;
     color: var(--primary-hover);
 }
@@ -390,6 +423,7 @@ input::placeholder {
     color: var(--light-text);
     font-size: 0.85rem;
     padding: 1rem 0;
+    font-family: 'Poppins', sans-serif;
 }
 
 .login-footer p {
@@ -408,6 +442,7 @@ input::placeholder {
     color: var(--light-text);
     text-decoration: none;
     transition: var(--transition);
+    font-family: 'Poppins', sans-serif;
 }
 
 .footer-links a:hover {
@@ -420,18 +455,17 @@ input::placeholder {
 }
 
 /* Responsive adjustments */
-@media (max-width: 480px) {
+@media (max-width: 768px) {
     .login-container {
         padding: 1.75rem;
-        border-radius: 0;
-    }
-    
-    .login-header h1 {
-        font-size: 1.5rem;
     }
     
     .login-header .logo {
         height: 60px;
+    }
+    
+    .login-header h1 {
+        font-size: 1.75rem;
     }
     
     input[type="text"],
@@ -439,12 +473,42 @@ input::placeholder {
         padding: 0.75rem 1rem 0.75rem 2.25rem;
     }
     
+    .auth-links {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .login-container {
+        padding: 1.5rem;
+        margin: 0.5rem;
+    }
+    
+    .login-header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .login-header p {
+        font-size: 1rem;
+    }
+    
     .login-btn {
         padding: 0.75rem;
     }
 }
 
-/* Loading state */
-.login-form.loading .login-btn {
-    pointer-events: none;
+/* Additional mobile optimizations */
+@media (max-width: 360px) {
+    .login-container {
+        padding: 1rem;
+    }
+    
+    .login-header h1 {
+        font-size: 1.25rem;
+    }
+    
+    .login-header p {
+        font-size: 0.9rem;
+    }
 }

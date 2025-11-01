@@ -20,7 +20,7 @@
 
 html, body {
     height: 100%;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: var(--tesda-light-gray);
     line-height: 1.6;
     color: var(--tesda-text);
@@ -45,6 +45,7 @@ body.modal-open {
     align-items: center;
     color: var(--tesda-white);
     height: 60px;
+    position: relative;
 }
 
 .nav-left, .nav-right {
@@ -68,6 +69,7 @@ body.modal-open {
     transition: all 0.3s ease;
     position: relative;
     margin: 0 2px;
+    font-family: 'Poppins', sans-serif;
 }
 
 .top-nav a:hover {
@@ -84,6 +86,146 @@ body.modal-open {
 .top-nav a i {
     margin-right: 8px;
     font-size: 1rem;
+}
+
+/* Hamburger Menu */
+.hamburger-menu {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    width: 30px;
+    height: 21px;
+    justify-content: space-between;
+    background: none;
+    border: none;
+    padding: 0;
+    margin-left: auto;
+}
+
+.hamburger-menu span {
+    display: block;
+    height: 3px;
+    width: 100%;
+    background-color: var(--tesda-white);
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+.hamburger-menu:hover span {
+    background-color: var(--tesda-gold);
+}
+
+/* Mobile Navigation */
+.mobile-nav {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 85%;
+    max-width: 320px;
+    height: 100vh;
+    background: linear-gradient(135deg, var(--tesda-blue) 0%, var(--tesda-dark-blue) 100%);
+    box-shadow: -5px 0 25px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease-in-out;
+    z-index: 1000;
+    padding: 2rem 1.5rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.mobile-nav.active {
+    right: 0;
+}
+
+.mobile-nav-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.mobile-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--tesda-white);
+    font-weight: 700;
+    font-size: 1.1rem;
+    font-family: 'Poppins', sans-serif;
+}
+
+.mobile-brand img {
+    height: 35px;
+    filter: brightness(0) invert(1);
+}
+
+.close-mobile-nav {
+    background: none;
+    border: none;
+    color: var(--tesda-white);
+    font-size: 1.5rem;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.close-mobile-nav:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.mobile-nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.mobile-nav-links a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 1rem 1rem;
+    color: var(--tesda-white);
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.mobile-nav-links a:hover,
+.mobile-nav-links a.active {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: translateX(5px);
+    color: var(--tesda-white);
+}
+
+.mobile-nav-links a i {
+    width: 20px;
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+.mobile-nav-divider {
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.3);
+    margin: 1rem 0;
+}
+
+.mobile-nav-links .logout-btn {
+    color: #ff6b6b !important;
+}
+
+.mobile-nav-links .logout-btn i {
+    color: #ff6b6b !important;
 }
 
 .sub-nav {
@@ -107,6 +249,7 @@ body.modal-open {
     color: var(--tesda-blue);
     display: flex;
     align-items: center;
+    font-family: 'Poppins', sans-serif;
 }
 
 .brand-name::before {
@@ -185,6 +328,7 @@ body.modal-open {
     gap: 12px;
     transition: all 0.2s;
     text-decoration: none;
+    font-family: 'Poppins', sans-serif;
 }
 
 .dropdown-menu a:hover {
@@ -236,12 +380,16 @@ body.modal-open {
     display: flex;
     align-items: center;
     gap: 12px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
 }
 
 .welcome-section p {
     color: var(--tesda-text-light);
     font-size: 16px;
     line-height: 1.6;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
 }
 
 /* Quick Stats Styles */
@@ -305,12 +453,14 @@ body.modal-open {
     font-size: 2rem;
     font-weight: 700;
     color: var(--tesda-blue);
+    font-family: 'Poppins', sans-serif;
 }
 
 .stat-info p {
     margin: 5px 0 0 0;
     color: var(--tesda-text-light);
     font-weight: 500;
+    font-family: 'Poppins', sans-serif;
 }
 
 /* Schedule Styles */
@@ -325,6 +475,11 @@ body.modal-open {
 
 .section-header {
     margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
 }
 
 .section-header h2 {
@@ -335,6 +490,30 @@ body.modal-open {
     display: flex;
     align-items: center;
     gap: 10px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+}
+
+.schedule-mobile-info {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background-color: var(--tesda-light-blue);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    color: var(--tesda-blue);
+    font-family: 'Poppins', sans-serif;
+}
+
+.schedule-mobile-info i {
+    font-size: 1rem;
+}
+
+.schedule-wrapper {
+    overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid var(--tesda-border);
 }
 
 .schedule-grid {
@@ -342,9 +521,7 @@ body.modal-open {
     grid-template-columns: repeat(8, 1fr);
     gap: 1px;
     background-color: var(--tesda-border);
-    border: 1px solid var(--tesda-border);
-    border-radius: 8px;
-    overflow: hidden;
+    min-width: 800px;
 }
 
 .schedule-header {
@@ -354,6 +531,7 @@ body.modal-open {
     text-align: center;
     font-weight: bold;
     font-size: 14px;
+    font-family: 'Poppins', sans-serif;
 }
 
 .schedule-time {
@@ -363,6 +541,7 @@ body.modal-open {
     font-weight: 500;
     color: #334155;
     font-size: 13px;
+    font-family: 'Poppins', sans-serif;
 }
 
 .schedule-cell {
@@ -394,6 +573,7 @@ body.modal-open {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    font-family: 'Poppins', sans-serif;
 }
 
 .class-event-multi {
@@ -405,21 +585,25 @@ body.modal-open {
     text-align: left;
     height: 100%;
     width: 100%;
+    font-family: 'Poppins', sans-serif;
 }
 
 .class-event .course-code {
     font-weight: bold;
     color: #0d47a1;
+    font-family: 'Poppins', sans-serif;
 }
 
 .class-event .time {
     font-size: 11px;
     color: #546e7a;
+    font-family: 'Poppins', sans-serif;
 }
 
 .class-event .venue {
     font-size: 11px;
     color: #546e7a;
+    font-family: 'Poppins', sans-serif;
 }
 
 .time-range {
@@ -427,6 +611,7 @@ body.modal-open {
     color: #1976d2;
     margin-bottom: 5px;
     font-size: 11px;
+    font-family: 'Poppins', sans-serif;
 }
 
 .lunch-time {
@@ -436,6 +621,7 @@ body.modal-open {
     font-weight: 500;
     color: #334155;
     font-size: 13px;
+    font-family: 'Poppins', sans-serif;
 }
 
 .lunch-break {
@@ -449,6 +635,104 @@ body.modal-open {
     align-items: center;
     justify-content: center;
     gap: 8px;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Mobile Schedule Alternative */
+.mobile-schedule {
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.mobile-schedule-day {
+    background: white;
+    border-radius: 8px;
+    border: 1px solid var(--tesda-border);
+    overflow: hidden;
+}
+
+.mobile-day-header {
+    padding: 15px;
+    background-color: var(--tesda-light-blue);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.mobile-day-header:hover {
+    background-color: #dbeafe;
+}
+
+.mobile-day-header h4 {
+    margin: 0;
+    color: var(--tesda-blue);
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+}
+
+.mobile-day-header i {
+    color: var(--tesda-blue);
+    transition: transform 0.3s ease;
+}
+
+.mobile-schedule-day.active .mobile-day-header i {
+    transform: rotate(180deg);
+}
+
+.mobile-day-schedule {
+    padding: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.mobile-schedule-day.active .mobile-day-schedule {
+    padding: 15px;
+    max-height: 500px;
+}
+
+.mobile-class-event {
+    background-color: #e3f2fd;
+    border-left: 3px solid #1976d2;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
+.mobile-class-event:last-child {
+    margin-bottom: 0;
+}
+
+.mobile-class-time {
+    font-weight: bold;
+    color: #0d47a1;
+    margin-bottom: 5px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+}
+
+.mobile-class-title {
+    font-weight: 600;
+    color: var(--tesda-text);
+    margin-bottom: 3px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.mobile-class-course {
+    color: var(--tesda-text-light);
+    font-size: 0.85rem;
+    margin-bottom: 3px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.mobile-class-venue {
+    color: var(--tesda-text-light);
+    font-size: 0.85rem;
+    font-family: 'Poppins', sans-serif;
 }
 
 /* Modal Styles */
@@ -460,18 +744,19 @@ body.modal-open {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
+    z-index: 1100;
     justify-content: center;
     align-items: center;
     overflow: auto;
+    padding: 20px;
 }
 
 .modal-content {
     background-color: #fff;
-    margin: 20px auto;
+    margin: 0 auto;
     padding: 0;
     width: 400px;
-    max-width: 90%;
+    max-width: 100%;
     max-height: 90vh;
     border-radius: 8px;
     overflow-y: auto;
@@ -495,6 +780,8 @@ body.modal-open {
     display: flex;
     align-items: center;
     gap: 10px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
 }
 
 .close-modal {
@@ -504,6 +791,17 @@ body.modal-open {
     font-size: 1.5rem;
     cursor: pointer;
     padding: 0 5px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.close-modal:hover {
+    background-color: rgba(255, 255, 255, 0.2);
 }
 
 .modal-body {
@@ -515,6 +813,7 @@ body.modal-open {
     margin: 0;
     font-size: 1rem;
     color: #333;
+    font-family: 'Poppins', sans-serif;
 }
 
 .modal-footer {
@@ -534,6 +833,7 @@ body.modal-open {
     flex: 1;
     text-align: center;
     font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
 }
 
 .btn-yes {
@@ -603,6 +903,7 @@ body.modal-open {
     margin: 0 0 8px 0;
     font-size: 1.3rem;
     font-weight: 700;
+    font-family: 'Poppins', sans-serif;
 }
 
 .notification-text p {
@@ -610,6 +911,7 @@ body.modal-open {
     font-size: 0.95rem;
     line-height: 1.4;
     opacity: 0.9;
+    font-family: 'Poppins', sans-serif;
 }
 
 .notification-actions {
@@ -628,6 +930,7 @@ body.modal-open {
     font-weight: 600;
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
+    font-family: 'Poppins', sans-serif;
 }
 
 .enroll-btn:hover {
@@ -645,6 +948,7 @@ body.modal-open {
     cursor: pointer;
     font-weight: 600;
     transition: all 0.3s ease;
+    font-family: 'Poppins', sans-serif;
 }
 
 .close-notification:hover {
@@ -668,6 +972,7 @@ body.modal-open {
     position: absolute;
     font-size: 1.5rem;
     animation: fall 3s linear forwards;
+    font-family: 'Poppins', sans-serif;
 }
 
 /* Animations */
@@ -705,28 +1010,45 @@ body.modal-open {
     }
 }
 
-/* Responsive Design */
+/* ===== Responsive Design ===== */
+@media (max-width: 1024px) {
+    .top-nav a {
+        padding: 0 15px;
+        font-size: 0.9rem;
+    }
+    
+    .brand-section {
+        gap: 20px;
+    }
+    
+    .brand-name {
+        font-size: 1.3rem;
+    }
+    
+    .logo-container {
+        gap: 15px;
+    }
+}
+
 @media (max-width: 768px) {
     .top-nav {
         padding: 0 3%;
-        height: auto;
-        flex-wrap: wrap;
+        height: 60px;
     }
     
     .nav-left {
-        flex-wrap: wrap;
-        justify-content: center;
+        display: none;
     }
     
-    .top-nav a {
-        padding: 10px 15px;
-        font-size: 0.9rem;
+    .hamburger-menu {
+        display: flex;
     }
     
     .sub-nav {
         padding: 10px 3%;
         flex-direction: column;
         gap: 15px;
+        text-align: center;
     }
     
     .brand-section {
@@ -734,8 +1056,27 @@ body.modal-open {
         gap: 15px;
     }
     
+    .brand-name::before {
+        display: none;
+    }
+    
+    .logo-container {
+        justify-content: center;
+        border-left: none;
+        border-top: 3px solid var(--tesda-gold);
+        padding: 10px;
+    }
+    
     .main-content {
         padding: 20px 3%;
+    }
+    
+    .welcome-section {
+        padding: 20px;
+    }
+    
+    .welcome-section h1 {
+        font-size: 24px;
     }
     
     .quick-stats {
@@ -743,13 +1084,31 @@ body.modal-open {
         gap: 15px;
     }
     
-    .schedule-grid {
-        grid-template-columns: repeat(8, 1fr);
-        overflow-x: auto;
+    .stat-card {
+        padding: 20px;
     }
     
-    .schedule-header, .schedule-time, .schedule-cell {
-        min-width: 100px;
+    .schedule-container {
+        padding: 20px;
+    }
+    
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .schedule-mobile-info {
+        display: flex;
+        align-self: stretch;
+        justify-content: center;
+    }
+    
+    .schedule-grid {
+        display: none;
+    }
+    
+    .mobile-schedule {
+        display: flex;
     }
     
     .verification-notification {
@@ -771,12 +1130,6 @@ body.modal-open {
     .notification-actions {
         flex-direction: column;
     }
-}
-
-@media (max-width: 480px) {
-    .quick-stats {
-        grid-template-columns: 1fr;
-    }
     
     .notification-content {
         flex-direction: column;
@@ -787,12 +1140,83 @@ body.modal-open {
         align-self: center;
     }
     
-    .schedule-grid {
-        font-size: 12px;
+    .modal-content {
+        width: 95%;
+        margin: 20px auto;
     }
     
-    .schedule-header, .schedule-time, .schedule-cell {
-        min-width: 80px;
-        padding: 8px 4px;
+    .modal-footer {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 480px) {
+    .top-nav {
+        padding: 0 2%;
+    }
+    
+    .sub-nav {
+        padding: 10px 2%;
+    }
+    
+    .main-content {
+        padding: 15px 2%;
+    }
+    
+    .quick-stats {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .stat-card {
+        padding: 15px;
+    }
+    
+    .stat-info h3 {
+        font-size: 1.5rem;
+    }
+    
+    .stat-icon {
+        font-size: 2rem;
+    }
+    
+    .welcome-section {
+        padding: 15px;
+    }
+    
+    .welcome-section h1 {
+        font-size: 20px;
+    }
+    
+    .welcome-section p {
+        font-size: 14px;
+    }
+    
+    .section-header h2 {
+        font-size: 18px;
+    }
+    
+    .mobile-nav {
+        width: 90%;
+        padding: 1.5rem 1rem;
+    }
+    
+    .mobile-brand {
+        font-size: 1rem;
+    }
+    
+    .mobile-brand img {
+        height: 30px;
+    }
+    
+    .modal-content {
+        width: 100%;
+        margin: 10px;
+    }
+    
+    .modal-header,
+    .modal-body,
+    .modal-footer {
+        padding: 15px;
     }
 }
