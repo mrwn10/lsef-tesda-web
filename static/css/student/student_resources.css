@@ -6,6 +6,10 @@
     --tesda-white: #FFFFFF;
     --tesda-light-blue: #E6F0FA;
     --tesda-dark-blue: #002244;
+    --tesda-light-gray: #f8fafc;
+    --tesda-border: #e2e8f0;
+    --tesda-text: #333;
+    --tesda-text-light: #64748b;
 }
 
 * {
@@ -16,10 +20,10 @@
 
 html, body {
     height: 100%;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f8fafc;
+    font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--tesda-light-gray);
     line-height: 1.6;
-    color: #333;
+    color: var(--tesda-text);
 }
 
 body.modal-open {
@@ -41,6 +45,7 @@ body.modal-open {
     align-items: center;
     color: var(--tesda-white);
     height: 60px;
+    position: relative;
 }
 
 .nav-left, .nav-right {
@@ -64,6 +69,7 @@ body.modal-open {
     transition: all 0.3s ease;
     position: relative;
     margin: 0 2px;
+    font-family: 'Poppins', sans-serif;
 }
 
 .top-nav a:hover {
@@ -80,6 +86,146 @@ body.modal-open {
 .top-nav a i {
     margin-right: 8px;
     font-size: 1rem;
+}
+
+/* Hamburger Menu */
+.hamburger-menu {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    width: 30px;
+    height: 21px;
+    justify-content: space-between;
+    background: none;
+    border: none;
+    padding: 0;
+    margin-left: auto;
+}
+
+.hamburger-menu span {
+    display: block;
+    height: 3px;
+    width: 100%;
+    background-color: var(--tesda-white);
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+.hamburger-menu:hover span {
+    background-color: var(--tesda-gold);
+}
+
+/* Mobile Navigation */
+.mobile-nav {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 85%;
+    max-width: 320px;
+    height: 100vh;
+    background: linear-gradient(135deg, var(--tesda-blue) 0%, var(--tesda-dark-blue) 100%);
+    box-shadow: -5px 0 25px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease-in-out;
+    z-index: 1000;
+    padding: 2rem 1.5rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.mobile-nav.active {
+    right: 0;
+}
+
+.mobile-nav-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.mobile-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--tesda-white);
+    font-weight: 700;
+    font-size: 1.1rem;
+    font-family: 'Poppins', sans-serif;
+}
+
+.mobile-brand img {
+    height: 35px;
+    filter: brightness(0) invert(1);
+}
+
+.close-mobile-nav {
+    background: none;
+    border: none;
+    color: var(--tesda-white);
+    font-size: 1.5rem;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.close-mobile-nav:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.mobile-nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.mobile-nav-links a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 1rem 1rem;
+    color: var(--tesda-white);
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.mobile-nav-links a:hover,
+.mobile-nav-links a.active {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: translateX(5px);
+    color: var(--tesda-white);
+}
+
+.mobile-nav-links a i {
+    width: 20px;
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+.mobile-nav-divider {
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.3);
+    margin: 1rem 0;
+}
+
+.mobile-nav-links .logout-btn {
+    color: #ff6b6b !important;
+}
+
+.mobile-nav-links .logout-btn i {
+    color: #ff6b6b !important;
 }
 
 .sub-nav {
@@ -103,6 +249,7 @@ body.modal-open {
     color: var(--tesda-blue);
     display: flex;
     align-items: center;
+    font-family: 'Poppins', sans-serif;
 }
 
 .brand-name::before {
@@ -181,6 +328,7 @@ body.modal-open {
     gap: 12px;
     transition: all 0.2s;
     text-decoration: none;
+    font-family: 'Poppins', sans-serif;
 }
 
 .dropdown-menu a:hover {
@@ -210,8 +358,8 @@ body.modal-open {
 
 /* ===== Main Content Styles ===== */
 main {
-    padding: 2rem;
-    max-width: 1200px;
+    padding: 2rem 5%;
+    max-width: 1400px;
     margin: 0 auto;
     padding-top: 140px;
 }
@@ -219,25 +367,28 @@ main {
 .page-header {
     margin-bottom: 2rem;
     padding-bottom: 1rem;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid var(--tesda-border);
 }
 
 .page-header h1 {
-    color: #0033A0;
+    color: var(--tesda-blue);
     margin: 0 0 0.5rem 0;
     display: flex;
     align-items: center;
     gap: 12px;
     font-size: 28px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
 }
 
 .breadcrumb {
-    color: #64748b;
+    color: var(--tesda-text-light);
     font-size: 14px;
+    font-family: 'Poppins', sans-serif;
 }
 
 .breadcrumb span {
-    color: #0033A0;
+    color: var(--tesda-blue);
     font-weight: 500;
 }
 
@@ -249,7 +400,7 @@ main {
     padding: 10px;
     margin-bottom: 2rem;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--tesda-border);
 }
 
 .nav-tab {
@@ -257,7 +408,7 @@ main {
     text-align: center;
     padding: 15px 20px;
     text-decoration: none;
-    color: #64748b;
+    color: var(--tesda-text-light);
     font-weight: 500;
     border-radius: 6px;
     transition: all 0.3s ease;
@@ -265,6 +416,7 @@ main {
     align-items: center;
     justify-content: center;
     gap: 10px;
+    font-family: 'Poppins', sans-serif;
 }
 
 .nav-tab:hover {
@@ -300,11 +452,14 @@ main {
     align-items: center;
     justify-content: center;
     gap: 10px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
 }
 
 .section-header p {
-    color: #64748b;
+    color: var(--tesda-text-light);
     font-size: 16px;
+    font-family: 'Poppins', sans-serif;
 }
 
 /* ===== Resources Grid ===== */
@@ -320,8 +475,9 @@ main {
     border-radius: 8px;
     padding: 1.5rem;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--tesda-border);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    font-family: 'Poppins', sans-serif;
 }
 
 .resource-card:hover {
@@ -339,12 +495,15 @@ main {
     color: var(--tesda-blue);
     margin-bottom: 0.5rem;
     font-size: 1.2rem;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
 }
 
 .card-title-link {
     color: var(--tesda-blue);
     text-decoration: none;
     transition: color 0.3s ease;
+    font-family: 'Poppins', sans-serif;
 }
 
 .card-title-link:hover {
@@ -363,7 +522,8 @@ main {
     align-items: center;
     gap: 5px;
     font-size: 0.85rem;
-    color: #64748b;
+    color: var(--tesda-text-light);
+    font-family: 'Poppins', sans-serif;
 }
 
 .card-meta i {
@@ -375,10 +535,14 @@ main {
     margin-bottom: 1rem;
     color: #475569;
     line-height: 1.5;
+    font-family: 'Poppins', sans-serif;
 }
 
 .card-actions {
     margin-bottom: 1rem;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
 .download-btn {
@@ -392,16 +556,35 @@ main {
     text-decoration: none;
     font-weight: 500;
     transition: background-color 0.3s ease;
+    font-family: 'Poppins', sans-serif;
 }
 
 .download-btn:hover {
     background-color: var(--tesda-dark-blue);
 }
 
+.submit-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--tesda-maroon);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+    font-family: 'Poppins', sans-serif;
+}
+
+.submit-btn:hover {
+    background-color: #6b0000;
+}
+
 /* ===== File Preview Styles ===== */
 .file-preview {
     margin-top: 1rem;
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--tesda-border);
     border-radius: 6px;
     overflow: hidden;
 }
@@ -422,7 +605,8 @@ main {
     padding: 3rem;
     text-align: center;
     background-color: #f8fafc;
-    color: #64748b;
+    color: var(--tesda-text-light);
+    font-family: 'Poppins', sans-serif;
 }
 
 .file-placeholder i {
@@ -436,6 +620,24 @@ main {
     font-size: 0.9rem;
 }
 
+.download-btn-small {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background-color: var(--tesda-blue);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 3px;
+    text-decoration: none;
+    font-size: 0.8rem;
+    margin-top: 10px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.download-btn-small:hover {
+    background-color: var(--tesda-dark-blue);
+}
+
 /* ===== Empty State Styles ===== */
 .empty-state {
     text-align: center;
@@ -443,7 +645,8 @@ main {
     background: white;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--tesda-border);
+    font-family: 'Poppins', sans-serif;
 }
 
 .empty-state i {
@@ -456,14 +659,39 @@ main {
     color: var(--tesda-blue);
     margin-bottom: 1rem;
     font-size: 1.5rem;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
 }
 
 .empty-state p {
-    color: #64748b;
+    color: var(--tesda-text-light);
     font-size: 1.1rem;
+    font-family: 'Poppins', sans-serif;
 }
 
-/* ===== Modal Styles ===== */
+/* ===== Flash Messages ===== */
+.flash-messages {
+    margin-bottom: 2rem;
+}
+
+.flash-message {
+    padding: 15px 20px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: 'Poppins', sans-serif;
+    border-left: 4px solid var(--tesda-blue);
+    background-color: var(--tesda-light-blue);
+    color: var(--tesda-blue);
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== PERFECTLY MATCHED MODAL STYLES ===== */
 .modal {
     display: none;
     position: fixed;
@@ -472,22 +700,24 @@ main {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
+    z-index: 1100;
     justify-content: center;
     align-items: center;
     overflow: auto;
+    padding: 20px;
 }
 
 .modal-content {
     background-color: #fff;
-    margin: 20px auto;
+    margin: 0 auto;
     padding: 0;
     width: 400px;
-    max-width: 90%;
+    max-width: 100%;
     max-height: 90vh;
     border-radius: 8px;
     overflow-y: auto;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    animation: modalFadeIn 0.3s ease-out;
 }
 
 .modal-header {
@@ -497,6 +727,7 @@ main {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-radius: 8px 8px 0 0;
 }
 
 .modal-header h3 {
@@ -505,6 +736,8 @@ main {
     display: flex;
     align-items: center;
     gap: 10px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
 }
 
 .close-modal {
@@ -514,6 +747,17 @@ main {
     font-size: 1.5rem;
     cursor: pointer;
     padding: 0 5px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.close-modal:hover {
+    background-color: rgba(255, 255, 255, 0.2);
 }
 
 .modal-body {
@@ -525,6 +769,8 @@ main {
     margin: 0;
     font-size: 1rem;
     color: #333;
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
 }
 
 .modal-footer {
@@ -534,7 +780,8 @@ main {
     gap: 15px;
 }
 
-.btn {
+/* Modal Buttons - PERFECTLY CENTERED */
+.modal-footer .btn {
     padding: 10px 20px;
     border: none;
     border-radius: 4px;
@@ -544,6 +791,11 @@ main {
     flex: 1;
     text-align: center;
     font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
 }
 
 .btn-yes {
@@ -565,87 +817,6 @@ main {
     background-color: #e2e8f0;
 }
 
-/* Logout Modal Styles - Consistent across all pages */
-#logout-modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 2000;
-}
-
-#logout-modal .modal-content {
-    background-color: #fff;
-    margin: 15% auto;
-    padding: 0;
-    width: 400px;
-    max-width: 90%;
-    border-radius: 8px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-}
-
-#logout-modal .modal-header {
-    padding: 15px 20px;
-    background-color: var(--tesda-blue);
-    color: white;
-    border-radius: 8px 8px 0 0;
-    display: flex;
-    align-items: center;
-}
-
-#logout-modal .modal-header h3 {
-    margin: 0;
-    font-size: 1.2rem;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-#logout-modal .modal-body {
-    padding: 20px;
-    text-align: center;
-}
-
-#logout-modal .modal-footer {
-    padding: 15px 20px;
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    border-top: 1px solid #eee;
-}
-
-#logout-modal .btn {
-    padding: 8px 20px;
-    border-radius: 4px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s;
-    min-width: 80px;
-}
-
-#logout-modal .btn-yes {
-    background-color: var(--tesda-maroon);
-    color: white;
-    border: none;
-}
-
-#logout-modal .btn-yes:hover {
-    background-color: #6b0000;
-}
-
-#logout-modal .btn-no {
-    background-color: #f1f5f9;
-    color: #475569;
-    border: 1px solid #cbd5e1;
-}
-
-#logout-modal .btn-no:hover {
-    background-color: #e2e8f0;
-}
-
 /* Animation */
 @keyframes modalFadeIn {
     from {
@@ -658,12 +829,68 @@ main {
     }
 }
 
-#logout-modal[style*="display: flex"] .modal-content {
-    animation: modalFadeIn 0.3s ease-out;
+/* ===== MOBILE RESPONSIVE FIXES ===== */
+@media (max-width: 1024px) {
+    .top-nav a {
+        padding: 0 15px;
+        font-size: 0.9rem;
+    }
+    
+    .brand-section {
+        gap: 20px;
+    }
+    
+    .brand-name {
+        font-size: 1.3rem;
+    }
+    
+    .logo-container {
+        gap: 15px;
+    }
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
+    .top-nav {
+        padding: 0 3%;
+        height: 60px;
+    }
+    
+    .nav-left {
+        display: none;
+    }
+    
+    .hamburger-menu {
+        display: flex;
+    }
+    
+    .sub-nav {
+        padding: 10px 3%;
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .brand-section {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .brand-name::before {
+        display: none;
+    }
+    
+    .logo-container {
+        justify-content: center;
+        border-left: none;
+        border-top: 3px solid var(--tesda-gold);
+        padding: 10px;
+    }
+    
+    main {
+        padding: 20px 3%;
+        padding-top: 140px;
+    }
+    
     .resources-grid {
         grid-template-columns: 1fr;
     }
@@ -681,38 +908,45 @@ main {
         gap: 0.5rem;
     }
     
-    main {
-        padding: 1rem;
-        padding-top: 140px;
+    .card-actions {
+        flex-direction: column;
+        align-items: stretch;
     }
     
-    .top-nav {
-        padding: 0 2%;
+    .download-btn,
+    .submit-btn {
+        justify-content: center;
+        text-align: center;
     }
     
-    .top-nav a {
-        padding: 0 10px;
-        font-size: 0.85rem;
+    .modal-content {
+        width: 95%;
+        margin: 20px auto;
     }
     
-    .brand-section {
-        gap: 15px;
+    .modal-footer {
+        flex-direction: column;
     }
     
-    .brand-name {
-        font-size: 1.2rem;
-    }
-    
-    .logo-container {
-        gap: 15px;
-    }
-    
-    .logo-container img {
-        height: 30px;
+    .modal-footer .btn {
+        width: 100%;
     }
 }
 
 @media (max-width: 480px) {
+    .top-nav {
+        padding: 0 2%;
+    }
+    
+    .sub-nav {
+        padding: 10px 2%;
+    }
+    
+    main {
+        padding: 15px 2%;
+        padding-top: 140px;
+    }
+    
     .resource-card {
         padding: 1rem;
     }
@@ -727,5 +961,29 @@ main {
     
     .empty-state i {
         font-size: 3rem;
+    }
+    
+    .mobile-nav {
+        width: 90%;
+        padding: 1.5rem 1rem;
+    }
+    
+    .mobile-brand {
+        font-size: 1rem;
+    }
+    
+    .mobile-brand img {
+        height: 30px;
+    }
+    
+    .modal-content {
+        width: 100%;
+        margin: 10px;
+    }
+    
+    .modal-header,
+    .modal-body,
+    .modal-footer {
+        padding: 15px;
     }
 }

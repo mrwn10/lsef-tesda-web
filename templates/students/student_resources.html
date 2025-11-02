@@ -7,10 +7,10 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/student/student_resources.css') }}" />
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/lsef_logo.png') }}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
-<body data-user-id="{{ user_id }}">
-    <!-- New Navigation Start -->
+<body data-logout-url="{{ url_for('login.logout') }}" data-user-id="{{ user_id }}">
+    <!-- Navigation -->
     <div class="nav-container">
         <!-- Top Navigation -->
         <div class="top-nav">
@@ -20,10 +20,43 @@
                 <a href="{{ url_for('student_view_class.view_enrolled_classes') }}"><i class="fas fa-users"></i> Class</a>
                 <a href="{{ url_for('student_view_certificates.student_view_certificates') }}"><i class="fas fa-certificate"></i> Certificates</a>
                 <a href="{{ url_for('student_view_grades.view_grades') }}"><i class="fas fa-star"></i> Grades</a>
-                <a href="{{ url_for('student_resources.resources') }}"><i class="fas fa-tools"></i> Resources</a>
+                <a href="{{ url_for('student_resources.resources') }}" class="active"><i class="fas fa-tools"></i> Resources</a>
                 <a href="{{ url_for('student_requirements.upload_requirements') }}"><i class="fas fa-file-upload"></i> Requirements</a>
             </div>
             <div class="nav-right"></div>
+            
+            <!-- Mobile Hamburger Menu -->
+            <div class="hamburger-menu" id="hamburgerMenu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        
+        <!-- Mobile Navigation Menu -->
+        <div class="mobile-nav" id="mobileNav">
+            <div class="mobile-nav-header">
+                <div class="mobile-brand">
+                    <img src="{{ url_for('static', filename='img/lsef_logo.png') }}" alt="LSEF Logo">
+                    <span>LSEF TESDA</span>
+                </div>
+                <button class="close-mobile-nav" id="closeMobileNav">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="mobile-nav-links">
+                <a href="{{ url_for('student_homepage') }}"><i class="fas fa-home"></i> Home</a>
+                <a href="{{ url_for('student_enrollment.enrollment_page') }}"><i class="fas fa-user-plus"></i> Enrollment</a>
+                <a href="{{ url_for('student_view_class.view_enrolled_classes') }}"><i class="fas fa-users"></i> Class</a>
+                <a href="{{ url_for('student_view_certificates.student_view_certificates') }}"><i class="fas fa-certificate"></i> Certificates</a>
+                <a href="{{ url_for('student_view_grades.view_grades') }}"><i class="fas fa-star"></i> Grades</a>
+                <a href="{{ url_for('student_resources.resources') }}" class="active"><i class="fas fa-tools"></i> Resources</a>
+                <a href="{{ url_for('student_requirements.upload_requirements') }}"><i class="fas fa-file-upload"></i> Requirements</a>
+                <div class="mobile-nav-divider"></div>
+                <a href="{{ url_for('student_profile') }}"><i class="fas fa-user-circle"></i> My Profile</a>
+                <a href="#"><i class="fas fa-bookmark"></i> Contact Us</a>
+                <a href="#" class="logout-btn" id="mobile-logout-trigger"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
         </div>
         
         <!-- Sub Navigation -->
@@ -50,13 +83,15 @@
             </div>
         </div>
     </div>
-    <!-- New Navigation End -->
 
     <!-- Logout Confirmation Modal -->
     <div class="modal" id="logout-modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h3><i class="fas fa-sign-out-alt"></i> Confirm Logout</h3>
+                <button class="close-modal" id="close-logout-modal">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
             <div class="modal-body">
                 <p>Are you sure you want to logout?</p>
@@ -260,76 +295,7 @@
         </section>
     </main>
 
-    <script>
-        // Logout Modal Handling
-        document.addEventListener('DOMContentLoaded', function() {
-            // Get modal and buttons
-            const logoutModal = document.getElementById('logout-modal');
-            const logoutTrigger = document.getElementById('logout-trigger');
-            const confirmLogout = document.getElementById('confirm-logout');
-            const cancelLogout = document.getElementById('cancel-logout');
-            
-            // Show modal when logout is clicked
-            if (logoutTrigger) {
-                logoutTrigger.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    logoutModal.style.display = 'block';
-                });
-            }
-            
-            // Hide modal when cancel is clicked
-            if (cancelLogout) {
-                cancelLogout.addEventListener('click', function() {
-                    logoutModal.style.display = 'none';
-                });
-            }
-            
-            // Handle logout confirmation
-            if (confirmLogout) {
-                confirmLogout.addEventListener('click', function() {
-                    window.location.href = "{{ url_for('login.logout') }}";
-                });
-            }
-            
-            // Close modal when clicking outside of it
-            window.addEventListener('click', function(event) {
-                if (event.target === logoutModal) {
-                    logoutModal.style.display = 'none';
-                }
-            });
-
-            // Tab Navigation
-            const navTabs = document.querySelectorAll('.nav-tab');
-            const resourceSections = document.querySelectorAll('.resources-section');
-
-            navTabs.forEach(tab => {
-                tab.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    
-                    // Remove active class from all tabs and sections
-                    navTabs.forEach(t => t.classList.remove('active'));
-                    resourceSections.forEach(s => s.classList.remove('active'));
-                    
-                    // Add active class to clicked tab and corresponding section
-                    this.classList.add('active');
-                    const targetSection = document.getElementById(this.dataset.tab);
-                    if (targetSection) {
-                        targetSection.classList.add('active');
-                    }
-                });
-            });
-
-            // Auto-hide flash messages after 5 seconds
-            const flashMessages = document.querySelectorAll('.flash-message');
-            flashMessages.forEach(message => {
-                setTimeout(() => {
-                    message.style.opacity = '0';
-                    setTimeout(() => {
-                        message.remove();
-                    }, 500);
-                }, 5000);
-            });
-        });
-    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ url_for('static', filename='js/student/student_resources.js') }}"></script>
 </body>
 </html>
