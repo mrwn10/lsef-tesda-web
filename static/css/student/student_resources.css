@@ -361,7 +361,7 @@ main {
     padding: 2rem 5%;
     max-width: 1400px;
     margin: 0 auto;
-    padding-top: 140px;
+    padding-top: 30px; /* FIXED: Reduced from 140px to eliminate vacant space */
 }
 
 .page-header {
@@ -863,32 +863,65 @@ main {
         display: flex;
     }
     
+    /* ===== FIXED SUB-NAV MOBILE LAYOUT ===== */
     .sub-nav {
         padding: 10px 3%;
-        flex-direction: column;
-        gap: 15px;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
         text-align: center;
+        height: auto;
+        min-height: 70px;
     }
     
     .brand-section {
-        flex-direction: column;
-        gap: 15px;
+        flex-direction: row;
+        gap: 10px;
+        align-items: center;
+        flex: 1;
+    }
+    
+    .brand-name {
+        font-size: 1.1rem;
+        margin-right: 10px;
+        display: flex;
+        align-items: center;
     }
     
     .brand-name::before {
-        display: none;
+        display: inline-block;
+        width: 2px;
+        height: 25px;
+        margin-right: 8px;
     }
     
     .logo-container {
-        justify-content: center;
-        border-left: none;
-        border-top: 3px solid var(--tesda-gold);
-        padding: 10px;
+        justify-content: flex-start;
+        border-left: 2px solid var(--tesda-gold);
+        border-top: none;
+        padding: 5px 10px;
+        gap: 10px;
+        flex-shrink: 0;
+    }
+    
+    .logo-container img {
+        height: 30px;
+    }
+    
+    .user-section {
+        flex-shrink: 0;
+        margin-left: 10px;
+    }
+    
+    .profile-img {
+        width: 36px;
+        height: 36px;
     }
     
     main {
         padding: 20px 3%;
-        padding-top: 140px;
+        padding-top: 20px; /* FIXED: Reduced from 140px to eliminate vacant space */
     }
     
     .resources-grid {
@@ -939,12 +972,37 @@ main {
     }
     
     .sub-nav {
-        padding: 10px 2%;
+        padding: 8px 2%;
+        min-height: 65px;
+    }
+    
+    .brand-name {
+        font-size: 1rem;
+        margin-right: 5px;
+    }
+    
+    .logo-container {
+        padding: 3px 8px;
+        gap: 8px;
+    }
+    
+    .logo-container img {
+        height: 25px;
+    }
+    
+    .brand-name::before {
+        height: 20px;
+        margin-right: 6px;
+    }
+    
+    .profile-img {
+        width: 32px;
+        height: 32px;
     }
     
     main {
         padding: 15px 2%;
-        padding-top: 140px;
+        padding-top: 15px; /* FIXED: Reduced from 140px to eliminate vacant space */
     }
     
     .resource-card {
@@ -985,5 +1043,25 @@ main {
     .modal-body,
     .modal-footer {
         padding: 15px;
+    }
+}
+
+/* Extra small devices */
+@media (max-width: 360px) {
+    .brand-name {
+        font-size: 0.9rem;
+    }
+    
+    .logo-container {
+        gap: 5px;
+    }
+    
+    .logo-container img {
+        height: 22px;
+    }
+    
+    .profile-img {
+        width: 30px;
+        height: 30px;
     }
 }
