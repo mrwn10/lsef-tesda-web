@@ -55,9 +55,6 @@ $(document).ready(function() {
             modal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
             document.body.classList.add('modal-open');
-            
-            // Force reflow for mobile devices
-            void modal.offsetHeight;
         }
     }
 
@@ -112,6 +109,7 @@ $(document).ready(function() {
             e.preventDefault();
             e.stopPropagation();
             closeModal('logout-modal');
+            // Ensure body overflow is properly reset
             document.body.style.overflow = '';
             document.body.classList.remove('modal-open');
         });
@@ -123,6 +121,7 @@ $(document).ready(function() {
             e.preventDefault();
             e.stopPropagation();
             closeModal('logout-modal');
+            // Ensure body overflow is properly reset
             document.body.style.overflow = '';
             document.body.classList.remove('modal-open');
         });
@@ -150,6 +149,7 @@ $(document).ready(function() {
     window.addEventListener('click', function(event) {
         if (event.target === logoutModal) {
             closeModal('logout-modal');
+            // Ensure body overflow is properly reset
             document.body.style.overflow = '';
             document.body.classList.remove('modal-open');
         }
@@ -159,22 +159,21 @@ $(document).ready(function() {
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && logoutModal && logoutModal.style.display === 'flex') {
             closeModal('logout-modal');
+            // Ensure body overflow is properly reset
             document.body.style.overflow = '';
             document.body.classList.remove('modal-open');
         }
     });
 
-    // ===== FILE PREVIEW MODAL FUNCTIONALITY - FIXED FOR DYNAMIC CONTENT =====
+    // ===== FILE PREVIEW MODAL FUNCTIONALITY =====
     const previewModal = document.getElementById('preview-modal');
     const closePreviewModal = document.getElementById('close-preview-modal');
     const closePreviewBtn = document.getElementById('close-preview-btn');
     const downloadPreviewBtn = document.getElementById('download-preview-btn');
     const previewContent = document.getElementById('preview-content');
 
-    // FIXED: Use event delegation on the document for preview buttons
-    // This works for both Announcements and Classwork sections
+    // Preview button event listeners
     document.addEventListener('click', function(e) {
-        // Handle preview buttons in both sections
         if (e.target.classList.contains('preview-btn') || e.target.closest('.preview-btn')) {
             const previewBtn = e.target.classList.contains('preview-btn') ? e.target : e.target.closest('.preview-btn');
             const fileUrl = previewBtn.getAttribute('data-file-url');
@@ -184,19 +183,6 @@ $(document).ready(function() {
             openFilePreview(fileUrl, fileType, fileName);
         }
     });
-
-    // FIXED: Add touch events for mobile preview buttons using event delegation
-    document.addEventListener('touchend', function(e) {
-        if (e.target.classList.contains('preview-btn') || e.target.closest('.preview-btn')) {
-            const previewBtn = e.target.classList.contains('preview-btn') ? e.target : e.target.closest('.preview-btn');
-            const fileUrl = previewBtn.getAttribute('data-file-url');
-            const fileType = previewBtn.getAttribute('data-file-type');
-            const fileName = previewBtn.getAttribute('data-file-name');
-            
-            e.preventDefault();
-            openFilePreview(fileUrl, fileType, fileName);
-        }
-    }, { passive: false });
 
     function openFilePreview(fileUrl, fileType, fileName) {
         // Set download link
@@ -287,105 +273,6 @@ $(document).ready(function() {
         }
     });
 
-    // ===== TAB NAVIGATION - FIXED TO REINITIALIZE EVENT LISTENERS =====
-    const navTabs = document.querySelectorAll('.nav-tab');
-    const resourceSections = document.querySelectorAll('.resources-section');
-
-    function switchToTab(tabElement) {
-        // Remove active class from all tabs and sections
-        navTabs.forEach(t => t.classList.remove('active'));
-        resourceSections.forEach(s => s.classList.remove('active'));
-        
-        // Add active class to clicked tab and corresponding section
-        tabElement.classList.add('active');
-        const targetSection = document.getElementById(tabElement.dataset.tab);
-        if (targetSection) {
-            targetSection.classList.add('active');
-            
-            // FIXED: Reinitialize any necessary event listeners for the newly shown section
-            setTimeout(() => {
-                initializeSectionEvents(targetSection.id);
-            }, 50);
-        }
-    }
-
-    // Initialize event listeners for a specific section
-    function initializeSectionEvents(sectionId) {
-        if (sectionId === 'classwork') {
-            // Any Classwork-specific event listeners can be added here
-            console.log('Classwork section initialized');
-        } else if (sectionId === 'announcements') {
-            // Any Announcements-specific event listeners can be added here
-            console.log('Announcements section initialized');
-        }
-    }
-
-    // Set up tab click events
-    navTabs.forEach(tab => {
-        tab.addEventListener('click', function(e) {
-            e.preventDefault();
-            switchToTab(this);
-        });
-        
-        // Add touch events for mobile tab navigation
-        tab.addEventListener('touchend', function(e) {
-            e.preventDefault();
-            switchToTab(this);
-        }, { passive: false });
-    });
-
-    // FIXED: Initialize events for the initially active section
-    initializeSectionEvents('announcements');
-
-    // ===== ENHANCED EVENT DELEGATION FOR ALL INTERACTIVE ELEMENTS =====
-    
-    // Handle all download buttons in both sections
-    document.addEventListener('click', function(e) {
-        // Download buttons in resource cards
-        if (e.target.classList.contains('download-btn') || e.target.closest('.download-btn')) {
-            const downloadBtn = e.target.classList.contains('download-btn') ? e.target : e.target.closest('.download-btn');
-            // Let the native download behavior handle it
-            console.log('Download button clicked');
-        }
-        
-        // Small download buttons in file placeholders
-        if (e.target.classList.contains('download-btn-small') || e.target.closest('.download-btn-small')) {
-            const downloadBtn = e.target.classList.contains('download-btn-small') ? e.target : e.target.closest('.download-btn-small');
-            // Let the native download behavior handle it
-            console.log('Small download button clicked');
-        }
-        
-        // Submit work buttons in classwork
-        if (e.target.classList.contains('submit-btn') || e.target.closest('.submit-btn')) {
-            const submitBtn = e.target.classList.contains('submit-btn') ? e.target : e.target.closest('.submit-btn');
-            // Let the native link behavior handle it
-            console.log('Submit work button clicked');
-        }
-    });
-
-    // Enhanced touch events for mobile
-    document.addEventListener('touchend', function(e) {
-        // Download buttons
-        if (e.target.classList.contains('download-btn') || e.target.closest('.download-btn')) {
-            console.log('Mobile download button tapped');
-        }
-        
-        // Small download buttons
-        if (e.target.classList.contains('download-btn-small') || e.target.closest('.download-btn-small')) {
-            console.log('Mobile small download button tapped');
-        }
-        
-        // Submit work buttons
-        if (e.target.classList.contains('submit-btn') || e.target.closest('.submit-btn')) {
-            console.log('Mobile submit work button tapped');
-        }
-        
-        // Preview buttons (already handled above, but included for completeness)
-        if (e.target.classList.contains('preview-btn') || e.target.closest('.preview-btn')) {
-            // Already handled in the preview button section above
-        }
-    }, { passive: false });
-
     // Auto-hide flash messages after 5 seconds
     const flashMessages = document.querySelectorAll('.flash-message');
     flashMessages.forEach(message => {
@@ -397,22 +284,35 @@ $(document).ready(function() {
         }, 5000);
     });
 
+    // Form submission enhancement
+    const submissionForm = document.querySelector('.submission-form');
+    if (submissionForm) {
+        submissionForm.addEventListener('submit', function(e) {
+            const fileInput = document.getElementById('submission');
+            if (fileInput && fileInput.files.length > 0) {
+                // Add loading state to submit button
+                const submitBtn = this.querySelector('.submit-btn');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+                submitBtn.disabled = true;
+                
+                // Revert after 3 seconds if still on page (fallback)
+                setTimeout(() => {
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                }, 3000);
+            }
+        });
+    }
+
     // Initialize page functionality
-    initializeResourcesPage();
+    initializeClassworkPage();
 });
 
-// Resources Page Specific Functionality
-function initializeResourcesPage() {
-    console.log('Student Resources page initialized');
+// Classwork Page Specific Functionality
+function initializeClassworkPage() {
+    console.log('Student Classwork page initialized');
     
-    // Add any resources-specific JavaScript here
-    // For example: file preview enhancements, search functionality, etc.
-    
-    // Example: Enhance file preview interactions
-    enhanceFilePreviews();
-}
-
-function enhanceFilePreviews() {
-    // Add any file preview enhancement logic here
-    // This is a placeholder for future functionality
+    // Add any classwork-specific JavaScript here
+    // For example: file upload preview, form validation, etc.
 }

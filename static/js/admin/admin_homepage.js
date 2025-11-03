@@ -3,10 +3,176 @@ let enrollmentBarChart = null;
 let userPieChart = null;
 
 $(document).ready(function() {
-    // Initialize modal functionality first
-    initializeModals();
+    // Initialize all functionality
+    init();
     
     // Load dashboard data
+    loadDashboardData();
+});
+
+// Initialize all functionality
+function init() {
+    initMobileNavigation();
+    initModals();
+}
+
+// Mobile Navigation Functionality
+function initMobileNavigation() {
+    const hamburgerMenu = document.getElementById('hamburgerMenu');
+    const mobileNav = document.getElementById('mobileNav');
+    const closeMobileNav = document.getElementById('closeMobileNav');
+    
+    if (hamburgerMenu && mobileNav) {
+        hamburgerMenu.addEventListener('click', function() {
+            mobileNav.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        
+        if (closeMobileNav) {
+            closeMobileNav.addEventListener('click', function() {
+                mobileNav.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        }
+        
+        // Close mobile nav when clicking on links
+        const mobileNavLinks = document.querySelectorAll('.mobile-nav-links a');
+        mobileNavLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                mobileNav.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        });
+        
+        // Expandable mobile menu sections
+        const mobileNavHeaders = document.querySelectorAll('.mobile-nav-header-link');
+        mobileNavHeaders.forEach(header => {
+            header.addEventListener('click', function() {
+                const section = this.getAttribute('data-section');
+                const submenu = document.getElementById(`${section}-submenu`);
+                const chevron = this.querySelector('.chevron-icon');
+                
+                // Toggle active class
+                this.classList.toggle('active');
+                
+                // Toggle submenu
+                if (submenu) {
+                    submenu.classList.toggle('active');
+                }
+                
+                // Rotate only the chevron icon
+                if (chevron) {
+                    chevron.style.transform = this.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0deg)';
+                }
+            });
+        });
+        
+        // Close mobile nav when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!hamburgerMenu.contains(e.target) && !mobileNav.contains(e.target) && mobileNav.classList.contains('active')) {
+                mobileNav.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+        
+        // Close mobile nav with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && mobileNav.classList.contains('active')) {
+                mobileNav.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+    }
+}
+
+// Initialize modal functionality - CONSISTENT WITH USER MANAGEMENT
+function initModals() {
+    // Close modal function - works for ALL modals
+    function closeAllModals() {
+        $('.modal').fadeOut(300);
+        document.body.style.overflow = '';
+        document.body.classList.remove('modal-open');
+    }
+
+    // Open modal function
+    function openModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            document.body.classList.add('modal-open');
+        }
+    }
+
+    // Close modal when clicking outside - works for ALL modals
+    $(document).on('click', function(e) {
+        if ($(e.target).hasClass('modal')) {
+            closeAllModals();
+        }
+    });
+
+    // Escape key to close modals - works for ALL modals
+    $(document).keyup(function(e) {
+        if (e.keyCode === 27) {
+            closeAllModals();
+        }
+    });
+
+    // ===== SPECIFIC MODAL FUNCTIONALITY =====
+
+    // Logout Modal - CONSISTENT WITH USER MANAGEMENT
+    $('#logout-trigger').click(function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        openModal('logout-modal');
+    });
+    
+    $('#mobile-logout-trigger').click(function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        // First close mobile nav properly
+        const mobileNav = document.getElementById('mobileNav');
+        if (mobileNav) {
+            mobileNav.classList.remove('active');
+        }
+        // Then open logout modal
+        setTimeout(() => {
+            openModal('logout-modal');
+        }, 10);
+    });
+    
+    $('#cancel-logout').click(function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        closeAllModals();
+    });
+    
+    $('#close-logout-modal').click(function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        closeAllModals();
+    });
+    
+    $('#confirm-logout').click(function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const logoutUrl = document.body.getAttribute('data-logout-url');
+        if (logoutUrl) {
+            window.location.href = logoutUrl;
+        } else {
+            console.error('Logout URL not found');
+            window.location.href = "/logout";
+        }
+    });
+
+    // Close alert when X is clicked (if you add alerts later)
+    $('.close-alert').click(function() {
+        $('#status-message').fadeOut();
+    });
+}
+
+// Load dashboard data
+function loadDashboardData() {
     $.ajax({
         url: "/admin/dashboard/data",
         type: 'GET',
@@ -46,7 +212,7 @@ $(document).ready(function() {
             $('.loading-spinner').html('<p>Error loading dashboard data. Please refresh the page.</p>');
         }
     });
-});
+}
 
 // Animation function for numbers
 function animateValue(id, target, delay = 0) {
@@ -111,8 +277,8 @@ function updateRecentEnrollments(enrollments) {
             enrollmentsHtml += `
                 <div class="enrollment-item">
                     <div class="enrollment-info">
-                        <strong>${enrollment.student_name}</strong>
-                        <span>${enrollment.course_title} - ${enrollment.class_title}</span>
+                        <div class="enrollment-name">${enrollment.student_name}</div>
+                        <div class="enrollment-details">${enrollment.course_title} - ${enrollment.class_title}</div>
                     </div>
                     <div class="enrollment-date">${enrollment.enrollment_date}</div>
                 </div>
@@ -131,8 +297,10 @@ function updatePopularCourses(courses) {
         courses.forEach(course => {
             coursesHtml += `
                 <div class="course-item">
-                    <div class="course-name">${course.course_title}</div>
-                    <div class="course-enrollments">${course.enrollment_count} enrollments</div>
+                    <div class="course-info">
+                        <div class="course-name">${course.course_title}</div>
+                        <div class="course-details">${course.enrollment_count} enrollments</div>
+                    </div>
                 </div>
             `;
         });
@@ -290,52 +458,6 @@ function createCharts(data) {
             }
         });
     }
-}
-
-// Initialize modal functionality - ENHANCED VERSION (Copied from User Management)
-function initializeModals() {
-    // Close modal function
-    function closeAllModals() {
-        $('.modal').fadeOut(300);
-    }
-
-    // Close modal when clicking X
-    $('.close-modal').click(function() {
-        closeAllModals();
-    });
-
-    // Close modal when clicking outside
-    $(document).on('click', function(e) {
-        if ($(e.target).hasClass('modal')) {
-            closeAllModals();
-        }
-    });
-
-    // Escape key to close modals
-    $(document).keyup(function(e) {
-        if (e.keyCode === 27) {
-            closeAllModals();
-        }
-    });
-
-    // Logout Modal Functionality - ENHANCED
-    $('#logout-trigger').click(function(e) {
-        e.preventDefault();
-        $('#logout-modal').fadeIn();
-    });
-    
-    $('#cancel-logout').click(function() {
-        $('#logout-modal').fadeOut();
-    });
-    
-    $('#confirm-logout').click(function() {
-        window.location.href = window.appUrls.logoutUrl; // Using the URL from appUrls
-    });
-
-    // Close alert when X is clicked (if you add alerts later)
-    $('.close-alert').click(function() {
-        $('#status-message').fadeOut();
-    });
 }
 
 // Show status message (for potential future use)

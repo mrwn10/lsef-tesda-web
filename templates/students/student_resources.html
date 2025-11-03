@@ -103,6 +103,29 @@
         </div>
     </div>
 
+    <!-- File Preview Modal -->
+    <div class="modal" id="preview-modal">
+        <div class="modal-content preview-modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-eye"></i> File Preview</h3>
+                <button class="close-modal" id="close-preview-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body preview-modal-body">
+                <div id="preview-content">
+                    <!-- Preview content will be dynamically inserted here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#" id="download-preview-btn" class="btn btn-yes">
+                    <i class="fas fa-download" ></i>&nbsp;Download
+                </a>
+                <button class="btn btn-no" id="close-preview-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Main Content -->
     <main>
         <div class="page-header">
@@ -169,6 +192,9 @@
                                     <a href="{{ file_url }}" download class="download-btn">
                                         <i class="fas fa-download"></i> Download File
                                     </a>
+                                    <button class="preview-btn" data-file-url="{{ file_url }}" data-file-type="{{ a.stored_filename.split('.')[-1].lower() }}" data-file-name="{{ a.stored_filename }}">
+                                        <i class="fas fa-eye"></i> Preview
+                                    </button>
                                 </div>
                                 
                                 <div class="file-preview">
@@ -247,6 +273,9 @@
                                     <a href="{{ file_url }}" download class="download-btn">
                                         <i class="fas fa-download"></i> Download File
                                     </a>
+                                    <button class="preview-btn" data-file-url="{{ file_url }}" data-file-type="{{ c.stored_filename.split('.')[-1].lower() }}" data-file-name="{{ c.stored_filename }}">
+                                        <i class="fas fa-eye"></i> Preview
+                                    </button>
                                     <a href="{{ url_for('student_resources.view_classwork', material_id=c.material_id) }}" class="submit-btn">
                                         <i class="fas fa-paper-plane"></i> Submit Work
                                     </a>

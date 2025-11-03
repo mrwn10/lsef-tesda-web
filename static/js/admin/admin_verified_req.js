@@ -2,8 +2,8 @@
 let fileModal = null;
 
 $(document).ready(function() {
-    // Initialize modal functionality
-    initializeModals();
+    // Initialize all functionality
+    init();
     
     const modal = $('#fileModal');
     const fileViewer = $('#fileViewer');
@@ -340,7 +340,7 @@ $(document).ready(function() {
 
         // Close file modal
         $('#close-file-modal').on('click', closeFileModal);
-        $('.close-modal').on('click', closeFileModal);
+        $('#close-file-modal-header').on('click', closeFileModal);
         $(window).on('click', (e) => { if ($(e.target).is(modal)) closeFileModal(); });
     }
 
@@ -354,44 +354,164 @@ $(document).ready(function() {
     loadData();
 });
 
-// Initialize modal functionality
-function initializeModals() {
-    // Close modal function
+// Initialize all functionality
+function init() {
+    initMobileNavigation();
+    initModals();
+}
+
+// Mobile Navigation Functionality
+function initMobileNavigation() {
+    const hamburgerMenu = document.getElementById('hamburgerMenu');
+    const mobileNav = document.getElementById('mobileNav');
+    const closeMobileNav = document.getElementById('closeMobileNav');
+    
+    if (hamburgerMenu && mobileNav) {
+        hamburgerMenu.addEventListener('click', function() {
+            mobileNav.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        
+        if (closeMobileNav) {
+            closeMobileNav.addEventListener('click', function() {
+                mobileNav.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        }
+        
+        // Close mobile nav when clicking on links
+        const mobileNavLinks = document.querySelectorAll('.mobile-nav-links a');
+        mobileNavLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                mobileNav.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        });
+        
+        // Expandable mobile menu sections
+        const mobileNavHeaders = document.querySelectorAll('.mobile-nav-header-link');
+        mobileNavHeaders.forEach(header => {
+            header.addEventListener('click', function() {
+                const section = this.getAttribute('data-section');
+                const submenu = document.getElementById(`${section}-submenu`);
+                const chevron = this.querySelector('.chevron-icon');
+                
+                // Toggle active class
+                this.classList.toggle('active');
+                
+                // Toggle submenu
+                if (submenu) {
+                    submenu.classList.toggle('active');
+                }
+                
+                // Rotate only the chevron icon
+                if (chevron) {
+                    chevron.style.transform = this.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0deg)';
+                }
+            });
+        });
+        
+        // Close mobile nav when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!hamburgerMenu.contains(e.target) && !mobileNav.contains(e.target) && mobileNav.classList.contains('active')) {
+                mobileNav.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+        
+        // Close mobile nav with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && mobileNav.classList.contains('active')) {
+                mobileNav.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+    }
+}
+
+// Initialize modal functionality - CONSISTENT WITH OTHER PAGES
+function initModals() {
+    // Close modal function - works for ALL modals
     function closeAllModals() {
         $('.modal').fadeOut(300);
+        document.body.style.overflow = '';
+        document.body.classList.remove('modal-open');
     }
 
-    // Close modal when clicking X
-    $('.close-modal').click(function() {
-        closeAllModals();
-    });
+    // Open modal function
+    function openModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            document.body.classList.add('modal-open');
+        }
+    }
 
-    // Close modal when clicking outside
+    // Close modal when clicking outside - works for ALL modals
     $(document).on('click', function(e) {
         if ($(e.target).hasClass('modal')) {
             closeAllModals();
         }
     });
 
-    // Escape key to close modals
+    // Escape key to close modals - works for ALL modals
     $(document).keyup(function(e) {
         if (e.keyCode === 27) {
             closeAllModals();
         }
     });
 
-    // Logout Modal Functionality
+    // ===== SPECIFIC MODAL FUNCTIONALITY =====
+
+    // Logout Modal - CONSISTENT WITH OTHER PAGES
     $('#logout-trigger').click(function(e) {
         e.preventDefault();
-        $('#logout-modal').fadeIn();
+        e.stopPropagation();
+        openModal('logout-modal');
     });
     
-    $('#cancel-logout').click(function() {
-        $('#logout-modal').fadeOut();
+    $('#mobile-logout-trigger').click(function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        // First close mobile nav properly
+        const mobileNav = document.getElementById('mobileNav');
+        if (mobileNav) {
+            mobileNav.classList.remove('active');
+        }
+        // Then open logout modal
+        setTimeout(() => {
+            openModal('logout-modal');
+        }, 10);
     });
     
-    $('#confirm-logout').click(function() {
-        window.location.href = window.appUrls.logoutUrl;
+    $('#cancel-logout').click(function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        closeAllModals();
+    });
+    
+    $('#close-logout-modal').click(function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        closeAllModals();
+    });
+    
+    $('#confirm-logout').click(function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const logoutUrl = document.body.getAttribute('data-logout-url');
+        if (logoutUrl) {
+            window.location.href = logoutUrl;
+        } else {
+            console.error('Logout URL not found');
+            window.location.href = "/logout";
+        }
+    });
+
+    // Close all modals when clicking close buttons
+    $('.close-modal').click(function() {
+        closeAllModals();
     });
 }
 
@@ -421,80 +541,3 @@ $(window).on('resize', function() {
         // You can add responsive adjustments here if needed
     }
 });
-
-// Add some basic status message styles if needed
-const statusStyles = `
-    <style>
-        .status-message {
-            position: fixed;
-            top: 120px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 3000;
-            padding: 1rem 1.5rem;
-            border-radius: 8px;
-            color: white;
-            font-weight: 500;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            min-width: 300px;
-            text-align: center;
-            display: none;
-        }
-        .status-message.success { background-color: #10b981; }
-        .status-message.danger { background-color: #ef4444; }
-        .status-message.warning { background-color: #f59e0b; }
-        .message-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 1rem;
-        }
-        .close-alert {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.2rem;
-            cursor: pointer;
-            padding: 0;
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .btn-view {
-            position: relative;
-        }
-        .btn-view .tooltip {
-            visibility: hidden;
-            width: 120px;
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            border-radius: 6px;
-            padding: 5px;
-            position: absolute;
-            z-index: 1;
-            bottom: 125%;
-            left: 50%;
-            margin-left: -60px;
-            opacity: 0;
-            transition: opacity 0.3s;
-            font-size: 0.75rem;
-        }
-        .btn-view:hover .tooltip {
-            visibility: visible;
-            opacity: 1;
-        }
-        .stat-description {
-            font-size: 0.75rem;
-            color: #64748b;
-            margin-top: 0.25rem;
-        }
-    </style>
-`;
-
-// Inject styles if not already present
-if (!$('#status-styles').length) {
-    $('head').append(statusStyles);
-}
