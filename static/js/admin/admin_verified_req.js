@@ -269,7 +269,7 @@ $(document).ready(function() {
                     }
                     modal.fadeIn();
                 }).fail(() => {
-                    showStatusMessage('Error loading file preview', 'danger');
+                    showMessage('error', 'Error loading file preview');
                 }).always(() => {
                     // Reset button state
                     button.html(originalHtml).prop('disabled', false);
@@ -303,7 +303,7 @@ $(document).ready(function() {
                     }
                     modal.fadeIn();
                 }).fail(() => {
-                    showStatusMessage('Error loading file preview', 'danger');
+                    showMessage('error', 'Error loading file preview');
                 }).always(() => {
                     // Reset button state
                     button.html(originalHtml).prop('disabled', false);
@@ -324,16 +324,16 @@ $(document).ready(function() {
             
             $.post(`/admin/verify/accept/${userId}`, function (response) {
                 if (response.success) {
-                    showStatusMessage(`Successfully verified ${studentName}`, 'success');
+                    showMessage('success', `Successfully verified ${studentName}`);
                     // Reload both data and stats
                     loadData(currentPage);
                     loadStats();
                 } else {
-                    showStatusMessage(`Error: ${response.message}`, 'danger');
+                    showMessage('error', `Error: ${response.message}`);
                     button.html('<i class="fas fa-check"></i> Verify').prop('disabled', false);
                 }
             }).fail(() => {
-                showStatusMessage('Error verifying student', 'danger');
+                showMessage('error', 'Error verifying student');
                 button.html('<i class="fas fa-check"></i> Verify').prop('disabled', false);
             });
         });
@@ -515,22 +515,25 @@ function initModals() {
     });
 }
 
-// Show status message
-function showStatusMessage(message, type) {
-    const statusMessage = $('#status-message');
-    const messageText = $('#message-text');
+// Unified Modal Handling - CONSISTENT WITH PROFILE PAGE
+function showMessage(type, text) {
+    // Hide all modals first
+    $('.modal').fadeOut();
     
-    statusMessage.removeClass('success danger warning').addClass(type);
-    messageText.text(message);
-    statusMessage.fadeIn();
-    
-    // Add close functionality
-    $('.close-alert').off('click').on('click', function() {
-        statusMessage.fadeOut();
-    });
-    
-    // Auto-hide after 5 seconds
-    setTimeout(() => statusMessage.fadeOut(), 5000);
+    switch(type) {
+        case 'success':
+            $('#success-message').text(text);
+            $('#success-modal').fadeIn();
+            break;
+        case 'error':
+            $('#error-message').text(text);
+            $('#error-modal').fadeIn();
+            break;
+        case 'info':
+            $('#info-message').text(text);
+            $('#info-modal').fadeIn();
+            break;
+    }
 }
 
 // Handle window resize

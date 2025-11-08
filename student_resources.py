@@ -16,7 +16,7 @@ def allowed_file(filename):
 
 @student_resources_bp.route("/resources")
 def resources():
-    """Show announcements and classwork ONLY for classes the student is enrolled in"""
+    """Show announcements and classwork for enrolled classes PLUS global announcements (class_id = null)"""
     if "user_id" not in session or session.get("role") != "student":
         flash("Unauthorized access. Please login as student.")
         return redirect(url_for("auth.login"))
@@ -43,43 +43,52 @@ def resources():
     )
     enrolled_classes = [row["class_id"] for row in cursor.fetchall()]
 
-    if not enrolled_classes:
-        flash("You are not enrolled in any classes yet.")
-        return render_template("students/student_resources.html",
-                               announcements=[],
-                               classworks=[],
-                               profile_picture=profile_picture,
-                               user_id=session["user_id"])
-
-    placeholders = ",".join(["%s"] * len(enrolled_classes))
-
-    # ✅ Announcements (strictly based on enrolled classes)
-    cursor.execute(
-        f"""
-        SELECT m.*, c.class_title, c.instructor_name
-        FROM materials m
-        LEFT JOIN classes c ON m.class_id = c.class_id
-        WHERE m.type = 'announcement'
-        AND m.class_id IN ({placeholders})
-        ORDER BY m.date_uploaded DESC
-        """,
-        enrolled_classes
-    )
+    # ✅ Announcements: enrolled classes + global announcements (class_id IS NULL)
+    if enrolled_classes:
+        placeholders = ",".join(["%s"] * len(enrolled_classes))
+        cursor.execute(
+            f"""
+            SELECT m.*, c.class_title, c.instructor_name
+            FROM materials m
+            LEFT JOIN classes c ON m.class_id = c.class_id
+            WHERE m.type = 'announcement'
+            AND (m.class_id IN ({placeholders}) OR m.class_id IS NULL)
+            ORDER BY m.date_uploaded DESC
+            """,
+            enrolled_classes
+        )
+    else:
+        # If not enrolled in any classes, only show global announcements
+        cursor.execute(
+            """
+            SELECT m.*, c.class_title, c.instructor_name
+            FROM materials m
+            LEFT JOIN classes c ON m.class_id = c.class_id
+            WHERE m.type = 'announcement' AND m.class_id IS NULL
+            ORDER BY m.date_uploaded DESC
+            """
+        )
     announcements = cursor.fetchall()
 
-    # ✅ Classwork (strictly based on enrolled classes)
-    cursor.execute(
-        f"""
-        SELECT m.*, c.class_title, c.instructor_name
-        FROM materials m
-        LEFT JOIN classes c ON m.class_id = c.class_id
-        WHERE m.type = 'classwork'
-        AND m.class_id IN ({placeholders})
-        ORDER BY m.date_uploaded DESC
-        """,
-        enrolled_classes
-    )
-    classworks = cursor.fetchall()
+    # ✅ Classwork: only for enrolled classes
+    if enrolled_classes:
+        placeholders = ",".join(["%s"] * len(enrolled_classes))
+        cursor.execute(
+            f"""
+            SELECT m.*, c.class_title, c.instructor_name,
+                   DATE_FORMAT(m.submission_start, '%Y-%m-%dT%H:%i') as submission_start_formatted,
+                   DATE_FORMAT(m.submission_end, '%Y-%m-%dT%H:%i') as submission_end_formatted
+            FROM materials m
+            LEFT JOIN classes c ON m.class_id = c.class_id
+            WHERE m.type = 'classwork'
+            AND m.class_id IN ({placeholders})
+            ORDER BY m.date_uploaded DESC
+            """,
+            enrolled_classes
+        )
+        classworks = cursor.fetchall()
+    else:
+        classworks = []
 
     cursor.close()
 
@@ -91,7 +100,7 @@ def resources():
 
 @student_resources_bp.route("/resources/classwork/<int:material_id>", methods=["GET", "POST"])
 def view_classwork(material_id):
-    """View classwork details and allow student submission"""
+    """View classwork details and allow student submission with time validation"""
     if "user_id" not in session or session.get("role") != "student":
         flash("Unauthorized access. Please login as student.")
         return redirect(url_for("auth.login"))
@@ -111,10 +120,12 @@ def view_classwork(material_id):
     profile_data = cursor.fetchone()
     profile_picture = profile_data["profile_picture"] if profile_data else None
 
-    # ✅ Fetch classwork details
+    # ✅ Fetch classwork details with formatted dates
     cursor.execute(
         """
-        SELECT m.*, c.class_title, c.instructor_name
+        SELECT m.*, c.class_title, c.instructor_name,
+               DATE_FORMAT(m.submission_start, '%Y-%m-%d %H:%i') as submission_start_formatted,
+               DATE_FORMAT(m.submission_end, '%Y-%m-%d %H:%i') as submission_end_formatted
         FROM materials m
         LEFT JOIN classes c ON m.class_id = c.class_id
         WHERE m.material_id = %s AND m.type = 'classwork'
@@ -136,8 +147,25 @@ def view_classwork(material_id):
         flash("You are not enrolled in this class.")
         return redirect(url_for("student_resources.resources"))
 
-    # ✅ Handle submission
-    if request.method == "POST":
+    # ✅ Check if submission is currently allowed based on time
+    current_time = datetime.now()
+    submission_allowed = False
+    submission_status = "not_started"
+    
+    if classwork["submission_start"] and classwork["submission_end"]:
+        submission_start = classwork["submission_start"]
+        submission_end = classwork["submission_end"]
+        
+        if current_time < submission_start:
+            submission_status = "not_started"
+        elif current_time <= submission_end:
+            submission_status = "open"
+            submission_allowed = True
+        else:
+            submission_status = "closed"
+
+    # ✅ Handle submission (only if allowed)
+    if request.method == "POST" and submission_allowed:
         file = request.files.get("submission")
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
@@ -161,7 +189,8 @@ def view_classwork(material_id):
     # ✅ Fetch student's submissions
     cursor.execute(
         """
-        SELECT *
+        SELECT *,
+               DATE_FORMAT(date_submitted, '%Y-%m-%d %H:%i') as date_submitted_formatted
         FROM submissions
         WHERE material_id = %s AND student_id = %s
         ORDER BY date_submitted DESC
@@ -170,10 +199,17 @@ def view_classwork(material_id):
     )
     submissions = cursor.fetchall()
 
+    # Check if student has submitted
+    has_submitted = len(submissions) > 0
+
     cursor.close()
 
     return render_template("students/student_classwork.html",
                            classwork=classwork,
                            submissions=submissions,
                            profile_picture=profile_picture,
-                           user_id=session["user_id"])
+                           user_id=session["user_id"],
+                           submission_allowed=submission_allowed,
+                           submission_status=submission_status,
+                           has_submitted=has_submitted,
+                           current_time=current_time)

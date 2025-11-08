@@ -26,7 +26,7 @@ def materials():
     cursor = db.cursor(dictionary=True)
     staff_user_id = session.get("user_id")
 
-    # ✅ Fetch profile picture (like the courses view route)
+    # ✅ Fetch profile picture
     profile_picture = "default.png"
     cursor.execute(
         """
@@ -49,6 +49,24 @@ def materials():
         description = request.form.get("description")
         type_ = request.form.get("type")
         class_id = request.form.get("class_id") or None
+        
+        # ✅ Handle submission dates for classwork
+        submission_start = None
+        submission_end = None
+        if type_ == "classwork":
+            submission_start_str = request.form.get("submission_start")
+            submission_end_str = request.form.get("submission_end")
+            
+            if submission_start_str:
+                try:
+                    submission_start = datetime.strptime(submission_start_str, '%Y-%m-%dT%H:%M')
+                except ValueError:
+                    flash("Invalid submission start date format.")
+            if submission_end_str:
+                try:
+                    submission_end = datetime.strptime(submission_end_str, '%Y-%m-%dT%H:%M')
+                except ValueError:
+                    flash("Invalid submission end date format.")
 
         file = request.files.get("file")
         stored_filename = None
@@ -57,7 +75,7 @@ def materials():
         file_size = None
 
         # ✅ Handle file upload
-        if file and allowed_file(file.filename):
+        if file and file.filename != '' and allowed_file(file.filename):
             original_filename = secure_filename(file.filename)
             stored_filename = f"{datetime.now().strftime('%Y%m%d%H%M%S')}_{original_filename}"
             filepath = os.path.join(UPLOAD_FOLDER, stored_filename)
@@ -67,26 +85,42 @@ def materials():
 
         if material_id:
             # ✅ UPDATE existing material
+            # First verify the material belongs to this instructor
+            cursor.execute(
+                "SELECT instructor_id FROM materials WHERE material_id = %s",
+                (material_id,)
+            )
+            material = cursor.fetchone()
+            
+            if not material or material["instructor_id"] != staff_user_id:
+                flash("Unauthorized to update this material.")
+                return redirect(url_for("staff_materials.materials"))
+                
             if stored_filename:
                 cursor.execute(
                     """
                     UPDATE materials
                     SET class_id=%s, title=%s, description=%s, type=%s,
-                        original_filename=%s, stored_filename=%s, mimetype=%s, file_size=%s
+                        original_filename=%s, stored_filename=%s, mimetype=%s, file_size=%s,
+                        submission_start=%s, submission_end=%s
                     WHERE material_id=%s AND instructor_id=%s
                     """,
                     (class_id, title, description, type_,
                      original_filename, stored_filename, mimetype, file_size,
+                     submission_start, submission_end,
                      material_id, staff_user_id)
                 )
             else:
                 cursor.execute(
                     """
                     UPDATE materials
-                    SET class_id=%s, title=%s, description=%s, type=%s
+                    SET class_id=%s, title=%s, description=%s, type=%s,
+                        submission_start=%s, submission_end=%s
                     WHERE material_id=%s AND instructor_id=%s
                     """,
-                    (class_id, title, description, type_, material_id, staff_user_id)
+                    (class_id, title, description, type_, 
+                     submission_start, submission_end,
+                     material_id, staff_user_id)
                 )
             db.commit()
             flash("Material updated successfully.")
@@ -106,11 +140,13 @@ def materials():
             cursor.execute(
                 """
                 INSERT INTO materials (class_id, instructor_id, instructor_name, title, description, type,
-                                       original_filename, stored_filename, mimetype, file_size, date_uploaded)
-                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,NOW())
+                                       original_filename, stored_filename, mimetype, file_size, 
+                                       submission_start, submission_end, date_uploaded)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, NOW())
                 """,
                 (class_id, staff_user_id, instructor_name, title, description, type_,
-                 original_filename, stored_filename, mimetype, file_size)
+                 original_filename, stored_filename, mimetype, file_size,
+                 submission_start, submission_end)
             )
             db.commit()
             flash("Material uploaded successfully.")
@@ -123,7 +159,9 @@ def materials():
     # ✅ Fetch all materials uploaded by this staff
     cursor.execute(
         """
-        SELECT m.*, c.class_title
+        SELECT m.*, c.class_title,
+               DATE_FORMAT(m.submission_start, '%Y-%m-%dT%H:%i') as submission_start_formatted,
+               DATE_FORMAT(m.submission_end, '%Y-%m-%dT%H:%i') as submission_end_formatted
         FROM materials m
         LEFT JOIN classes c ON m.class_id = c.class_id
         WHERE m.instructor_id = %s
@@ -133,20 +171,21 @@ def materials():
     )
     materials = cursor.fetchall()
 
-    # ✅ Fetch only active classes (status='active')
+    # ✅ Fetch ONLY classes assigned to current instructor
     cursor.execute(
         """
-        SELECT class_id, class_title
+        SELECT class_id, class_title, instructor_name
         FROM classes
-        WHERE status = 'active'
+        WHERE status = 'active' AND instructor_id = %s
         ORDER BY class_title ASC
-        """
+        """,
+        (staff_user_id,)
     )
     classes = cursor.fetchall()
 
     # Optional feedback if no active classes
     if not classes:
-        flash("No active classes available for selection.")
+        flash("No active classes assigned to you. Please contact administrator to get assigned to classes.")
 
     return render_template(
         "staffs/staff_materials.html",
@@ -171,20 +210,23 @@ def check_submissions(material_id):
 
     db = get_db()
     cursor = db.cursor(dictionary=True)
+    staff_user_id = session.get("user_id")
 
     cursor.execute(
         """
-        SELECT m.*, c.class_title
+        SELECT m.*, c.class_title,
+               DATE_FORMAT(m.submission_start, '%Y-%m-%d %H:%i') as submission_start_formatted,
+               DATE_FORMAT(m.submission_end, '%Y-%m-%d %H:%i') as submission_end_formatted
         FROM materials m
         LEFT JOIN classes c ON m.class_id = c.class_id
-        WHERE m.material_id = %s
+        WHERE m.material_id = %s AND m.instructor_id = %s
         """,
-        (material_id,)
+        (material_id, staff_user_id)
     )
     material = cursor.fetchone()
 
     if not material or material["type"] != "classwork":
-        flash("Invalid classwork.")
+        flash("Invalid classwork or unauthorized access.")
         return redirect(url_for("staff_materials.materials"))
 
     cursor.execute(
@@ -217,3 +259,23 @@ def check_submissions(material_id):
             student["submission"] = next(s for s in submissions if s["student_id"] == student["user_id"])
 
     return render_template("staffs/staff_check.html", material=material, students=enrolled_students)
+
+
+@staff_materials_bp.route("/materials/delete/<int:material_id>", methods=["POST"])
+def delete_material(material_id):
+    """Delete a material."""
+    if "user_id" not in session or session.get("role") != "staff":
+        flash("Unauthorized access.")
+        return redirect(url_for("auth.login"))
+
+    db = get_db()
+    cursor = db.cursor()
+    
+    cursor.execute(
+        "DELETE FROM materials WHERE material_id = %s AND instructor_id = %s",
+        (material_id, session.get("user_id"))
+    )
+    db.commit()
+    
+    flash("Material deleted successfully.")
+    return redirect(url_for("staff_materials.materials"))

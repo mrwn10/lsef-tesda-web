@@ -1,28 +1,268 @@
-document.addEventListener('DOMContentLoaded', function() {
+// admin_enrollment.js - Complete Fixed Version with All Mobile Navigation Features
+$(document).ready(function() {
     // Global variables
     let currentEnrollmentId = null;
     let currentAction = null;
 
-    // DOM Elements
-    const searchInput = document.getElementById('search-input');
-    const statusFilter = document.getElementById('status-filter');
-    const courseFilter = document.getElementById('course-filter');
-    const resetFilters = document.getElementById('reset-filters');
-    const showAllEnrollments = document.getElementById('show-all-enrollments');
-    
-    // Modal elements
-    const logoutModal = document.getElementById('logout-modal');
-    const enrollmentDetailsModal = document.getElementById('enrollmentDetailsModal');
-    const statusUpdateModal = document.getElementById('statusUpdateModal');
-    const successModal = document.getElementById('successModal');
-    const errorModal = document.getElementById('errorModal');
-    const loadingModal = document.getElementById('loadingModal');
+    // Initialize all functionality
+    function init() {
+        initMobileNavigation();
+        initModals();
+        initializeEventListeners();
+    }
 
-    // Initialize the page
-    initializeEventListeners();
-    initializeModals();
+    // Mobile Navigation Functionality
+    function initMobileNavigation() {
+        const hamburgerMenu = document.getElementById('hamburgerMenu');
+        const mobileNav = document.getElementById('mobileNav');
+        const closeMobileNav = document.getElementById('closeMobileNav');
+        
+        if (hamburgerMenu && mobileNav) {
+            hamburgerMenu.addEventListener('click', function() {
+                mobileNav.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+            
+            if (closeMobileNav) {
+                closeMobileNav.addEventListener('click', function() {
+                    mobileNav.classList.remove('active');
+                    document.body.style.overflow = '';
+                });
+            }
+            
+            // Close mobile nav when clicking on links
+            const mobileNavLinks = document.querySelectorAll('.mobile-nav-links a');
+            mobileNavLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    mobileNav.classList.remove('active');
+                    document.body.style.overflow = '';
+                });
+            });
+            
+            // Expandable mobile menu sections
+            const mobileNavHeaders = document.querySelectorAll('.mobile-nav-header-link');
+            mobileNavHeaders.forEach(header => {
+                header.addEventListener('click', function() {
+                    const section = this.getAttribute('data-section');
+                    const submenu = document.getElementById(`${section}-submenu`);
+                    const chevron = this.querySelector('.chevron-icon');
+                    
+                    // Toggle active class
+                    this.classList.toggle('active');
+                    
+                    // Toggle submenu
+                    if (submenu) {
+                        submenu.classList.toggle('active');
+                    }
+                    
+                    // Rotate only the chevron icon
+                    if (chevron) {
+                        chevron.style.transform = this.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0deg)';
+                    }
+                });
+            });
+            
+            // Close mobile nav when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!hamburgerMenu.contains(e.target) && !mobileNav.contains(e.target) && mobileNav.classList.contains('active')) {
+                    mobileNav.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+            
+            // Close mobile nav with Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && mobileNav.classList.contains('active')) {
+                    mobileNav.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+        }
+    }
+
+    // Initialize all modal functionality
+    function initModals() {
+        // Close modal function - works for ALL modals
+        function closeAllModals() {
+            $('.modal').fadeOut(300);
+            document.body.style.overflow = '';
+            document.body.classList.remove('modal-open');
+        }
+
+        // Open modal function
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+                document.body.classList.add('modal-open');
+            }
+        }
+
+        // Close modal when clicking outside - works for ALL modals
+        $(document).on('click', function(e) {
+            if ($(e.target).hasClass('modal')) {
+                closeAllModals();
+            }
+        });
+
+        // Escape key to close modals - works for ALL modals
+        $(document).keyup(function(e) {
+            if (e.keyCode === 27) {
+                closeAllModals();
+            }
+        });
+
+        // ===== SPECIFIC MODAL FUNCTIONALITY =====
+
+        // Logout Modal
+        $('#logout-trigger').click(function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            openModal('logout-modal');
+        });
+        
+        $('#mobile-logout-trigger').click(function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            // First close mobile nav properly
+            const mobileNav = document.getElementById('mobileNav');
+            if (mobileNav) {
+                mobileNav.classList.remove('active');
+            }
+            // Then open logout modal
+            setTimeout(() => {
+                openModal('logout-modal');
+            }, 10);
+        });
+        
+        $('#cancel-logout').click(function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            closeAllModals();
+        });
+        
+        $('#close-logout-modal').click(function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            closeAllModals();
+        });
+        
+        $('#confirm-logout').click(function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const logoutUrl = document.body.getAttribute('data-logout-url');
+            if (logoutUrl) {
+                window.location.href = logoutUrl;
+            } else {
+                console.error('Logout URL not found');
+                window.location.href = "/logout";
+            }
+        });
+
+        // Enrollment Details Modal Flow
+        $('#closeDetailsModal').click(function() {
+            closeAllModals();
+        });
+
+        $('#close-details-modal').click(function() {
+            closeAllModals();
+        });
+
+        // Approve Enrollment Flow
+        $('#approveEnrollmentBtn').click(function() {
+            $('#enrollmentDetailsModal').fadeOut();
+            $('#approvalModal').fadeIn();
+        });
+
+        $('#cancelApproval').click(function() {
+            $('#approvalModal').fadeOut();
+            $('#enrollmentDetailsModal').fadeIn();
+        });
+
+        $('#close-approval-modal').click(function() {
+            $('#approvalModal').fadeOut();
+            $('#enrollmentDetailsModal').fadeIn();
+        });
+
+        $('#confirmApproval').click(function() {
+            if (currentEnrollmentId) {
+                $('#approvalModal').fadeOut();
+                showLoadingScreen('Approving enrollment...');
+                updateEnrollmentStatus(currentEnrollmentId, 'enrolled');
+            }
+        });
+
+        // Reject Enrollment Flow
+        $('#rejectEnrollmentBtn').click(function() {
+            $('#enrollmentDetailsModal').fadeOut();
+            $('#rejectionModal').fadeIn();
+        });
+
+        $('#cancelRejection').click(function() {
+            $('#rejectionModal').fadeOut();
+            $('#enrollmentDetailsModal').fadeIn();
+        });
+
+        $('#close-rejection-modal').click(function() {
+            $('#rejectionModal').fadeOut();
+            $('#enrollmentDetailsModal').fadeIn();
+        });
+
+        $('#confirmRejection').click(function() {
+            if (currentEnrollmentId) {
+                $('#rejectionModal').fadeOut();
+                showLoadingScreen('Rejecting enrollment...');
+                updateEnrollmentStatus(currentEnrollmentId, 'rejected');
+            }
+        });
+
+        // Success Modals
+        $('#closeSuccessModal').click(function() {
+            closeAllModals();
+            // Refresh the page to show updated status
+            setTimeout(() => {
+                window.location.reload();
+            }, 500);
+        });
+
+        $('#close-success-modal').click(function() {
+            closeAllModals();
+            // Refresh the page to show updated status
+            setTimeout(() => {
+                window.location.reload();
+            }, 500);
+        });
+
+        $('#closeRejectionSuccessModal').click(function() {
+            closeAllModals();
+            // Refresh the page to show updated status
+            setTimeout(() => {
+                window.location.reload();
+            }, 500);
+        });
+
+        $('#close-rejection-success-modal').click(function() {
+            closeAllModals();
+            // Refresh the page to show updated status
+            setTimeout(() => {
+                window.location.reload();
+            }, 500);
+        });
+
+        // Alert close
+        $('.close-alert').click(function() {
+            $(this).closest('.alert').fadeOut();
+        });
+    }
 
     function initializeEventListeners() {
+        // DOM Elements
+        const searchInput = document.getElementById('search-input');
+        const statusFilter = document.getElementById('status-filter');
+        const courseFilter = document.getElementById('course-filter');
+        const showAllEnrollments = document.getElementById('show-all-enrollments');
+        
         // Filter event listeners
         [statusFilter, courseFilter].forEach(filter => {
             filter.addEventListener('change', applyFilters);
@@ -30,9 +270,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Search functionality
         searchInput.addEventListener('input', debounce(applyFilters, 300));
-        
-        // Reset filters
-        resetFilters.addEventListener('click', resetAllFilters);
         
         // Show all enrollments
         if (showAllEnrollments) {
@@ -53,153 +290,30 @@ document.addEventListener('DOMContentLoaded', function() {
                 setTimeout(() => alert.style.display = 'none', 500);
             });
         }, 5000);
-    }
 
-    function initializeModals() {
-        // Logout modal
-        document.getElementById('logout-trigger').addEventListener('click', function(e) {
-            e.preventDefault();
-            showModal(logoutModal);
-        });
-        
-        document.getElementById('confirm-logout').addEventListener('click', function() {
-            window.location.href = window.appUrls.logoutUrl;
-        });
-
-        // Close modal events
-        document.querySelectorAll('.modal-close, .close-modal').forEach(btn => {
-            btn.addEventListener('click', function() {
-                hideAllModals();
-            });
-        });
-
-        // Close modal when clicking outside
-        document.querySelectorAll('.modal').forEach(modal => {
-            modal.addEventListener('click', function(e) {
-                if (e.target === this) {
-                    hideAllModals();
-                }
-            });
-        });
-
-        // Status update confirmation
-        document.getElementById('confirm-status-update').addEventListener('click', function() {
-            if (currentEnrollmentId && currentAction) {
-                updateEnrollmentStatus(currentEnrollmentId, currentAction);
-            }
-            hideModal(statusUpdateModal);
-        });
-
-        // Handle enrollment action buttons
-        document.addEventListener('click', function(e) {
-            const actionButton = e.target.closest('.btn-action');
-            if (actionButton) {
-                const row = actionButton.closest('tr');
-                const enrollmentId = row.dataset.enrollmentId;
-                const action = actionButton.dataset.action;
-                const studentName = row.querySelector('.student-name').textContent;
-                const currentStatus = row.querySelector('.status-badge').textContent.toLowerCase();
-                
-                if (actionButton.classList.contains('btn-details')) {
-                    // View details action
-                    viewEnrollmentDetails(enrollmentId);
-                } else if (action) {
-                    // Status update action
-                    showStatusUpdateModal(enrollmentId, action, studentName, currentStatus);
-                }
-            }
+        // Handle view details button clicks
+        $(document).on('click', '.view-details-btn', function() {
+            const enrollmentId = $(this).data('enrollment-id');
+            viewEnrollmentDetails(enrollmentId);
         });
     }
 
-    function showModal(modal) {
-        hideAllModals();
-        modal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
+    // Show loading screen during approval/rejection
+    function showLoadingScreen(message) {
+        $('#loading-message').text(message);
+        $('#loading-screen').fadeIn();
     }
-
-    function hideModal(modal) {
-        modal.style.display = 'none';
-        document.body.style.overflow = 'auto';
-    }
-
-    function hideAllModals() {
-        document.querySelectorAll('.modal').forEach(modal => {
-            hideModal(modal);
-        });
-    }
-
-    function showLoadingModal() {
-        showModal(loadingModal);
-    }
-
-    function hideLoadingModal() {
-        hideModal(loadingModal);
-    }
-
-    function showStatusUpdateModal(enrollmentId, action, studentName, currentStatus) {
-        currentEnrollmentId = enrollmentId;
-        currentAction = action;
-        
-        const actionText = getActionText(action);
-        const currentStatusText = getActionText(currentStatus);
-        const message = getStatusUpdateMessage(action, studentName, currentStatusText);
-        const title = getStatusUpdateTitle(action);
-        
-        document.getElementById('status-update-title').innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${title}`;
-        document.getElementById('status-update-message').innerHTML = message;
-        showModal(statusUpdateModal);
-    }
-
-    function getStatusUpdateMessage(action, studentName, currentStatus) {
-        const messages = {
-            'enrolled': `Approve enrollment for <strong>${studentName}</strong>? This will change their status from <span class="status-badge status-pending">${currentStatus}</span> to <span class="status-badge status-enrolled">Enrolled</span>.`,
-            'rejected': `Reject enrollment for <strong>${studentName}</strong>? This will change their status from <span class="status-badge status-pending">${currentStatus}</span> to <span class="status-badge status-rejected">Rejected</span>.`,
-            'completed': `Mark <strong>${studentName}</strong> as completed? This will change their status from <span class="status-badge status-enrolled">${currentStatus}</span> to <span class="status-badge status-completed">Completed</span>.`,
-            'dropped': `Drop <strong>${studentName}</strong> from the class? This will change their status from <span class="status-badge status-enrolled">${currentStatus}</span> to <span class="status-badge status-dropped">Dropped</span>.`,
-            'pending': `Reconsider enrollment for <strong>${studentName}</strong>? This will change their status from <span class="status-badge status-rejected">${currentStatus}</span> to <span class="status-badge status-pending">Pending</span>.`
-        };
-        
-        return messages[action] || `Change enrollment status for <strong>${studentName}</strong>?`;
-    }
-
-    function getStatusUpdateTitle(action) {
-        const titles = {
-            'enrolled': 'Approve Enrollment',
-            'rejected': 'Reject Enrollment',
-            'completed': 'Mark as Completed',
-            'dropped': 'Drop Student',
-            'pending': 'Reconsider Enrollment'
-        };
-        
-        return titles[action] || 'Confirm Status Update';
-    }
-
-    function showSuccessModal(message) {
-        document.getElementById('success-message').textContent = message;
-        showModal(successModal);
-    }
-
-    function showErrorModal(message) {
-        document.getElementById('error-message').textContent = message;
-        showModal(errorModal);
-    }
-
-    function getActionText(action) {
-        const actions = {
-            'pending': 'Pending',
-            'enrolled': 'Enrolled',
-            'rejected': 'Rejected',
-            'completed': 'Completed',
-            'dropped': 'Dropped'
-        };
-        return actions[action] || action;
+    
+    // Hide loading screen
+    function hideLoadingScreen() {
+        $('#loading-screen').fadeOut();
     }
 
     // Function to apply filters
     function applyFilters() {
-        const status = statusFilter.value;
-        const course = courseFilter.value;
-        const search = searchInput.value.trim();
+        const status = document.getElementById('status-filter').value;
+        const course = document.getElementById('course-filter').value;
+        const search = document.getElementById('search-input').value.trim();
         
         let url = window.appUrls.getEnrollments + '?';
         if (status !== 'all') url += `status=${status}&`;
@@ -211,15 +325,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Function to reset all filters
     function resetAllFilters() {
-        statusFilter.value = 'all';
-        courseFilter.value = 'all';
-        searchInput.value = '';
+        document.getElementById('status-filter').value = 'all';
+        document.getElementById('course-filter').value = 'all';
+        document.getElementById('search-input').value = '';
         applyFilters();
     }
 
     // Function to update enrollment status
     function updateEnrollmentStatus(enrollmentId, newStatus) {
-        showLoadingModal();
+        const approveBtn = $('#confirmApproval');
+        const rejectBtn = $('#confirmRejection');
+        const button = newStatus === 'enrolled' ? approveBtn : rejectBtn;
+        
+        // Show loading state
+        button.addClass('loading').prop('disabled', true);
         
         fetch(window.appUrls.updateEnrollmentStatus, {
             method: 'POST',
@@ -238,30 +357,43 @@ document.addEventListener('DOMContentLoaded', function() {
             return response.json();
         })
         .then(data => {
-            hideLoadingModal();
+            button.removeClass('loading').prop('disabled', false);
+            hideLoadingScreen();
             
             if (data.success) {
-                const actionText = getActionText(newStatus);
-                showSuccessModal(`Enrollment has been ${actionText.toLowerCase()} successfully!`);
-                
-                // Update the UI after a short delay
-                setTimeout(() => {
-                    window.location.reload();
-                }, 2000);
+                if (newStatus === 'enrolled') {
+                    $('#successMessage').text('Enrollment has been approved successfully and the student is now enrolled.');
+                    $('#successModal').fadeIn();
+                } else {
+                    $('#rejectionSuccessMessage').text('Enrollment has been rejected successfully.');
+                    $('#rejectionSuccessModal').fadeIn();
+                }
             } else {
                 showErrorModal(data.message || 'Failed to update enrollment status');
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            hideLoadingModal();
+            button.removeClass('loading').prop('disabled', false);
+            hideLoadingScreen();
             showErrorModal('An error occurred while updating enrollment status');
         });
     }
 
     // Function to view enrollment details
     function viewEnrollmentDetails(enrollmentId) {
-        showLoadingModal();
+        currentEnrollmentId = enrollmentId;
+        window.currentEnrollmentId = enrollmentId;
+        
+        // Show loading state
+        $('#enrollmentDetailsContent').html(`
+            <div class="loading-spinner">
+                <div class="spinner"></div>
+                <span>Loading enrollment details...</span>
+            </div>
+        `);
+        
+        $('#enrollmentDetailsModal').fadeIn();
         
         const url = window.appUrls.getEnrollmentDetails.replace('0', enrollmentId);
         
@@ -275,19 +407,37 @@ document.addEventListener('DOMContentLoaded', function() {
             return response.json();
         })
         .then(data => {
-            hideLoadingModal();
-            
             if (data.success) {
                 populateEnrollmentDetails(data.enrollment);
-                showModal(enrollmentDetailsModal);
+                // Show/hide action buttons based on enrollment status
+                if (data.enrollment.status === 'pending') {
+                    $('#approveEnrollmentBtn').show();
+                    $('#rejectEnrollmentBtn').show();
+                } else {
+                    $('#approveEnrollmentBtn').hide();
+                    $('#rejectEnrollmentBtn').hide();
+                }
             } else {
-                showErrorModal(data.message || 'Failed to load enrollment details');
+                $('#enrollmentDetailsContent').html(`
+                    <div class="error-message">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Failed to load enrollment details: ${data.message}
+                    </div>
+                `);
+                $('#approveEnrollmentBtn').hide();
+                $('#rejectEnrollmentBtn').hide();
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            hideLoadingModal();
-            showErrorModal(error.message || 'An error occurred while fetching enrollment details');
+            $('#enrollmentDetailsContent').html(`
+                <div class="error-message">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Failed to load enrollment details. Please try again.
+                </div>
+            `);
+            $('#approveEnrollmentBtn').hide();
+            $('#rejectEnrollmentBtn').hide();
         });
     }
 
@@ -299,78 +449,113 @@ document.addEventListener('DOMContentLoaded', function() {
             const date = new Date(dateString);
             return date.toLocaleDateString('en-US', {
                 year: 'numeric',
-                month: 'long',
+                month: 'short',
                 day: 'numeric'
             });
         };
 
         content.innerHTML = `
-            <div class="detail-section">
-                <h4>Student Information</h4>
-                <div class="detail-row">
-                    <span class="detail-label">Name:</span>
-                    <span class="detail-value">${enrollment.student_name || 'N/A'}</span>
+            <div class="user-details-content">
+                <div class="user-detail-section">
+                    <h4><i class="fas fa-user-graduate"></i> Student Information</h4>
+                    <div class="user-detail-grid">
+                        <div class="user-detail-item">
+                            <div class="user-detail-label">Full Name</div>
+                            <div class="user-detail-value">${enrollment.student_name || 'N/A'}</div>
+                        </div>
+                        <div class="user-detail-item">
+                            <div class="user-detail-label">Email</div>
+                            <div class="user-detail-value">${enrollment.email || 'N/A'}</div>
+                        </div>
+                        <div class="user-detail-item">
+                            <div class="user-detail-label">Role</div>
+                            <div class="user-detail-value">${enrollment.role || 'N/A'}</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="detail-row">
-                    <span class="detail-label">Email:</span>
-                    <span class="detail-value">${enrollment.email || 'N/A'}</span>
+                
+                <div class="user-detail-section">
+                    <h4><i class="fas fa-book"></i> Course Information</h4>
+                    <div class="user-detail-grid">
+                        <div class="user-detail-item">
+                            <div class="user-detail-label">Course</div>
+                            <div class="user-detail-value">${enrollment.course_title || 'N/A'}</div>
+                        </div>
+                        <div class="user-detail-item">
+                            <div class="user-detail-label">Class</div>
+                            <div class="user-detail-value">${enrollment.class_title || 'N/A'}</div>
+                        </div>
+                        <div class="user-detail-item">
+                            <div class="user-detail-label">Schedule</div>
+                            <div class="user-detail-value">${enrollment.schedule || 'N/A'}</div>
+                        </div>
+                        <div class="user-detail-item">
+                            <div class="user-detail-label">Venue</div>
+                            <div class="user-detail-value">${enrollment.venue || 'N/A'}</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="detail-row">
-                    <span class="detail-label">Role:</span>
-                    <span class="detail-value">${enrollment.role || 'N/A'}</span>
+                
+                <div class="user-detail-section">
+                    <h4><i class="fas fa-calendar-alt"></i> Class Dates</h4>
+                    <div class="user-detail-grid">
+                        <div class="user-detail-item">
+                            <div class="user-detail-label">Start Date</div>
+                            <div class="user-detail-value">${formatDate(enrollment.start_date)}</div>
+                        </div>
+                        <div class="user-detail-item">
+                            <div class="user-detail-label">End Date</div>
+                            <div class="user-detail-value">${formatDate(enrollment.end_date)}</div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="detail-section">
-                <h4>Course Information</h4>
-                <div class="detail-row">
-                    <span class="detail-label">Course:</span>
-                    <span class="detail-value">${enrollment.course_title || 'N/A'}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Class:</span>
-                    <span class="detail-value">${enrollment.class_title || 'N/A'}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Schedule:</span>
-                    <span class="detail-value">${enrollment.schedule || 'N/A'}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Venue:</span>
-                    <span class="detail-value">${enrollment.venue || 'N/A'}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Max Students:</span>
-                    <span class="detail-value">${enrollment.max_students || 'N/A'}</span>
-                </div>
-            </div>
-            
-            <div class="detail-section">
-                <h4>Class Dates</h4>
-                <div class="detail-row">
-                    <span class="detail-label">Start Date:</span>
-                    <span class="detail-value">${formatDate(enrollment.start_date)}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">End Date:</span>
-                    <span class="detail-value">${formatDate(enrollment.end_date)}</span>
-                </div>
-            </div>
-            
-            <div class="detail-section">
-                <h4>Enrollment Details</h4>
-                <div class="detail-row">
-                    <span class="detail-label">Status:</span>
-                    <span class="detail-value status-badge status-${enrollment.status}">
-                        ${enrollment.status ? enrollment.status.charAt(0).toUpperCase() + enrollment.status.slice(1) : 'N/A'}
-                    </span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Enrollment Date:</span>
-                    <span class="detail-value">${formatDate(enrollment.enrollment_date)}</span>
+                
+                <div class="user-detail-section">
+                    <h4><i class="fas fa-info-circle"></i> Enrollment Details</h4>
+                    <div class="user-detail-grid">
+                        <div class="user-detail-item">
+                            <div class="user-detail-label">Status</div>
+                            <div class="user-detail-value">
+                                <span class="status-badge status-${enrollment.status}">
+                                    ${enrollment.status ? enrollment.status.charAt(0).toUpperCase() + enrollment.status.slice(1) : 'N/A'}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="user-detail-item">
+                            <div class="user-detail-label">Enrollment Date</div>
+                            <div class="user-detail-value">${formatDate(enrollment.enrollment_date)}</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         `;
+    }
+
+    // Show error modal
+    function showErrorModal(message) {
+        // Create a simple alert for errors
+        const alertHtml = `
+            <div class="alert danger">
+                <span id="message-text">
+                    <i class="fas fa-exclamation-circle"></i>
+                    ${message}
+                </span>
+                <button type="button" class="close-alert">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        `;
+        
+        // Remove any existing alerts
+        $('.alert.danger').remove();
+        
+        // Add the new alert
+        $('.flash-messages').html(alertHtml);
+        
+        // Auto-remove after 5 seconds
+        setTimeout(() => {
+            $('.alert.danger').fadeOut();
+        }, 5000);
     }
 
     // Utility function for debouncing
@@ -386,10 +571,6 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     }
 
-    // Keyboard event listeners for accessibility
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            hideAllModals();
-        }
-    });
+    // Initialize everything
+    init();
 });

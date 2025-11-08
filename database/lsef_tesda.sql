@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 03, 2025 at 12:37 PM
+-- Generation Time: Nov 08, 2025 at 01:07 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -73,11 +73,11 @@ CREATE TABLE `classes` (
 
 INSERT INTO `classes` (`class_id`, `course_id`, `class_title`, `school_year`, `batch`, `schedule`, `days_of_week`, `venue`, `max_students`, `instructor_id`, `instructor_name`, `start_date`, `end_date`, `prerequisites`, `status`, `date_created`, `date_updated`, `edit_reason`) VALUES
 (15, 9, 'FOOD 101', '2025 - 2026', 'Batch 1', 'Tuesday 8:00 AM-4:00 PM, Thursday 10:00 AM-6:00 PM', '{\"Tuesday\": {\"start\": \"08:00\", \"end\": \"16:00\"}, \"Thursday\": {\"start\": \"10:00\", \"end\": \"18:00\"}}', 'LSEF TESDA', 25, 10, 'Vincent Octavio', '2025-10-01', '2026-09-08', 'Before entering the Food and Beverages field, students should have a basic understanding of food safety, hygiene practices, and customer service. A keen interest in culinary arts, attention to detail, and good communication skills are also essential for success in this area.', 'active', '2025-10-22 19:42:25', '2025-11-03 19:18:24', NULL),
-(16, 17, 'HOUSE 101', '2025 - 2026', '2025', 'Monday 7:00 AM-2:00 PM, Tuesday 8:00 AM-3:00 PM, Wednesday 6:00 AM-4:00 PM', '{\"Monday\":{\"start\":\"07:00\",\"end\":\"14:00\"},\"Tuesday\":{\"start\":\"08:00\",\"end\":\"15:00\"},\"Wednesday\":{\"start\":\"06:00\",\"end\":\"16:00\"}}', 'LSEF TESDA', 25, 1, 'James Harden', '2025-11-03', '2026-11-04', 'Applicants must be able to read and communicate in basic English and Filipino and possess good physical condition to perform housekeeping duties. No previous experience is required, but completion of high school or equivalent is recommended.', 'active', '2025-11-03 19:22:55', NULL, NULL),
-(17, 18, 'BREAD 101', '2025 - 2026', '2025', 'Thursday 8:00 AM-5:00 PM, Friday 6:00 AM-1:00 PM, Wednesday 10:00 AM-2:00 PM', '{\"Thursday\":{\"start\":\"08:00\",\"end\":\"17:00\"},\"Friday\":{\"start\":\"06:00\",\"end\":\"13:00\"},\"Wednesday\":{\"start\":\"10:00\",\"end\":\"14:00\"}}', 'LSEF TESDA', 25, 1, 'Lebron James', '2025-11-03', '2026-11-03', 'Applicants should be able to communicate in basic English and Filipino and be in good physical and mental condition. No prior baking experience is required, but having basic cooking knowledge is an advantage.', 'active', '2025-11-03 19:26:34', NULL, NULL),
-(18, 19, 'BOOK 101', '2025 - 2026', '2025', 'Monday 6:00 AM-1:00 PM, Wednesday 6:00 AM-1:00 PM, Friday 10:00 AM-6:00 PM', '{\"Monday\":{\"start\":\"06:00\",\"end\":\"13:00\"},\"Wednesday\":{\"start\":\"06:00\",\"end\":\"13:00\"},\"Friday\":{\"start\":\"10:00\",\"end\":\"18:00\"}}', 'LSEF TESDA', 25, 1, 'Megan Young', '2025-11-03', '2026-11-03', 'Before starting bookkeeping, it’s important to have a basic understanding of accounting principles, familiarity with financial documents (like invoices and receipts), and proficiency in using spreadsheets or accounting software. Attention to detail and basic math skills are also essential for maintaining accurate financial records.\n', 'active', '2025-11-03 19:29:28', NULL, NULL),
-(19, 20, 'ICT 101', '2025 - 2026', '2025', 'Tuesday 8:00 AM-2:00 PM, Thursday 7:00 AM-3:00 PM, Saturday 6:00 AM-12:00 PM', '{\"Tuesday\":{\"start\":\"08:00\",\"end\":\"14:00\"},\"Thursday\":{\"start\":\"07:00\",\"end\":\"15:00\"},\"Saturday\":{\"start\":\"06:00\",\"end\":\"12:00\"}}', 'LSEF TESDA', 25, 1, 'Lebron James', '2025-11-03', '2026-11-03', 'Must be able to read and write; basic computer literacy and knowledge of electronic components are recommended. Some training centers may require completion of a basic ICT-related course.', 'active', '2025-11-03 19:31:43', NULL, NULL),
-(20, 21, 'EIM 101', '2025 - 2026', '2025', 'Monday 6:00 AM-1:00 PM, Wednesday 6:00 AM-1:00 PM, Friday 8:00 AM-3:00 PM', '{\"Monday\":{\"start\":\"06:00\",\"end\":\"13:00\"},\"Wednesday\":{\"start\":\"06:00\",\"end\":\"13:00\"},\"Friday\":{\"start\":\"08:00\",\"end\":\"15:00\"}}', 'LSEF TESDA', 25, 1, 'Elon Musk', '2025-11-03', '2026-11-03', 'Must be able to read and write; basic knowledge of mathematics and electricity is recommended. Some institutions may require completion of a basic electrical course or equivalent experience.', 'active', '2025-11-03 19:34:11', NULL, NULL);
+(21, 17, 'HOUSE 101', '2025 - 2026', '2025', 'Wednesday 08:00-15:00', '{\"Monday\": {\"start\": \"06:00\", \"end\": \"13:00\"}, \"Tuesday\": {\"start\": \"06:00\", \"end\": \"13:00\"}, \"Wednesday\": {\"start\": \"08:00\", \"end\": \"15:00\"}}', 'LSEF TESDA', 25, 10, 'Lebron James', '2025-11-08', '2026-11-08', 'Applicants must be able to read and communicate in basic English and Filipino and possess good physical condition to perform housekeeping duties. No previous experience is required, but completion of high school or equivalent is recommended.', 'active', '2025-11-08 11:49:12', '2025-11-08 11:55:00', NULL),
+(22, 18, 'BREAD 101', '2025 - 2026', '2025', 'Friday 10:00-15:00', '{\"Monday\": {\"start\": \"11:00\", \"end\": \"17:00\"}, \"Wednesday\": {\"start\": \"11:00\", \"end\": \"17:00\"}, \"Friday\": {\"start\": \"10:00\", \"end\": \"15:00\"}}', 'LSEF TESDA', 25, 10, 'James Harden', '2025-11-08', '2026-11-08', 'Applicants should be able to communicate in basic English and Filipino and be in good physical and mental condition. No prior baking experience is required, but having basic cooking knowledge is an advantage.', 'active', '2025-11-08 11:50:09', '2025-11-08 11:54:58', NULL),
+(23, 19, 'BOOK 101', '2025 - 2026', '2025', 'Friday 10:00-18:00', '{\"Monday\": {\"start\": \"06:00\", \"end\": \"15:00\"}, \"Wednesday\": {\"start\": \"06:00\", \"end\": \"15:00\"}, \"Friday\": {\"start\": \"10:00\", \"end\": \"18:00\"}}', 'LSEF TESDA', 25, 10, 'James Harden', '2025-11-08', '2026-11-08', 'Before starting bookkeeping, it’s important to have a basic understanding of accounting principles, familiarity with financial documents (like invoices and receipts), and proficiency in using spreadsheets or accounting software. Attention to detail and basic math skills are also essential for maintaining accurate financial records.\n', 'active', '2025-11-08 11:51:18', '2025-11-08 11:54:55', NULL),
+(24, 20, 'ICT 101', '2025 - 2026', '2025', 'Saturday 10:00-16:00', '{\"Tuesday\": {\"start\": \"06:00\", \"end\": \"10:00\"}, \"Thursday\": {\"start\": \"06:00\", \"end\": \"10:00\"}, \"Saturday\": {\"start\": \"10:00\", \"end\": \"16:00\"}}', 'LSEF TESDA', 25, 10, 'Megan Young', '2025-11-08', '2026-11-08', 'Must be able to read and write; basic computer literacy and knowledge of electronic components are recommended. Some training centers may require completion of a basic ICT-related course.', 'active', '2025-11-08 11:52:17', '2025-11-08 11:54:51', NULL),
+(25, 21, 'EIM 101', '2025 - 2026', '2025', 'Thursday 10:00-16:00', '{\"Monday\": {\"start\": \"08:00\", \"end\": \"16:00\"}, \"Tuesday\": {\"start\": \"08:00\", \"end\": \"15:00\"}, \"Thursday\": {\"start\": \"10:00\", \"end\": \"16:00\"}}', 'LSEF TESDA', 25, 10, 'Elon Musk', '2025-11-08', '2026-11-08', 'Must be able to read and write; basic knowledge of mathematics and electricity is recommended. Some institutions may require completion of a basic electrical course or equivalent experience.', 'active', '2025-11-08 11:54:19', '2025-11-08 11:54:48', NULL);
 
 -- --------------------------------------------------------
 
@@ -118,9 +118,7 @@ INSERT INTO `courses` (`course_id`, `course_code`, `course_title`, `course_descr
 (18, 'BREAD 104', 'BREAD AND PASTRY PRODUCTION', 'The Bread and Pastry Production course equips learners with the knowledge and practical skills to prepare and produce a variety of bakery and pastry products. It includes training in baking bread, cakes, pastries, and other desserts following industry standards of quality and safety.', 'Vocational', 'Beginner', 'Applicants should be able to communicate in basic English and Filipino and be in good physical and mental condition. No prior baking experience is required, but having basic cooking knowledge is an advantage.', 'Upon completion, trainees will be able to prepare, bake, and present bread and pastry products professionally. They will also learn food safety practices, sanitation, and the use of baking tools and equipment essential in bakery or pastry shop operations.', 141, 0.00, 25, 'active', 1, 1, NULL, '2025-10-12 20:26:32', NULL, '2025-10-12 20:26:32', NULL, NULL),
 (19, 'BOOK 103', 'BOOKKEEPING', 'This program covers the competencies required to maintain books of accounts, prepare financial reports, and review internal control systems in various business environments.', 'Vocational', 'All Levels', 'Before starting bookkeeping, it’s important to have a basic understanding of accounting principles, familiarity with financial documents (like invoices and receipts), and proficiency in using spreadsheets or accounting software. Attention to detail and basic math skills are also essential for maintaining accurate financial records.\n', 'Post transactions to the general ledger\nPrepare trial balance and basic financial statements\nReview internal control systems\nProcess payroll and tax documents\nUse accounting software applications', 350, 0.00, 25, 'active', 1, 10, 1, '2025-10-13 08:07:55', '2025-11-03 19:11:22', '2025-10-13 14:06:46', '2025-10-22 19:47:23', NULL),
 (20, 'ICT 102', 'COMPUTER SYSTEM SERVICING', 'This course trains learners to install, configure, and maintain computer systems and networks. It covers hardware troubleshooting, software installation, and network setup to ensure computers function efficiently and securely.', 'Skills', 'Intermediate', 'Must be able to read and write; basic computer literacy and knowledge of electronic components are recommended. Some training centers may require completion of a basic ICT-related course.', 'Learners will be able to assemble and disassemble computer hardware, install operating systems and software, configure local area networks (LAN), and perform preventive maintenance and repair on computer systems.', 280, 0.00, 25, 'active', 1, 1, NULL, '2025-10-13 14:41:20', '2025-11-03 19:14:50', '2025-10-13 14:41:20', NULL, NULL),
-(21, 'EIM 101', 'ELECTRICAL INSTALLATION AND MAINTENANCE', 'This course provides learners with the knowledge and skills to install, maintain, and repair electrical wiring, lighting, and power systems in residential, commercial, and industrial settings. It also covers safety procedures and the proper use of electrical tools and equipment.', 'Technical', 'Beginner', 'Must be able to read and write; basic knowledge of mathematics and electricity is recommended. Some institutions may require completion of a basic electrical course or equivalent experience.', 'Learners will be able to perform electrical installation, maintenance, and troubleshooting according to industry standards and safety regulations. They will gain competencies in interpreting electrical plans, using measuring instruments, and ensuring proper circuit function.', 196, 0.00, 25, 'active', 1, 10, 1, '2025-10-22 19:44:04', '2025-11-03 19:12:41', '2025-10-22 19:47:35', '2025-10-22 19:47:35', NULL),
-(25, 'asdasdddsa', 'asdasdsd', 'asdsdasd', 'Vocational', 'Beginner', 'asdasdd', 'asd', 2231, 0.00, 25, 'inactive', 1, 10, 1, '2025-10-23 22:47:44', '2025-11-03 19:23:48', NULL, '2025-11-03 19:23:48', NULL),
-(26, 'asdasd', 'asd232', 'asdads', 'Technical', 'Advanced', 'fsdfsd', 'fdsdff', 123, 0.00, 25, 'inactive', 1, 10, 1, '2025-10-23 22:52:39', '2025-11-03 19:23:52', NULL, '2025-11-03 19:23:52', NULL);
+(21, 'EIM 101', 'ELECTRICAL INSTALLATION AND MAINTENANCE', 'This course provides learners with the knowledge and skills to install, maintain, and repair electrical wiring, lighting, and power systems in residential, commercial, and industrial settings. It also covers safety procedures and the proper use of electrical tools and equipment.', 'Technical', 'Beginner', 'Must be able to read and write; basic knowledge of mathematics and electricity is recommended. Some institutions may require completion of a basic electrical course or equivalent experience.', 'Learners will be able to perform electrical installation, maintenance, and troubleshooting according to industry standards and safety regulations. They will gain competencies in interpreting electrical plans, using measuring instruments, and ensuring proper circuit function.', 196, 0.00, 25, 'active', 1, 10, 1, '2025-10-22 19:44:04', '2025-11-03 19:12:41', '2025-10-22 19:47:35', '2025-10-22 19:47:35', NULL);
 
 -- --------------------------------------------------------
 
@@ -142,7 +140,11 @@ CREATE TABLE `enrollment` (
 
 INSERT INTO `enrollment` (`enrollment_id`, `user_id`, `class_id`, `enrollment_date`, `status`) VALUES
 (9, 80, 15, '2025-10-22 19:50:12', 'enrolled'),
-(11, 17, 20, '2025-11-03 19:35:22', 'enrolled');
+(12, 29, 15, '2025-11-04 09:09:52', 'enrolled'),
+(13, 17, 22, '2025-11-08 12:49:11', 'enrolled'),
+(14, 19, 23, '2025-11-08 14:05:01', 'enrolled'),
+(15, 18, 23, '2025-11-08 14:06:09', 'rejected'),
+(16, 18, 23, '2025-11-08 14:07:03', 'pending');
 
 -- --------------------------------------------------------
 
@@ -224,15 +226,15 @@ INSERT INTO `login` (`user_id`, `username`, `password`, `email`, `role`, `accoun
 (71, 'phoebejoymiranda', 'Ph03b3J0y!', 'phoebe.joy.miranda@gmail.com', 'student', 'pending', 'pending'),
 (72, 'quentinsison', '	Q!uent1nIra', 'quentin.ira.sison@gmail.com', 'student', 'pending', 'pending'),
 (73, 'rosacastillo', 'R0s@M@y123', 'rosa.may.castillo@gmail.com', 'student', 'pending', 'pending'),
-(74, 'seanvalencia', '	S3@nP@tr1ck', 'sean.patrick.valencia@gmail.com', 'student', 'pending', 'pending'),
+(74, 'seanvalencia', '	S3@nP@tr1ck', 'sean.patrick.valencia@gmail.com', 'student', 'active', 'pending'),
 (75, 'tessacabral', 'T3ss@L0rr@1n', 'tessa.lorraine.cabral@gmail.com', 'student', 'inactive', 'pending'),
 (76, 'ulyssesherrera', 'U1yss3sD3@n!	', 'ulysses.dean.herrera@gmail.com', 'student', 'active', 'pending'),
-(77, 'violemaesantiago', 'Vi0l3tM@e!8', 'violet.mae.santiago@gmail.com', 'student', 'active', 'pending'),
 (78, 'warrenlim', 'W@rr3nJ0e1', 'warren.joel.lim@gmail.com', 'student', 'inactive', 'pending'),
-(79, 'yvonneong', 'Yv0nN3C!air', 'yvonne.claire.ong@gmail.com', 'student', 'active', 'pending'),
 (80, 'markjohn', 'Marwindalin09!', 'markjohn@gmail.com', 'student', 'active', 'verified'),
 (81, 'christineparis2024', 'Chris09!', 'ye@gmail.com', 'student', 'active', 'pending'),
-(82, 'kanyeyeast', 'Kanye09!', 'yeast@gmail.com', 'student', 'pending', 'pending');
+(82, 'kanyeyeast', 'Kanye09!', 'yeast@gmail.com', 'student', 'pending', 'pending'),
+(83, 'nigg', 'Beepboop09!', 'niig@gmail.com', 'staff', 'active', 'verified'),
+(84, 'wakara', 'Marwindalin09!', 'waka@gmail.com', 'staff', 'active', 'verified');
 
 -- --------------------------------------------------------
 
@@ -252,16 +254,20 @@ CREATE TABLE `materials` (
   `stored_filename` varchar(255) DEFAULT NULL,
   `mimetype` varchar(100) DEFAULT NULL,
   `file_size` int(11) DEFAULT NULL,
-  `date_uploaded` datetime NOT NULL DEFAULT current_timestamp()
+  `date_uploaded` datetime NOT NULL DEFAULT current_timestamp(),
+  `submission_start` datetime DEFAULT NULL,
+  `submission_end` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `materials`
 --
 
-INSERT INTO `materials` (`material_id`, `class_id`, `instructor_id`, `instructor_name`, `title`, `description`, `type`, `original_filename`, `stored_filename`, `mimetype`, `file_size`, `date_uploaded`) VALUES
-(7, 15, 10, 'niko Nonoy', 'may pasok na sa november', 'gg', 'announcement', 'Screenshot_from_2025-09-20_08-28-28.png', '20251022194922_Screenshot_from_2025-09-20_08-28-28.png', 'image/png', 237858, '2025-10-22 19:49:22'),
-(8, 15, 10, 'niko Nonoy', 'isapa', 'wala ulit pasok', 'classwork', 'Screenshot_from_2025-09-24_09-13-20.png', '20251022195409_Screenshot_from_2025-09-24_09-13-20.png', 'image/png', 97297, '2025-10-22 19:54:09');
+INSERT INTO `materials` (`material_id`, `class_id`, `instructor_id`, `instructor_name`, `title`, `description`, `type`, `original_filename`, `stored_filename`, `mimetype`, `file_size`, `date_uploaded`, `submission_start`, `submission_end`) VALUES
+(7, 15, 10, 'niko Nonoy', 'may pasok na sa november', 'gg', 'announcement', 'Screenshot_from_2025-09-20_08-28-28.png', '20251022194922_Screenshot_from_2025-09-20_08-28-28.png', 'image/png', 237858, '2025-10-22 19:49:22', NULL, NULL),
+(8, 15, 10, 'niko Nonoy', 'isapa', 'wala ulit pasok', 'classwork', 'Screenshot_from_2025-09-24_09-13-20.png', '20251022195409_Screenshot_from_2025-09-24_09-13-20.png', 'image/png', 97297, '2025-10-22 19:54:09', NULL, NULL),
+(9, NULL, 10, 'niko Nonoy', 'Walang pasok', 'may bagyong tino', 'announcement', 'th15_defence_20.jpg', '20251104104201_th15_defence_20.jpg', 'image/jpeg', 1094052, '2025-11-04 10:42:01', NULL, NULL),
+(10, 15, 10, 'niko Nonoy', 'Assignment', 'assignement 1', 'classwork', '508497457_1238429944449072_4759415022123866266_n_1.jpg', '20251104104526_508497457_1238429944449072_4759415022123866266_n_1.jpg', 'image/jpeg', 196149, '2025-11-04 10:45:26', '2025-11-04 10:45:00', '2025-11-04 10:47:00');
 
 -- --------------------------------------------------------
 
@@ -292,7 +298,7 @@ CREATE TABLE `personal_information` (
 
 INSERT INTO `personal_information` (`info_id`, `user_id`, `province`, `municipality`, `baranggay`, `contact_number`, `first_name`, `middle_name`, `last_name`, `date_of_birth`, `gender`, `profile_picture`, `terms_accepted`, `date_registered`) VALUES
 (1, 1, 'Metro Manila (NCR)', 'City of Taguig', 'New Lower Bicutan', '09474371682', 'Admin', 'M', 'Ako', '2025-06-03', 'male', '1_8b857edd7d394680b7a326ad0235ee5e.jpg', 1, '2025-06-05 22:58:27'),
-(14, 10, 'Leyte', 'City of Tacloban', 'Barangay 109-A', '09474371682', 'niko', 'N', 'Nonoy', '2025-06-02', 'male', '10_8e72396301fc4280980ba99b98f75dff.png', 1, '2025-06-08 09:55:38'),
+(14, 10, 'Leyte', 'City of Tacloban', 'Barangay 109-A', '09474371682', 'Niko', 'N', 'Nonoy', '2000-11-05', 'male', '10_8e72396301fc4280980ba99b98f75dff.png', 1, '2025-06-08 09:55:38'),
 (29, 17, 'Laguna', 'Pila', 'Pansol', '09474371682', 'Marwin', 'Mejoradaaaa', 'Dalin', '2004-03-01', 'male', '17_f7f4e25350df442582215d422ac9871f.png', 1, '2025-10-12 08:24:29'),
 (30, 18, 'Laguna', 'Pila', 'Pansol', '09474371682', 'Mark', '', 'Capillan', '2004-03-01', 'male', NULL, 1, '2025-10-12 10:29:44'),
 (31, 19, 'Palawan', 'Kalayaan', 'Pag-Asa (Pob.)', '09474371682', 'Piolo', '', 'Pascual', '1988-03-01', 'male', NULL, 1, '2025-10-12 10:31:10'),
@@ -353,12 +359,12 @@ INSERT INTO `personal_information` (`info_id`, `user_id`, `province`, `municipal
 (86, 74, 'Laguna', 'Paete', 'Ilaya del Norte (Pob.)', '09108236537', 'Sean	 ', 'Patrick	 ', 'Valencia', '1999-07-13', 'male', NULL, 1, '2025-10-13 10:30:59'),
 (87, 75, 'Laguna', 'Mabitac', 'Matalatala', '09108236537', 'Tessa	 ', 'Lorraine	 ', 'Cabral', '2005-06-09', 'female', NULL, 1, '2025-10-13 10:31:46'),
 (88, 76, 'Laguna', 'Pakil', 'Casinsin', '09108236537', 'Ulysses	 ', 'Dean	 ', 'Herrera', '1996-06-07', 'male', NULL, 1, '2025-10-13 10:32:43'),
-(89, 77, 'Laguna', 'Luisiana', 'San Pedro', '09108236537', 'Viole Mae', '', 'Santiago', '2000-06-08', 'female', NULL, 1, '2025-10-13 10:33:37'),
 (90, 78, 'Laguna', 'City of Santa Rosa', 'Pook', '09108236537', 'Warren	 ', 'Joel	 ', 'Lim', '2001-09-28', 'male', NULL, 1, '2025-10-13 10:34:24'),
-(91, 79, 'Laguna', 'Pagsanjan', 'Layugan', '09108236537', 'Yvonne	 ', 'Claire	 ', 'Ong', '1998-06-18', 'female', NULL, 1, '2025-10-13 10:35:17'),
-(92, 80, 'Benguet', 'Mankayan', 'Poblacion', '09474371682', 'mark', '', 'john', '2002-02-05', 'male', NULL, 1, '2025-10-22 19:34:38'),
-(93, 81, 'Marinduque', 'Santa Cruz', 'Dolores', '09474371682', 'Christine', '', 'Paris', '2005-02-09', 'female', NULL, 1, '2025-11-01 18:59:13'),
-(94, 82, 'Abra', 'Lagayan', 'Pulot', '09474371682', 'kanye', '', 'yeast', '2005-06-07', 'male', NULL, 1, '2025-11-01 19:11:48');
+(92, 80, 'Benguet', 'Mankayan', 'Poblacion', '09474371682', 'Mark', NULL, 'John', '2002-02-05', 'male', NULL, 1, '2025-10-22 19:34:38'),
+(93, 81, 'Marinduque', 'Santa Cruz', 'Dolores', '09474371682', 'Christine', NULL, 'Paris', '2005-02-09', 'female', NULL, 1, '2025-11-01 18:59:13'),
+(94, 82, 'Abra', 'Lagayan', 'Pulot', '09474371682', 'kanye', '', 'yeast', '2005-06-07', 'male', NULL, 1, '2025-11-01 19:11:48'),
+(97, 83, 'Not set', 'Not set', 'Not set', 'Not set', 'Staff', '', 'Member', '2000-01-01', 'other', NULL, 1, '2025-11-08 17:26:40'),
+(98, 84, 'Not set', 'Not set', 'Not set', 'Not set', 'Staff', '', 'Member', '2000-01-01', 'other', NULL, 1, '2025-11-08 18:27:21');
 
 -- --------------------------------------------------------
 
@@ -430,6 +436,13 @@ CREATE TABLE `submissions` (
   `date_submitted` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `submissions`
+--
+
+INSERT INTO `submissions` (`submission_id`, `material_id`, `student_id`, `original_filename`, `stored_filename`, `date_submitted`) VALUES
+(2, 10, 29, '508884083_734705079084048_8964909700600746865_n.jpg', '20251104104626_508884083_734705079084048_8964909700600746865_n.jpg', '2025-11-04 10:46:26');
+
 -- --------------------------------------------------------
 
 --
@@ -459,6 +472,13 @@ CREATE TABLE `user_archived` (
   `date_archived` datetime NOT NULL DEFAULT current_timestamp() COMMENT 'When the user was archived',
   `archived_by` int(11) DEFAULT NULL COMMENT 'User ID who performed the archive'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `user_archived`
+--
+
+INSERT INTO `user_archived` (`archive_id`, `original_user_id`, `username`, `password`, `email`, `role`, `account_status`, `province`, `municipality`, `baranggay`, `contact_number`, `first_name`, `middle_name`, `last_name`, `date_of_birth`, `gender`, `profile_picture`, `terms_accepted`, `date_registered`, `date_archived`, `archived_by`) VALUES
+(19, 77, 'violemaesantiago', 'Vi0l3tM@e!8', 'violet.mae.santiago@gmail.com', 'student', 'active', 'Laguna', 'Luisiana', 'San Pedro', '09108236537', 'Viole Mae', '', 'Santiago', '2000-06-08', 'female', NULL, 1, '2025-10-13 10:33:37', '2025-11-08 15:59:50', NULL);
 
 --
 -- Indexes for dumped tables
@@ -564,7 +584,7 @@ ALTER TABLE `certificates`
 -- AUTO_INCREMENT for table `classes`
 --
 ALTER TABLE `classes`
-  MODIFY `class_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `class_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `courses`
@@ -576,25 +596,25 @@ ALTER TABLE `courses`
 -- AUTO_INCREMENT for table `enrollment`
 --
 ALTER TABLE `enrollment`
-  MODIFY `enrollment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `enrollment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `login`
 --
 ALTER TABLE `login`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=85;
 
 --
 -- AUTO_INCREMENT for table `materials`
 --
 ALTER TABLE `materials`
-  MODIFY `material_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `material_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `personal_information`
 --
 ALTER TABLE `personal_information`
-  MODIFY `info_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
+  MODIFY `info_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=99;
 
 --
 -- AUTO_INCREMENT for table `student_grades`
@@ -612,13 +632,13 @@ ALTER TABLE `student_requirements`
 -- AUTO_INCREMENT for table `submissions`
 --
 ALTER TABLE `submissions`
-  MODIFY `submission_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `submission_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `user_archived`
 --
 ALTER TABLE `user_archived`
-  MODIFY `archive_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `archive_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- Constraints for dumped tables

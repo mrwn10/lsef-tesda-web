@@ -4,61 +4,521 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Check Submissions - {{ material.title }}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-    th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
-    th { background: #f2f2f2; }
-    .submitted { color: green; font-weight: bold; }
-    .not-submitted { color: red; font-weight: bold; }
-    a { color: #007bff; text-decoration: none; }
-    a:hover { text-decoration: underline; }
+    body { 
+        font-family: Arial, sans-serif; 
+        margin: 0;
+        padding: 20px;
+        background-color: #f8f9fa;
+    }
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .header {
+        border-bottom: 3px solid #007bff;
+        padding-bottom: 20px;
+        margin-bottom: 25px;
+    }
+    .material-info {
+        background: linear-gradient(135deg, #e9ecef 0%, #f8f9fa 100%);
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 25px;
+        border-left: 4px solid #007bff;
+    }
+    .btn-back {
+        background: #6c757d;
+        color: white;
+        padding: 10px 20px;
+        text-decoration: none;
+        border-radius: 6px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+    }
+    .btn-back:hover {
+        background: #5a6268;
+        color: white;
+        text-decoration: none;
+        transform: translateY(-2px);
+    }
+    .badge {
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-size: 0.9em;
+        font-weight: 500;
+    }
+    .table th {
+        background: #007bff;
+        color: white;
+        font-weight: 600;
+        border: none;
+    }
+    .table td {
+        vertical-align: middle;
+        border-color: #dee2e6;
+    }
+    .progress {
+        height: 25px;
+        border-radius: 6px;
+    }
+    .progress-bar {
+        font-weight: 600;
+    }
+    .summary-card {
+        background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+        color: white;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    
+    /* Preview Modal Styles */
+    .preview-modal {
+        display: none;
+        position: fixed;
+        z-index: 1050;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(5px);
+    }
+    .preview-modal-content {
+        position: relative;
+        background-color: #fff;
+        margin: 2% auto;
+        padding: 0;
+        width: 90%;
+        max-width: 1000px;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        max-height: 90vh;
+        display: flex;
+        flex-direction: column;
+    }
+    .preview-modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 20px;
+        border-bottom: 1px solid #dee2e6;
+        background: #f8f9fa;
+        border-radius: 12px 12px 0 0;
+    }
+    .preview-modal-body {
+        padding: 20px;
+        flex: 1;
+        overflow: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 400px;
+    }
+    .preview-modal-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 20px;
+        border-top: 1px solid #dee2e6;
+        background: #f8f9fa;
+        border-radius: 0 0 12px 12px;
+    }
+    .close-btn {
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        color: #6c757d;
+        transition: color 0.3s;
+    }
+    .close-btn:hover {
+        color: #dc3545;
+    }
+    .preview-iframe {
+        width: 100%;
+        height: 500px;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+    }
+    .preview-image {
+        max-width: 100%;
+        max-height: 70vh;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    .file-info {
+        background: #e9ecef;
+        padding: 10px 15px;
+        border-radius: 6px;
+        margin-bottom: 15px;
+        width: 100%;
+    }
+    .preview-actions {
+        display: flex;
+        gap: 10px;
+    }
+    .preview-not-supported {
+        text-align: center;
+        padding: 40px 20px;
+    }
+    .preview-not-supported i {
+        font-size: 4rem;
+        color: #6c757d;
+        margin-bottom: 20px;
+    }
+    
+    /* File type badges */
+    .file-type-badge {
+        font-size: 0.75rem;
+        padding: 3px 8px;
+        border-radius: 4px;
+        margin-left: 8px;
+    }
+    .file-pdf { background: #dc3545; color: white; }
+    .file-image { background: #28a745; color: white; }
+    .file-doc { background: #007bff; color: white; }
+    .file-ppt { background: #fd7e14; color: white; }
+    .file-xls { background: #20c997; color: white; }
+    .file-other { background: #6c757d; color: white; }
+    
+    /* Action buttons */
+    .btn-preview {
+        background: #17a2b8;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 0.875rem;
+        transition: all 0.3s;
+    }
+    .btn-preview:hover {
+        background: #138496;
+        transform: translateY(-1px);
+    }
+    .btn-download {
+        background: #28a745;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 0.875rem;
+        transition: all 0.3s;
+    }
+    .btn-download:hover {
+        background: #218838;
+        transform: translateY(-1px);
+    }
+    .file-actions {
+        display: flex;
+        gap: 5px;
+    }
   </style>
 </head>
 <body>
+    <div class="container">
+        <a href="{{ url_for('staff_materials.materials') }}" class="btn-back">
+            <i class="fas fa-arrow-left"></i> Back to Materials
+        </a>
 
-  <h1>Check Submissions for: {{ material.title }}</h1>
-  <p><b>Class:</b> {{ material.class_title }}</p>
-  <p><b>Date Assigned:</b> {{ material.date_uploaded }}</p>
-  <p><b>Description:</b> {{ material.description }}</p>
+        <div class="header">
+            <h1 class="text-primary mb-4">
+                <i class="fas fa-tasks me-2"></i> Check Submissions
+            </h1>
+            <div class="material-info">
+                <h3 class="text-primary">{{ material.title }}</h3>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <p><strong><i class="fas fa-users me-2"></i>Class:</strong> {{ material.class_title or 'All Classes' }}</p>
+                        <p><strong><i class="fas fa-calendar me-2"></i>Date Assigned:</strong> {{ material.date_uploaded.strftime('%Y-%m-%d %H:%M') if material.date_uploaded is string else material.date_uploaded }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        {% if material.submission_start_formatted and material.submission_end_formatted %}
+                            <p><strong><i class="fas fa-clock me-2"></i>Submission Period:</strong></p>
+                            <p>{{ material.submission_start_formatted.replace('T', ' ') }} to {{ material.submission_end_formatted.replace('T', ' ') }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                {% if material.description %}
+                    <p class="mt-3"><strong><i class="fas fa-file-alt me-2"></i>Description:</strong> {{ material.description }}</p>
+                {% endif %}
+            </div>
+        </div>
 
-  <h2>Student Submissions</h2>
-  <table>
-    <tr>
-      <th>Student</th>
-      <th>Status</th>
-      <th>File</th>
-      <th>Date Submitted</th>
-    </tr>
-    {% for s in students %}
-      <tr>
-        <td>{{ s.first_name }} {{ s.last_name }}</td>
-        <td>
-          {% if s.submitted %}
-            <span class="submitted">Submitted</span>
-          {% else %}
-            <span class="not-submitted">Not Submitted</span>
-          {% endif %}
-        </td>
-        <td>
-          {% if s.submitted %}
-            <a href="{{ url_for('static', filename='uploads/student_submissions/' ~ s.submission.stored_filename) }}" download>
-              {{ s.submission.original_filename }}
-            </a>
-          {% else %}
-            -
-          {% endif %}
-        </td>
-        <td>
-          {% if s.submitted %}
-            {{ s.submission.date_submitted }}
-          {% else %}
-            -
-          {% endif %}
-        </td>
-      </tr>
-    {% endfor %}
-  </table>
+        <!-- Summary Statistics -->
+        {% set submitted_count = students|selectattr('submitted')|list|length %}
+        {% set total_count = students|length %}
+        {% set submission_rate = (submitted_count / total_count * 100) if total_count > 0 else 0 %}
+        
+        <div class="summary-card"> 
+          <h5 class="mb-3"><i class="fas fa-chart-bar me-2"></i>Submission Summary</h5>
+          <div class="row text-center">
+              <div class="col-md-4">
+                  <h3 class="mb-1">{{ submitted_count }}</h3>
+                  <p class="mb-0">Submitted</p>
+              </div>
+              <div class="col-md-4">
+                  <h3 class="mb-1">{{ total_count - submitted_count }}</h3>
+                  <p class="mb-0">Not Submitted</p>
+              </div>
+              <div class="col-md-4">
+                  <h3 class="mb-1">{{ total_count }}</h3>
+                  <p class="mb-0">Total Students</p>
+              </div>
+          </div>
+          <div class="progress mt-3">
+            <div class="progress-bar bg-success 
+                        {% if submission_rate %}w-{{ submission_rate|round(0) }}{% else %}w-0{% endif %}">
+                {{ submission_rate|round(1) }}%
+            </div>
+          </div>
 
+      </div>
+
+        <h2 class="mb-4"><i class="fas fa-list-check me-2"></i>Student Submissions</h2>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Student Name</th>
+                        <th>Status</th>
+                        <th>Submitted File</th>
+                        <th>Date Submitted</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for s in students %}
+                    <tr>
+                        <td>
+                            <i class="fas fa-user me-2 text-muted"></i>
+                            {{ s.first_name }} {{ s.last_name }}
+                        </td>
+                        <td>
+                            {% if s.submitted %}
+                                <span class="badge bg-success">
+                                    <i class="fas fa-check me-1"></i> Submitted
+                                </span>
+                            {% else %}
+                                <span class="badge bg-danger">
+                                    <i class="fas fa-times me-1"></i> Not Submitted
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if s.submitted %}
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-file me-2 text-primary"></i>
+                                    <span class="me-2">{{ s.submission.original_filename }}</span>
+                                    {% if s.submission.stored_filename %}
+                                        {% set file_ext = s.submission.stored_filename.split('.')[-1].lower() %}
+                                        {% if file_ext in ['pdf'] %}
+                                            <span class="file-type-badge file-pdf">PDF</span>
+                                        {% elif file_ext in ['jpg', 'jpeg', 'png', 'gif', 'bmp'] %}
+                                            <span class="file-type-badge file-image">IMAGE</span>
+                                        {% elif file_ext in ['doc', 'docx'] %}
+                                            <span class="file-type-badge file-doc">DOC</span>
+                                        {% elif file_ext in ['ppt', 'pptx'] %}
+                                            <span class="file-type-badge file-ppt">PPT</span>
+                                        {% elif file_ext in ['xls', 'xlsx'] %}
+                                            <span class="file-type-badge file-xls">EXCEL</span>
+                                        {% else %}
+                                            <span class="file-type-badge file-other">{{ file_ext|upper }}</span>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+                            {% else %}
+                                <span class="text-muted">
+                                    <i class="fas fa-file me-1"></i> No file submitted
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if s.submitted %}
+                                <span class="text-success">
+                                    <i class="fas fa-clock me-1"></i>
+                                    {{ s.submission.date_submitted.strftime('%Y-%m-%d %H:%M') if s.submission.date_submitted is string else s.submission.date_submitted }}
+                                </span>
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if s.submitted %}
+                                <div class="file-actions">
+                                    <button class="btn-preview" onclick="openPreview('{{ s.submission.stored_filename }}', '{{ s.submission.original_filename }}', '{{ s.first_name }} {{ s.last_name }}')">
+                                        <i class="fas fa-eye me-1"></i> Preview
+                                    </button>
+                                    <a href="{{ url_for('static', filename='uploads/student_submissions/' ~ s.submission.stored_filename) }}" 
+                                       download 
+                                       class="btn-download text-decoration-none">
+                                        <i class="fas fa-download me-1"></i> Download
+                                    </a>
+                                </div>
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Preview Modal -->
+    <div id="previewModal" class="preview-modal">
+        <div class="preview-modal-content">
+            <div class="preview-modal-header">
+                <h5 class="mb-0" id="previewModalTitle">
+                    <i class="fas fa-file me-2"></i>File Preview
+                </h5>
+                <button class="close-btn" onclick="closePreview()">&times;</button>
+            </div>
+            <div class="preview-modal-body">
+                <div class="file-info">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <strong>File:</strong> <span id="previewFileName"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Student:</strong> <span id="previewStudentName"></span>
+                        </div>
+                    </div>
+                </div>
+                <div id="previewContent" class="w-100 text-center">
+                    <!-- Preview content will be loaded here -->
+                </div>
+            </div>
+            <div class="preview-modal-footer">
+                <div id="fileTypeInfo" class="text-muted">
+                    <!-- File type info will be shown here -->
+                </div>
+                <div class="preview-actions">
+                    <a id="downloadLink" href="#" download class="btn btn-success">
+                        <i class="fas fa-download me-1"></i> Download
+                    </a>
+                    <button class="btn btn-secondary" onclick="closePreview()">
+                        <i class="fas fa-times me-1"></i> Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Preview modal functionality
+        function openPreview(storedFilename, originalFilename, studentName) {
+            const modal = document.getElementById('previewModal');
+            const previewContent = document.getElementById('previewContent');
+            const fileTypeInfo = document.getElementById('fileTypeInfo');
+            const downloadLink = document.getElementById('downloadLink');
+            
+            // Set modal information
+            document.getElementById('previewFileName').textContent = originalFilename;
+            document.getElementById('previewStudentName').textContent = studentName;
+            
+            // Set download link
+            downloadLink.href = `/static/uploads/student_submissions/${storedFilename}`;
+            
+            // Clear previous content
+            previewContent.innerHTML = '';
+            
+            // Get file extension
+            const fileExt = storedFilename.split('.').pop().toLowerCase();
+            
+            // Show appropriate preview based on file type
+            if (fileExt === 'pdf') {
+                fileTypeInfo.innerHTML = '<i class="fas fa-file-pdf me-1 text-danger"></i> PDF Document';
+                previewContent.innerHTML = `
+                    <iframe src="/static/uploads/student_submissions/${storedFilename}" 
+                            class="preview-iframe" 
+                            frameborder="0">
+                    </iframe>
+                `;
+            } else if (['jpg', 'jpeg', 'png', 'gif', 'bmp'].includes(fileExt)) {
+                fileTypeInfo.innerHTML = '<i class="fas fa-file-image me-1 text-success"></i> Image File';
+                previewContent.innerHTML = `
+                    <img src="/static/uploads/student_submissions/${storedFilename}" 
+                         alt="${originalFilename}" 
+                         class="preview-image">
+                `;
+            } else if (['doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx'].includes(fileExt)) {
+                fileTypeInfo.innerHTML = `<i class="fas fa-file me-1 text-primary"></i> ${fileExt.toUpperCase()} File`;
+                previewContent.innerHTML = `
+                    <div class="preview-not-supported">
+                        <i class="fas fa-file"></i>
+                        <h4>Preview Not Available</h4>
+                        <p class="text-muted">Preview for ${fileExt.toUpperCase()} files is not supported in the browser.</p>
+                        <p>Please download the file to view it.</p>
+                    </div>
+                `;
+            } else {
+                fileTypeInfo.innerHTML = `<i class="fas fa-file me-1 text-secondary"></i> ${fileExt.toUpperCase()} File`;
+                previewContent.innerHTML = `
+                    <div class="preview-not-supported">
+                        <i class="fas fa-file"></i>
+                        <h4>Preview Not Available</h4>
+                        <p class="text-muted">Preview for this file type is not supported.</p>
+                        <p>Please download the file to view it.</p>
+                    </div>
+                `;
+            }
+            
+            // Show modal
+            modal.style.display = 'block';
+        }
+        
+        function closePreview() {
+            document.getElementById('previewModal').style.display = 'none';
+        }
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('previewModal');
+            if (event.target === modal) {
+                closePreview();
+            }
+        }
+        
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closePreview();
+            }
+        });
+        
+        // Auto-adjust iframe height for PDFs
+        function adjustIframeHeight() {
+            const iframe = document.querySelector('.preview-iframe');
+            if (iframe) {
+                iframe.onload = function() {
+                    try {
+                        // Try to adjust height based on content
+                        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                        iframe.style.height = iframeDoc.body.scrollHeight + 'px';
+                    } catch (e) {
+                        // Cross-origin restriction, use default height
+                        console.log('Cannot adjust iframe height due to cross-origin restrictions');
+                    }
+                };
+            }
+        }
+        
+        // Call adjustIframeHeight when modal is opened
+        document.getElementById('previewModal').addEventListener('shown.bs.modal', adjustIframeHeight);
+    </script>
 </body>
 </html>

@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admin/admin_enrollment.css') }}" />
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/lsef_logo.png') }}" />
-    <title>Enrollment Management</title>
+    <title>Student Acceptance</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Define URLs for JavaScript -->
     <script>
@@ -18,21 +18,105 @@
             getEnrollmentDetails: "{{ url_for('admin_enrollment.enrollment_details', enrollment_id=0) }}",
             logoutUrl: "{{ url_for('login.logout') }}"
         };
+        
+        // Store current enrollment ID globally for modal actions
+        window.currentEnrollmentId = null;
     </script>
 </head>
-<body>
-    <!-- Navigation (same as before) -->
+<body data-logout-url="{{ url_for('login.logout') }}">
+    <!-- Navigation Container -->
     <div class="nav-container">
         <!-- Top Navigation -->
         <div class="top-nav">
             <div class="nav-left">
-                <a href="{{ url_for('admin_homepage') }}"><i class="fas fa-home"></i> Home</a>
-                <a href="{{ url_for('admin_user_management') }}"><i class="fas fa-users-cog"></i> User Management</a>
-                <a href="{{ url_for('admin_class_management.view_active_classes') }}"><i class="fas fa-users"></i> Class Management</a>
-                <a href="{{ url_for('admin_courses_approval.view_pending_courses') }}"><i class="fas fa-book"></i> Courses</a>
-                <a href="{{ url_for('admin_verified_req.view_requirements') }}"><i class="fas fa-user-check"></i> Verify Account</a>
+                <div class="nav-left">
+                    <a href="{{ url_for('admin_homepage') }}"><i class="fas fa-home"></i> Home</a>
+                    <a href="{{ url_for('admin_user_management') }}" class="active"><i class="fas fa-users-cog"></i> Users</a>
+                    <a href="{{ url_for('admin_class_management.view_active_classes') }}"><i class="fas fa-users"></i> Classes</a>
+                    <a href="{{ url_for('admin_courses_approval.view_pending_courses') }}"><i class="fas fa-book"></i> Courses</a>
+                    <a href="{{ url_for('admin_verified_req.view_requirements') }}"><i class="fas fa-user-check"></i> Verification</a>
+                    <a href="{{ url_for('admin_materials.materials') }}"><i class="fas fa-bullhorn"></i> Announce</a>
+                    <a href="{{ url_for('admin_create_staff.create_staff') }}"><i class="fas fa-user-plus"></i> Add Staff</a>
+                </div>
             </div>
             <div class="nav-right"></div>
+            
+            <!-- Mobile Hamburger Menu -->
+            <div class="hamburger-menu" id="hamburgerMenu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        
+        <!-- Mobile Navigation Menu -->
+        <div class="mobile-nav" id="mobileNav">
+            <div class="mobile-nav-header">
+                <div class="mobile-brand">
+                    <img src="{{ url_for('static', filename='img/lsef_logo.png') }}" alt="LSEF Logo">
+                    <span>LSEF TESDA</span>
+                </div>
+                <button class="close-mobile-nav" id="closeMobileNav">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="mobile-nav-links">
+                <a href="{{ url_for('admin_homepage') }}"><i class="fas fa-home"></i> Home</a>
+                
+                <!-- Users Expandable Section -->
+                <div class="mobile-nav-section">
+                    <div class="mobile-nav-header-link" data-section="users">
+                        <span><i class="fas fa-users-cog"></i> Users</span>
+                        <i class="fas fa-chevron-down chevron-icon"></i>
+                    </div>
+                    <div class="mobile-nav-submenu" id="users-submenu">
+                        <a href="{{ url_for('admin_user_management') }}"><i class="fas fa-user-check"></i> User Acceptance</a>
+                        <a href="{{ url_for('admin_enrollment.view_enrollments') }}" class="active"><i class="fas fa-user-graduate"></i> Student Acceptance</a>
+                        <a href="{{ url_for('admin_user_update') }}"><i class="fas fa-user-edit"></i> User Update</a>
+                        <a href="{{ url_for('admin_user_deletion') }}"><i class="fas fa-user-times"></i> User Deletion</a>
+                        <a href="{{ url_for('admin_user_archive') }}"><i class="fas fa-archive"></i> User Archive</a>
+                    </div>
+                </div>
+                
+                <!-- Classes Expandable Section -->
+                <div class="mobile-nav-section">
+                    <div class="mobile-nav-header-link" data-section="classes">
+                        <span><i class="fas fa-users"></i> Classes</span>
+                        <i class="fas fa-chevron-down chevron-icon"></i>
+                    </div>
+                    <div class="mobile-nav-submenu" id="classes-submenu">
+                        <a href="{{ url_for('admin_class_management.view_active_classes') }}"><i class="fas fa-users"></i> Class Management</a>
+                        <a href="{{ url_for('admin_class_creation.create_class') }}"><i class="fas fa-plus-circle"></i> Class Creation</a>
+                        <a href="{{ url_for('admin_edit_class.view_editable_classes') }}"><i class="fas fa-edit"></i> Edit Class</a>
+                        <a href="{{ url_for('admin_class_approval.view_pending_classes') }}"><i class="fas fa-check-circle"></i> Class Approval</a>
+                        <a href="{{ url_for('admin_class_edit_req.view_class_edit_requests') }}"><i class="fas fa-pencil-alt"></i> Class Edit Request</a>
+                    </div>
+                </div>
+                
+                <!-- Courses Expandable Section -->
+                <div class="mobile-nav-section">
+                    <div class="mobile-nav-header-link" data-section="courses">
+                        <span><i class="fas fa-book"></i> Courses</span>
+                        <i class="fas fa-chevron-down chevron-icon"></i>
+                    </div>
+                    <div class="mobile-nav-submenu" id="courses-submenu">
+                        <a href="{{ url_for('admin_courses_approval.view_pending_courses') }}"><i class="fas fa-clipboard-check"></i> Courses Approval</a>
+                        <a href="{{ url_for('admin_create_course.create_course') }}"><i class="fas fa-plus-circle"></i> Create Course</a>
+                        <a href="{{ url_for('admin_edit_course.view_editable_courses') }}"><i class="fas fa-edit"></i> Edit Course</a>
+                        <a href="{{ url_for('admin_courses_avail.view_available_courses') }}"><i class="fas fa-list"></i> Courses Available</a>
+                        <a href="{{ url_for('admin_courses_edit_req.view_edit_requests') }}"><i class="fas fa-pen-fancy"></i> Courses Edit Request</a>
+                    </div>
+                </div>
+                
+                <a href="{{ url_for('admin_verified_req.view_requirements') }}"><i class="fas fa-user-check"></i> Verification</a>
+                <a href="{{ url_for('admin_materials.materials') }}"><i class="fas fa-bullhorn"></i> Announce</a>
+                <a href="{{ url_for('admin_create_staff.create_staff') }}"><i class="fas fa-user-plus"></i> Add Staff</a>
+                
+                <div class="mobile-nav-divider"></div>
+                <a href="{{ url_for('admin_profile') }}"><i class="fas fa-user-circle"></i> My Profile</a>
+                <a href="#"><i class="fas fa-bookmark"></i> Contact Us</a>
+                <a href="#" class="logout-btn" id="mobile-logout-trigger"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
         </div>
         
         <!-- Brand Section -->
@@ -57,9 +141,9 @@
                 </div>
             </div>
         </div>
-        
-        <!-- Enrollment Management Subnav -->
-        <nav class="courses-subnav">
+
+        <!-- Enrollment Management Subnav - Desktop Only -->
+        <nav class="subnav">
             <div class="subnav-right">
                 <a href="{{ url_for('admin_user_management') }}"><i class="fas fa-user-check"></i> User Acceptance</a>
                 <a href="{{ url_for('admin_enrollment.view_enrollments') }}" class="active"><i class="fas fa-user-graduate"></i> Student Acceptance</a>
@@ -75,14 +159,16 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3><i class="fas fa-sign-out-alt"></i> Confirm Logout</h3>
-                <span class="modal-close">&times;</span>
+                <button class="close-modal" id="close-logout-modal">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
             <div class="modal-body">
                 <p>Are you sure you want to logout?</p>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-yes" id="confirm-logout">Yes</button>
-                <button class="btn btn-no close-modal">No</button>
+                <button class="btn btn-no" id="cancel-logout">No</button>
             </div>
         </div>
     </div>
@@ -90,7 +176,7 @@
     <main class="content">
         <div class="container">
             <div class="page-header">
-                <h1><i class="fas fa-user-graduate"></i> Enrollment Management</h1>
+                <h1><i class="fas fa-user-graduate"></i> Student Acceptance</h1>
                 <p class="subtitle">Review and manage student enrollments</p>
             </div>
 
@@ -123,10 +209,6 @@
                     <i class="fas fa-search search-icon"></i>
                     <input type="text" id="search-input" placeholder="Search by name, email, or course" value="{{ search_query }}">
                 </div>
-                
-                <button id="reset-filters" class="btn btn-secondary">
-                    <i class="fas fa-sync-alt"></i> Reset
-                </button>
             </div>
 
             <!-- Flash Messages -->
@@ -149,7 +231,7 @@
             {% endwith %}
             
             <div class="user-table-container">
-                <table id="enrollmentTable">
+                <table id="enrollmentTable" class="user-table">
                     <thead>
                         <tr>
                             <th>Student</th>
@@ -189,39 +271,18 @@
                                 <td>
                                     <span class="status-badge status-{{ enroll.status }}">{{ enroll.status|title }}</span>
                                 </td>
-                                <td>{{ enroll.enrollment_date }}</td>
                                 <td>
-                                    <div class="action-buttons">
-                                        <button class="btn-action btn-details" title="View Details">
-                                            <i class="fas fa-eye"></i>
+                                    {% if enroll.enrollment_date %}
+                                        {{ enroll.enrollment_date.strftime('%b %d, %Y') }}
+                                    {% else %}
+                                        N/A
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="action-btn-group">
+                                        <button class="action-btn view-btn view-details-btn" data-enrollment-id="{{ enroll.enrollment_id }}" title="View Details">
+                                            <i class="fas fa-eye"></i> View
                                         </button>
-                                        {% if enroll.status == 'pending' %}
-                                        <button class="btn-action btn-approve" data-action="enrolled" title="Approve Enrollment">
-                                            <i class="fas fa-check"></i>
-                                        </button>
-                                        <button class="btn-action btn-reject" data-action="rejected" title="Reject Enrollment">
-                                            <i class="fas fa-times"></i>
-                                        </button>
-                                        {% elif enroll.status == 'enrolled' %}
-                                        <button class="btn-action btn-complete" data-action="completed" title="Mark as Completed">
-                                            <i class="fas fa-graduation-cap"></i>
-                                        </button>
-                                        <button class="btn-action btn-drop" data-action="dropped" title="Drop Student">
-                                            <i class="fas fa-user-slash"></i>
-                                        </button>
-                                        {% elif enroll.status == 'completed' %}
-                                        <button class="btn-action btn-reopen" data-action="enrolled" title="Reopen Enrollment">
-                                            <i class="fas fa-redo"></i>
-                                        </button>
-                                        {% elif enroll.status == 'rejected' %}
-                                        <button class="btn-action btn-reconsider" data-action="pending" title="Reconsider Enrollment">
-                                            <i class="fas fa-undo"></i>
-                                        </button>
-                                        {% elif enroll.status == 'dropped' %}
-                                        <button class="btn-action btn-reenroll" data-action="enrolled" title="Re-enroll Student">
-                                            <i class="fas fa-user-plus"></i>
-                                        </button>
-                                        {% endif %}
                                     </div>
                                 </td>
                             </tr>
@@ -229,13 +290,9 @@
                         {% else %}
                             <tr class="loading-row">
                                 <td colspan="8">
-                                    <div class="empty-state">
-                                        <i class="fas fa-inbox"></i>
-                                        <h3>No enrollments found</h3>
-                                        <p>There are no enrollments matching your current filters.</p>
-                                        <button class="btn btn-primary" id="show-all-enrollments">
-                                            <i class="fas fa-sync-alt"></i> Show All Enrollments
-                                        </button>
+                                    <div class="loading-spinner">
+                                        <div class="spinner"></div>
+                                        <span>Loading enrollments...</span>
                                     </div>
                                 </td>
                             </tr>
@@ -264,35 +321,60 @@
 
     <!-- Enrollment Details Modal -->
     <div id="enrollmentDetailsModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content user-details-modal">
             <div class="modal-header">
-                <h3><i class="fas fa-info-circle"></i> Enrollment Details</h3>
-                <span class="modal-close">&times;</span>
+                <h3><i class="fas fa-user-circle"></i> Enrollment Details</h3>
+                <button class="close-modal" id="close-details-modal">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
             <div class="modal-body">
-                <div class="user-details-form" id="enrollmentDetailsContent">
+                <div class="user-details-content" id="enrollmentDetailsContent">
                     <!-- Details will be loaded here -->
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-no close-modal">Close</button>
+                <button class="btn btn-success" id="approveEnrollmentBtn" style="display: none;">Approve</button>
+                <button class="btn btn-danger" id="rejectEnrollmentBtn" style="display: none;">Reject</button>
+                <button class="btn btn-secondary" id="closeDetailsModal">Close</button>
             </div>
         </div>
     </div>
 
-    <!-- Status Update Confirmation Modal -->
-    <div id="statusUpdateModal" class="modal">
+    <!-- Approval Confirmation Modal -->
+    <div id="approvalModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 id="status-update-title"><i class="fas fa-exclamation-triangle"></i> Confirm Status Update</h3>
-                <span class="modal-close">&times;</span>
+                <h3><i class="fas fa-check-circle"></i> Confirm Approval</h3>
+                <button class="close-modal" id="close-approval-modal">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
             <div class="modal-body">
-                <p id="status-update-message">Are you sure you want to change this enrollment status?</p>
+                <p>Are you sure you want to approve this enrollment? The student will be enrolled in the class.</p>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-yes" id="confirm-status-update">Yes, Update</button>
-                <button class="btn btn-no close-modal">Cancel</button>
+                <button class="btn btn-success" id="confirmApproval">Yes</button>
+                <button class="btn btn-secondary" id="cancelApproval">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rejection Confirmation Modal -->
+    <div id="rejectionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-times-circle"></i> Confirm Rejection</h3>
+                <button class="close-modal" id="close-rejection-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to reject this enrollment? This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" id="confirmRejection">Yes</button>
+                <button class="btn btn-secondary" id="cancelRejection">Cancel</button>
             </div>
         </div>
     </div>
@@ -302,47 +384,45 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3><i class="fas fa-check-circle"></i> Success</h3>
-                <span class="modal-close">&times;</span>
+                <button class="close-modal" id="close-success-modal">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
             <div class="modal-body">
-                <div class="success-content">
-                    <i class="fas fa-check-circle success-icon"></i>
-                    <p id="success-message">Enrollment status updated successfully!</p>
-                </div>
+                <p id="successMessage">Enrollment has been approved successfully and the student is now enrolled.</p>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-yes close-modal">OK</button>
+                <button class="btn btn-success" id="closeSuccessModal">OK</button>
             </div>
         </div>
     </div>
 
-    <!-- Error Modal -->
-    <div id="errorModal" class="modal">
+    <!-- Rejection Success Modal -->
+    <div id="rejectionSuccessModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3><i class="fas fa-exclamation-circle"></i> Error</h3>
-                <span class="modal-close">&times;</span>
+                <h3><i class="fas fa-times-circle"></i> Enrollment Rejected</h3>
+                <button class="close-modal" id="close-rejection-success-modal">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
             <div class="modal-body">
-                <div class="error-content">
-                    <i class="fas fa-exclamation-circle error-icon"></i>
-                    <p id="error-message">An error occurred while updating the enrollment status.</p>
-                </div>
+                <p id="rejectionSuccessMessage">Enrollment has been rejected successfully.</p>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-no close-modal">Close</button>
+                <button class="btn btn-secondary" id="closeRejectionSuccessModal">OK</button>
             </div>
         </div>
     </div>
 
-    <!-- Loading Modal -->
-    <div id="loadingModal" class="modal">
-        <div class="modal-content">
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="modal" style="display: none; z-index: 3000;">
+        <div class="modal-content" style="width: 300px; text-align: center;">
             <div class="modal-body">
-                <div class="loading-content">
-                    <div class="loading-spinner-large"></div>
-                    <p>Processing your request...</p>
+                <div class="loading-spinner" style="margin-bottom: 15px;">
+                    <div class="spinner" style="width: 40px; height: 40px; margin: 0 auto;"></div>
                 </div>
+                <p id="loading-message" style="margin: 0; font-size: 16px; color: #333;">Processing...</p>
             </div>
         </div>
     </div>

@@ -43,6 +43,8 @@ from admin_class_creation import admin_class_creation_bp
 from admin_edit_class import admin_edit_class_bp
 from admin_enrollment import admin_enrollment_bp
 from admin_verified_req import admin_verified_req_bp
+from admin_create_staff import admin_create_staff_bp
+from admin_materials import admin_materials_bp
 
 #Staff BP
 from staff_profile import staff_profile_bp
@@ -106,6 +108,8 @@ app.register_blueprint(admin_class_creation_bp)
 app.register_blueprint(admin_edit_class_bp)
 app.register_blueprint(admin_enrollment_bp)
 app.register_blueprint(admin_verified_req_bp)
+app.register_blueprint(admin_create_staff_bp)
+app.register_blueprint(admin_materials_bp)
 
 #Staff BP
 app.register_blueprint(staff_profile_bp, url_prefix='/staff')

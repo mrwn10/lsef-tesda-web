@@ -438,19 +438,19 @@ body.modal-open {
     color: var(--tesda-maroon) !important;
 }
 
-/* ===== Courses Sub Navigation ===== */
-.courses-subnav {
+/* ===== Sub Navigation ===== */
+.subnav {
     background: var(--tesda-white);
     padding: 15px 5%;
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-.courses-subnav .subnav-right {
+.subnav .subnav-right {
     display: flex;
     gap: 15px;
 }
 
-.courses-subnav .subnav-right a {
+.subnav .subnav-right a {
     color: #475569;
     text-decoration: none;
     font-weight: 600;
@@ -465,24 +465,24 @@ body.modal-open {
     font-family: 'Poppins', sans-serif;
 }
 
-.courses-subnav .subnav-right a i {
+.subnav .subnav-right a i {
     font-size: 0.9rem;
 }
 
-.courses-subnav .subnav-right a:hover {
+.subnav .subnav-right a:hover {
     color: var(--tesda-blue);
     background-color: #f1f5f9;
 }
 
-.courses-subnav .subnav-right a.active {
+.subnav .subnav-right a.active {
     color: var(--tesda-blue);
     background-color: #e0f2fe;
 }
 
-.courses-subnav .subnav-right a.active:after {
+.subnav .subnav-right a.active:after {
     content: '';
     position: absolute;
-    bottom: -10px;
+    bottom: -15px;
     left: 0;
     width: 100%;
     height: 3px;
@@ -1015,7 +1015,7 @@ body.modal-open {
     background-color: #bae6fd;
 }
 
-/* ===== MODAL STYLES ===== */
+/* ===== MODAL STYLES - FIXED FOR SCROLL OVERLAP ===== */
 .modal {
     display: none;
     position: fixed;
@@ -1027,7 +1027,7 @@ body.modal-open {
     z-index: 2000;
     justify-content: center;
     align-items: center;
-    overflow: auto;
+    overflow-y: auto;
     padding: 20px;
 }
 
@@ -1039,14 +1039,39 @@ body.modal-open {
     max-width: 100%;
     max-height: 90vh;
     border-radius: 8px;
-    overflow-y: auto;
+    overflow: hidden;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     animation: modalFadeIn 0.3s ease-out;
+    display: flex;
+    flex-direction: column;
 }
 
-/* User Details Modal - Wider */
+/* User Details Modal - Wider with scroll fix */
 .user-details-modal {
     width: 600px;
+    max-height: 90vh;
+}
+
+/* Fix for User Details Modal scroll overlap */
+#userDetailsModal .modal-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    flex-shrink: 0;
+}
+
+#userDetailsModal .modal-body {
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+/* Keep all other modals centered and simple */
+#logout-modal .modal-header,
+#approvalModal .modal-header,
+#rejectionModal .modal-header,
+#successModal .modal-header,
+#rejectionSuccessModal .modal-header {
+    position: relative;
 }
 
 .modal-header {
@@ -1057,6 +1082,7 @@ body.modal-open {
     justify-content: space-between;
     align-items: center;
     border-radius: 8px 8px 0 0;
+    flex-shrink: 0;
 }
 
 .modal-header h3 {
@@ -1083,6 +1109,7 @@ body.modal-open {
     justify-content: center;
     border-radius: 50%;
     transition: all 0.3s ease;
+    flex-shrink: 0;
 }
 
 .close-modal:hover {
@@ -1092,6 +1119,7 @@ body.modal-open {
 .modal-body {
     padding: 20px;
     border-bottom: 1px solid #eee;
+    overflow-y: auto;
 }
 
 .modal-body p {
@@ -1107,6 +1135,7 @@ body.modal-open {
     display: flex;
     justify-content: space-between;
     gap: 15px;
+    flex-shrink: 0;
 }
 
 .btn {
@@ -1413,7 +1442,7 @@ body.modal-open {
     }
     
     /* Hide desktop subnav on mobile */
-    .courses-subnav {
+    .subnav {
         display: none;
     }
     
@@ -1443,6 +1472,10 @@ body.modal-open {
     }
     
     /* Modal adjustments for mobile */
+    .modal {
+        padding: 10px;
+    }
+    
     .modal-content {
         width: 95%;
         margin: 20px auto;

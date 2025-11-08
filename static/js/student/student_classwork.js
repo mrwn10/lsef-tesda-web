@@ -172,10 +172,15 @@ $(document).ready(function() {
     const downloadPreviewBtn = document.getElementById('download-preview-btn');
     const previewContent = document.getElementById('preview-content');
 
-    // Preview button event listeners
+    // Preview button event listeners for both classwork files and submission files
     document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('preview-btn') || e.target.closest('.preview-btn')) {
-            const previewBtn = e.target.classList.contains('preview-btn') ? e.target : e.target.closest('.preview-btn');
+        if (e.target.classList.contains('preview-btn') || e.target.closest('.preview-btn') ||
+            e.target.classList.contains('preview-btn-small') || e.target.closest('.preview-btn-small')) {
+            
+            const previewBtn = e.target.classList.contains('preview-btn') || e.target.classList.contains('preview-btn-small') 
+                ? e.target 
+                : e.target.closest('.preview-btn') || e.target.closest('.preview-btn-small');
+            
             const fileUrl = previewBtn.getAttribute('data-file-url');
             const fileType = previewBtn.getAttribute('data-file-type');
             const fileName = previewBtn.getAttribute('data-file-name');
@@ -198,6 +203,8 @@ $(document).ready(function() {
             iframe.src = fileUrl + '#toolbar=0';
             iframe.className = 'preview-iframe';
             iframe.setAttribute('frameborder', '0');
+            iframe.style.width = '100%';
+            iframe.style.height = '500px';
             previewContent.appendChild(iframe);
         } 
         else if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(fileType)) {
@@ -205,13 +212,17 @@ $(document).ready(function() {
             img.src = fileUrl;
             img.alt = 'File Preview';
             img.className = 'preview-image';
+            img.style.maxWidth = '100%';
+            img.style.maxHeight = '500px';
             previewContent.appendChild(img);
         }
         else if (['doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx'].includes(fileType)) {
             const placeholder = document.createElement('div');
             placeholder.className = 'preview-placeholder';
+            placeholder.style.textAlign = 'center';
+            placeholder.style.padding = '40px 20px';
             placeholder.innerHTML = `
-                <i class="fas fa-file"></i>
+                <i class="fas fa-file" style="font-size: 4rem; color: #6c757d; margin-bottom: 20px;"></i>
                 <h4>Preview Not Available</h4>
                 <p>Preview is not available for ${fileType.toUpperCase()} files.</p>
                 <p>Please download the file to view it.</p>
@@ -221,8 +232,10 @@ $(document).ready(function() {
         else {
             const placeholder = document.createElement('div');
             placeholder.className = 'preview-placeholder';
+            placeholder.style.textAlign = 'center';
+            placeholder.style.padding = '40px 20px';
             placeholder.innerHTML = `
-                <i class="fas fa-file"></i>
+                <i class="fas fa-file" style="font-size: 4rem; color: #6c757d; margin-bottom: 20px;"></i>
                 <h4>Preview Not Available</h4>
                 <p>File preview is not available for this file type.</p>
                 <p>Please download the file to view it.</p>
@@ -285,15 +298,15 @@ $(document).ready(function() {
     });
 
     // Form submission enhancement
-    const submissionForm = document.querySelector('.submission-form');
+    const submissionForm = document.getElementById('submissionForm');
     if (submissionForm) {
         submissionForm.addEventListener('submit', function(e) {
             const fileInput = document.getElementById('submission');
             if (fileInput && fileInput.files.length > 0) {
                 // Add loading state to submit button
-                const submitBtn = this.querySelector('.submit-btn');
+                const submitBtn = this.querySelector('#submitBtn');
                 const originalText = submitBtn.innerHTML;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Handing In...';
                 submitBtn.disabled = true;
                 
                 // Revert after 3 seconds if still on page (fallback)
@@ -305,6 +318,16 @@ $(document).ready(function() {
         });
     }
 
+    // File input change handler
+    const fileInput = document.getElementById('submission');
+    if (fileInput) {
+        fileInput.addEventListener('change', function(e) {
+            const fileName = this.files[0] ? this.files[0].name : 'No file chosen';
+            // You can add file validation here if needed
+            console.log('Selected file:', fileName);
+        });
+    }
+
     // Initialize page functionality
     initializeClassworkPage();
 });
@@ -313,6 +336,23 @@ $(document).ready(function() {
 function initializeClassworkPage() {
     console.log('Student Classwork page initialized');
     
-    // Add any classwork-specific JavaScript here
-    // For example: file upload preview, form validation, etc.
+    // Real-time submission status checking
+    checkSubmissionStatus();
+    
+    // Add any additional classwork-specific JavaScript here
+}
+
+// Function to check and update submission status in real-time
+function checkSubmissionStatus() {
+    const submissionForm = document.getElementById('submissionForm');
+    const submitBtn = document.getElementById('submitBtn');
+    
+    if (!submissionForm || !submitBtn) return;
+    
+    // This function would typically check against server-side time
+    // For now, we'll rely on the server-side validation
+    console.log('Submission status monitoring active');
+    
+    // You could add a timer here to disable the button when deadline passes
+    // This would require knowing the exact deadline time from the server
 }
