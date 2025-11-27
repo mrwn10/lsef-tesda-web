@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 08, 2025 at 01:07 PM
+-- Generation Time: Nov 27, 2025 at 06:10 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -77,7 +77,10 @@ INSERT INTO `classes` (`class_id`, `course_id`, `class_title`, `school_year`, `b
 (22, 18, 'BREAD 101', '2025 - 2026', '2025', 'Friday 10:00-15:00', '{\"Monday\": {\"start\": \"11:00\", \"end\": \"17:00\"}, \"Wednesday\": {\"start\": \"11:00\", \"end\": \"17:00\"}, \"Friday\": {\"start\": \"10:00\", \"end\": \"15:00\"}}', 'LSEF TESDA', 25, 10, 'James Harden', '2025-11-08', '2026-11-08', 'Applicants should be able to communicate in basic English and Filipino and be in good physical and mental condition. No prior baking experience is required, but having basic cooking knowledge is an advantage.', 'active', '2025-11-08 11:50:09', '2025-11-08 11:54:58', NULL),
 (23, 19, 'BOOK 101', '2025 - 2026', '2025', 'Friday 10:00-18:00', '{\"Monday\": {\"start\": \"06:00\", \"end\": \"15:00\"}, \"Wednesday\": {\"start\": \"06:00\", \"end\": \"15:00\"}, \"Friday\": {\"start\": \"10:00\", \"end\": \"18:00\"}}', 'LSEF TESDA', 25, 10, 'James Harden', '2025-11-08', '2026-11-08', 'Before starting bookkeeping, it’s important to have a basic understanding of accounting principles, familiarity with financial documents (like invoices and receipts), and proficiency in using spreadsheets or accounting software. Attention to detail and basic math skills are also essential for maintaining accurate financial records.\n', 'active', '2025-11-08 11:51:18', '2025-11-08 11:54:55', NULL),
 (24, 20, 'ICT 101', '2025 - 2026', '2025', 'Saturday 10:00-16:00', '{\"Tuesday\": {\"start\": \"06:00\", \"end\": \"10:00\"}, \"Thursday\": {\"start\": \"06:00\", \"end\": \"10:00\"}, \"Saturday\": {\"start\": \"10:00\", \"end\": \"16:00\"}}', 'LSEF TESDA', 25, 10, 'Megan Young', '2025-11-08', '2026-11-08', 'Must be able to read and write; basic computer literacy and knowledge of electronic components are recommended. Some training centers may require completion of a basic ICT-related course.', 'active', '2025-11-08 11:52:17', '2025-11-08 11:54:51', NULL),
-(25, 21, 'EIM 101', '2025 - 2026', '2025', 'Thursday 10:00-16:00', '{\"Monday\": {\"start\": \"08:00\", \"end\": \"16:00\"}, \"Tuesday\": {\"start\": \"08:00\", \"end\": \"15:00\"}, \"Thursday\": {\"start\": \"10:00\", \"end\": \"16:00\"}}', 'LSEF TESDA', 25, 10, 'Elon Musk', '2025-11-08', '2026-11-08', 'Must be able to read and write; basic knowledge of mathematics and electricity is recommended. Some institutions may require completion of a basic electrical course or equivalent experience.', 'active', '2025-11-08 11:54:19', '2025-11-08 11:54:48', NULL);
+(25, 21, 'EIM 101', '2025 - 2026', '2025', 'Monday 6:00 AM-4:00 PM, Thursday 10:00 AM-4:00 PM, Tuesday 8:00 AM-3:00 PM', '{\"Monday\": {\"start\": \"06:00\", \"end\": \"16:00\"}, \"Thursday\": {\"start\": \"10:00\", \"end\": \"16:00\"}, \"Tuesday\": {\"start\": \"08:00\", \"end\": \"15:00\"}}', 'LSEF TESDA', 25, 10, 'Elon Musk', '2025-11-08', '2026-11-08', 'Must be able to read and write; basic knowledge of mathematics and electricity is recommended. Some institutions may require completion of a basic electrical course or equivalent experience.', 'edited', '2025-11-08 11:54:19', '2025-11-10 21:10:28', NULL),
+(26, 9, 'asasdsdsd', 'asdasd', 'sda', 'Monday 06:00-18:00', '{\"Monday\": {\"start\": \"06:00\", \"end\": \"18:00\"}}', 'asd', 25, 10, 'sdaasd', '2025-11-10', '2026-06-16', 'Before entering the Food and Beverages field, students should have a basic understanding of food safety, hygiene practices, and customer service. A keen interest in culinary arts, attention to detail, and good communication skills are also essential for success in this area.', 'pending', '2025-11-10 18:16:40', '2025-11-10 21:10:05', NULL),
+(27, 9, 'asdsd', '132', '132', 'Monday 13:00-16:00', '{\"Monday\": {\"start\": \"13:00\", \"end\": \"16:00\"}}', 'asd', 25, 10, '132', '2025-11-03', '2025-11-21', 'Before entering the Food and Beverages field, students should have a basic understanding of food safety, hygiene practices, and customer service. A keen interest in culinary arts, attention to detail, and good communication skills are also essential for success in this area.', 'pending', '2025-11-24 12:58:53', NULL, NULL),
+(28, 18, 'asd', 'asd', 'asd', 'Monday 13:00-15:00', '{\"Monday\": {\"start\": \"13:00\", \"end\": \"15:00\"}}', 'asd', 25, 10, 'asd', '2025-10-28', '2026-06-16', 'Applicants should be able to communicate in basic English and Filipino and be in good physical and mental condition. No prior baking experience is required, but having basic cooking knowledge is an advantage.', 'pending', '2025-11-24 13:05:47', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -117,8 +120,9 @@ INSERT INTO `courses` (`course_id`, `course_code`, `course_title`, `course_descr
 (17, 'HOUSE 105', 'HOUSEKEEPING', 'The Housekeeping course provides learners with the skills and knowledge needed to perform housekeeping services in hotels, resorts, and other lodging establishments. It covers cleaning guest rooms, public areas, and facilities while ensuring quality standards and guest satisfaction.', 'Vocational', 'Beginner', 'Applicants must be able to read and communicate in basic English and Filipino and possess good physical condition to perform housekeeping duties. No previous experience is required, but completion of high school or equivalent is recommended.', 'After completing the course, trainees will be able to prepare guest rooms, clean public areas and facilities, provide laundry services, and maintain workplace safety and sanitation standards. They will also develop professionalism, attention to detail, and customer service skills essential in the hospitality industry.', 436, 0.00, 25, 'active', 1, 1, NULL, '2025-10-12 20:22:25', '2025-11-03 19:11:31', '2025-10-12 20:22:25', NULL, NULL),
 (18, 'BREAD 104', 'BREAD AND PASTRY PRODUCTION', 'The Bread and Pastry Production course equips learners with the knowledge and practical skills to prepare and produce a variety of bakery and pastry products. It includes training in baking bread, cakes, pastries, and other desserts following industry standards of quality and safety.', 'Vocational', 'Beginner', 'Applicants should be able to communicate in basic English and Filipino and be in good physical and mental condition. No prior baking experience is required, but having basic cooking knowledge is an advantage.', 'Upon completion, trainees will be able to prepare, bake, and present bread and pastry products professionally. They will also learn food safety practices, sanitation, and the use of baking tools and equipment essential in bakery or pastry shop operations.', 141, 0.00, 25, 'active', 1, 1, NULL, '2025-10-12 20:26:32', NULL, '2025-10-12 20:26:32', NULL, NULL),
 (19, 'BOOK 103', 'BOOKKEEPING', 'This program covers the competencies required to maintain books of accounts, prepare financial reports, and review internal control systems in various business environments.', 'Vocational', 'All Levels', 'Before starting bookkeeping, it’s important to have a basic understanding of accounting principles, familiarity with financial documents (like invoices and receipts), and proficiency in using spreadsheets or accounting software. Attention to detail and basic math skills are also essential for maintaining accurate financial records.\n', 'Post transactions to the general ledger\nPrepare trial balance and basic financial statements\nReview internal control systems\nProcess payroll and tax documents\nUse accounting software applications', 350, 0.00, 25, 'active', 1, 10, 1, '2025-10-13 08:07:55', '2025-11-03 19:11:22', '2025-10-13 14:06:46', '2025-10-22 19:47:23', NULL),
-(20, 'ICT 102', 'COMPUTER SYSTEM SERVICING', 'This course trains learners to install, configure, and maintain computer systems and networks. It covers hardware troubleshooting, software installation, and network setup to ensure computers function efficiently and securely.', 'Skills', 'Intermediate', 'Must be able to read and write; basic computer literacy and knowledge of electronic components are recommended. Some training centers may require completion of a basic ICT-related course.', 'Learners will be able to assemble and disassemble computer hardware, install operating systems and software, configure local area networks (LAN), and perform preventive maintenance and repair on computer systems.', 280, 0.00, 25, 'active', 1, 1, NULL, '2025-10-13 14:41:20', '2025-11-03 19:14:50', '2025-10-13 14:41:20', NULL, NULL),
-(21, 'EIM 101', 'ELECTRICAL INSTALLATION AND MAINTENANCE', 'This course provides learners with the knowledge and skills to install, maintain, and repair electrical wiring, lighting, and power systems in residential, commercial, and industrial settings. It also covers safety procedures and the proper use of electrical tools and equipment.', 'Technical', 'Beginner', 'Must be able to read and write; basic knowledge of mathematics and electricity is recommended. Some institutions may require completion of a basic electrical course or equivalent experience.', 'Learners will be able to perform electrical installation, maintenance, and troubleshooting according to industry standards and safety regulations. They will gain competencies in interpreting electrical plans, using measuring instruments, and ensuring proper circuit function.', 196, 0.00, 25, 'active', 1, 10, 1, '2025-10-22 19:44:04', '2025-11-03 19:12:41', '2025-10-22 19:47:35', '2025-10-22 19:47:35', NULL);
+(20, 'ICT 102', 'COMPUTER SYSTEM SERVICING', 'This course trains learners to install, configure, and maintain computer systems and networks. It covers hardware troubleshooting, software installation, and network setup to ensure computers function efficiently and securely.', 'Skills', 'All Levels', 'Must be able to read and write; basic computer literacy and knowledge of electronic components are recommended. Some training centers may require completion of a basic ICT-related course.', 'Learners will be able to assemble and disassemble computer hardware, install operating systems and software, configure local area networks (LAN), and perform preventive maintenance and repair on computer systems.', 280, 0.00, 25, 'active', 1, 1, NULL, '2025-10-13 14:41:20', '2025-11-11 10:17:37', '2025-10-13 14:41:20', NULL, NULL),
+(21, 'EIM 101', 'ELECTRICAL INSTALLATION AND MAINTENANCE', 'This course provides learners with the knowledge and skills to install, maintain, and repair electrical wiring, lighting, and power systems in residential, commercial, and industrial settings. It also covers safety procedures and the proper use of electrical tools and equipment.', 'Technical', 'Beginner', 'Must be able to read and write; basic knowledge of mathematics and electricity is recommended. Some institutions may require completion of a basic electrical course or equivalent experience.', 'Learners will be able to perform electrical installation, maintenance, and troubleshooting according to industry standards and safety regulations. They will gain competencies in interpreting electrical plans, using measuring instruments, and ensuring proper circuit function.', 196, 0.00, 25, 'active', 1, 10, 1, '2025-10-22 19:44:04', '2025-11-11 10:27:25', '2025-10-22 19:47:35', '2025-10-22 19:47:35', NULL),
+(30, 'Niggg', 'New18', 'Test', 'Other', 'Advanced', 'Test course\n', 'asdsd', 212, 0.00, 25, 'edited', 1, 10, NULL, '2025-11-23 17:29:51', '2025-11-23 18:55:38', NULL, '2025-11-23 18:55:38', 'yeaa');
 
 -- --------------------------------------------------------
 
@@ -144,7 +148,8 @@ INSERT INTO `enrollment` (`enrollment_id`, `user_id`, `class_id`, `enrollment_da
 (13, 17, 22, '2025-11-08 12:49:11', 'enrolled'),
 (14, 19, 23, '2025-11-08 14:05:01', 'enrolled'),
 (15, 18, 23, '2025-11-08 14:06:09', 'rejected'),
-(16, 18, 23, '2025-11-08 14:07:03', 'pending');
+(16, 18, 23, '2025-11-08 14:07:03', 'enrolled'),
+(17, 21, 23, '2025-11-24 14:18:41', 'pending');
 
 -- --------------------------------------------------------
 
@@ -298,7 +303,7 @@ CREATE TABLE `personal_information` (
 
 INSERT INTO `personal_information` (`info_id`, `user_id`, `province`, `municipality`, `baranggay`, `contact_number`, `first_name`, `middle_name`, `last_name`, `date_of_birth`, `gender`, `profile_picture`, `terms_accepted`, `date_registered`) VALUES
 (1, 1, 'Metro Manila (NCR)', 'City of Taguig', 'New Lower Bicutan', '09474371682', 'Admin', 'M', 'Ako', '2025-06-03', 'male', '1_8b857edd7d394680b7a326ad0235ee5e.jpg', 1, '2025-06-05 22:58:27'),
-(14, 10, 'Leyte', 'City of Tacloban', 'Barangay 109-A', '09474371682', 'Niko', 'N', 'Nonoy', '2000-11-05', 'male', '10_8e72396301fc4280980ba99b98f75dff.png', 1, '2025-06-08 09:55:38'),
+(14, 10, 'Leyte', 'City of Tacloban', 'Barangay 109-A', '09474371682', 'Niko', 'Nig', 'Nonoy', '2000-11-05', 'male', '10_8e72396301fc4280980ba99b98f75dff.png', 1, '2025-06-08 09:55:38'),
 (29, 17, 'Laguna', 'Pila', 'Pansol', '09474371682', 'Marwin', 'Mejoradaaaa', 'Dalin', '2004-03-01', 'male', '17_f7f4e25350df442582215d422ac9871f.png', 1, '2025-10-12 08:24:29'),
 (30, 18, 'Laguna', 'Pila', 'Pansol', '09474371682', 'Mark', '', 'Capillan', '2004-03-01', 'male', NULL, 1, '2025-10-12 10:29:44'),
 (31, 19, 'Palawan', 'Kalayaan', 'Pag-Asa (Pob.)', '09474371682', 'Piolo', '', 'Pascual', '1988-03-01', 'male', NULL, 1, '2025-10-12 10:31:10'),
@@ -584,19 +589,19 @@ ALTER TABLE `certificates`
 -- AUTO_INCREMENT for table `classes`
 --
 ALTER TABLE `classes`
-  MODIFY `class_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `class_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `courses`
 --
 ALTER TABLE `courses`
-  MODIFY `course_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `course_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `enrollment`
 --
 ALTER TABLE `enrollment`
-  MODIFY `enrollment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `enrollment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `login`

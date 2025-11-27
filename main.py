@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, redirect, flash, session, jso
 import os
 import hashlib  
 from datetime import datetime, timedelta
+from dotenv import load_dotenv
+load_dotenv()
 
 from cert_completion import create_completion_certificate
 
