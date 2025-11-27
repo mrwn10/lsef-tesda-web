@@ -24,4 +24,4 @@ Thumbs.db
 *.log
 instance/
 static/uploads/
-static/certs/
+# static/certs/  <-- COMMENTED OUT OR REMOVED
