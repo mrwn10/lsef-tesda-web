@@ -26,7 +26,6 @@ def materials():
     cursor = db.cursor(dictionary=True)
     admin_user_id = session.get("user_id")
 
-    # ✅ Fetch profile picture
     profile_picture = "default.png"
     cursor.execute(
         """
@@ -40,9 +39,6 @@ def materials():
     if user and user.get("profile_picture"):
         profile_picture = user["profile_picture"]
 
-    # -------------------------------
-    # POST — Add or update materials
-    # -------------------------------
     if request.method == "POST":
         material_id = request.form.get("material_id")
         title = request.form.get("title")
@@ -50,11 +46,9 @@ def materials():
         type_ = request.form.get("type")
         class_id = request.form.get("class_id") or None
         
-        # ✅ Handle global announcements - set class_id to None for "All" selection
         if class_id == "all":
             class_id = None
         
-        # ✅ Handle submission dates for classwork
         submission_start = None
         submission_end = None
         if type_ == "classwork":
@@ -78,7 +72,6 @@ def materials():
         mimetype = None
         file_size = None
 
-        # ✅ Handle file upload
         if file and file.filename != '' and allowed_file(file.filename):
             original_filename = secure_filename(file.filename)
             stored_filename = f"{datetime.now().strftime('%Y%m%d%H%M%S')}_{original_filename}"
@@ -88,8 +81,6 @@ def materials():
             file_size = os.path.getsize(filepath)
 
         if material_id:
-            # ✅ UPDATE existing material
-            # First verify the material belongs to this admin
             cursor.execute(
                 "SELECT instructor_id FROM materials WHERE material_id = %s",
                 (material_id,)
@@ -129,7 +120,7 @@ def materials():
             db.commit()
             flash("Material updated successfully.")
         else:
-            # ✅ INSERT new material
+            
             cursor.execute(
                 """
                 SELECT first_name, last_name
@@ -141,7 +132,6 @@ def materials():
             admin = cursor.fetchone()
             instructor_name = f"{admin['first_name']} {admin['last_name']}" if admin else "Administrator"
 
-            # ✅ Fixed: Removed is_global column from INSERT statement
             cursor.execute(
                 """
                 INSERT INTO materials (class_id, instructor_id, instructor_name, title, description, type,
@@ -158,10 +148,6 @@ def materials():
 
         return redirect(url_for("admin_materials.materials"))
 
-    # -------------------------------
-    # GET — Display materials & classes
-    # -------------------------------
-    # ✅ Fetch all materials uploaded by this admin
     cursor.execute(
         """
         SELECT m.*, c.class_title,
@@ -177,7 +163,6 @@ def materials():
     )
     materials = cursor.fetchall()
 
-    # ✅ Fetch ALL active classes for admin (including "All" option)
     cursor.execute(
         """
         SELECT class_id, class_title, instructor_name

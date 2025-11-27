@@ -26,7 +26,6 @@ def materials():
     cursor = db.cursor(dictionary=True)
     staff_user_id = session.get("user_id")
 
-    # ✅ Fetch profile picture
     profile_picture = "default.png"
     cursor.execute(
         """
@@ -40,9 +39,6 @@ def materials():
     if user and user.get("profile_picture"):
         profile_picture = user["profile_picture"]
 
-    # -------------------------------
-    # POST — Add or update materials
-    # -------------------------------
     if request.method == "POST":
         material_id = request.form.get("material_id")
         title = request.form.get("title")
@@ -50,7 +46,6 @@ def materials():
         type_ = request.form.get("type")
         class_id = request.form.get("class_id") or None
         
-        # ✅ Handle submission dates for classwork
         submission_start = None
         submission_end = None
         if type_ == "classwork":
@@ -74,7 +69,6 @@ def materials():
         mimetype = None
         file_size = None
 
-        # ✅ Handle file upload
         if file and file.filename != '' and allowed_file(file.filename):
             original_filename = secure_filename(file.filename)
             stored_filename = f"{datetime.now().strftime('%Y%m%d%H%M%S')}_{original_filename}"
@@ -84,8 +78,6 @@ def materials():
             file_size = os.path.getsize(filepath)
 
         if material_id:
-            # ✅ UPDATE existing material
-            # First verify the material belongs to this instructor
             cursor.execute(
                 "SELECT instructor_id FROM materials WHERE material_id = %s",
                 (material_id,)
@@ -125,7 +117,6 @@ def materials():
             db.commit()
             flash("Material updated successfully.")
         else:
-            # ✅ INSERT new material
             cursor.execute(
                 """
                 SELECT first_name, last_name
@@ -153,10 +144,6 @@ def materials():
 
         return redirect(url_for("staff_materials.materials"))
 
-    # -------------------------------
-    # GET — Display materials & classes
-    # -------------------------------
-    # ✅ Fetch all materials uploaded by this staff
     cursor.execute(
         """
         SELECT m.*, c.class_title,
@@ -171,7 +158,6 @@ def materials():
     )
     materials = cursor.fetchall()
 
-    # ✅ Fetch ONLY classes assigned to current instructor
     cursor.execute(
         """
         SELECT class_id, class_title, instructor_name
@@ -183,7 +169,6 @@ def materials():
     )
     classes = cursor.fetchall()
 
-    # Optional feedback if no active classes
     if not classes:
         flash("No active classes assigned to you. Please contact administrator to get assigned to classes.")
 
@@ -212,6 +197,23 @@ def check_submissions(material_id):
     cursor = db.cursor(dictionary=True)
     staff_user_id = session.get("user_id")
 
+    # Fetch staff profile picture
+    profile_picture = None
+    try:
+        cursor.execute(
+            """
+            SELECT profile_picture
+            FROM personal_information
+            WHERE user_id = %s
+            """,
+            (staff_user_id,)
+        )
+        result = cursor.fetchone()
+        profile_picture = result["profile_picture"] if result else None
+    except Exception as e:
+        profile_picture = None
+
+    # Fetch material info
     cursor.execute(
         """
         SELECT m.*, c.class_title,
@@ -229,6 +231,7 @@ def check_submissions(material_id):
         flash("Invalid classwork or unauthorized access.")
         return redirect(url_for("staff_materials.materials"))
 
+    # Fetch enrolled students
     cursor.execute(
         """
         SELECT pi.user_id, pi.first_name, pi.last_name
@@ -240,6 +243,7 @@ def check_submissions(material_id):
     )
     enrolled_students = cursor.fetchall()
 
+    # Fetch submissions
     cursor.execute(
         """
         SELECT s.*, pi.first_name, pi.last_name
@@ -258,8 +262,13 @@ def check_submissions(material_id):
         if student["submitted"]:
             student["submission"] = next(s for s in submissions if s["student_id"] == student["user_id"])
 
-    return render_template("staffs/staff_check.html", material=material, students=enrolled_students)
-
+    cursor.close()
+    return render_template(
+        "staffs/staff_check.html",
+        material=material,
+        students=enrolled_students,
+        profile_picture=profile_picture  # pass it to template
+    )
 
 @staff_materials_bp.route("/materials/delete/<int:material_id>", methods=["POST"])
 def delete_material(material_id):

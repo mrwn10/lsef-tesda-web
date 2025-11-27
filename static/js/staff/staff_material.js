@@ -1,4 +1,4 @@
-// staff_materials.js
+// staff_material.js - Complete Fixed Version with Homepage Modal System
 
 document.addEventListener('DOMContentLoaded', function() {
     initializeMaterialForm();
@@ -6,7 +6,193 @@ document.addEventListener('DOMContentLoaded', function() {
     setupFormValidation();
     setupDateConstraints();
     initializeFiltering();
+    initMobileNavigation();
+    initModals();
+    // setActiveNavigation() REMOVED - Using server-side active class instead
 });
+
+// Mobile Navigation Functionality - EXACT COPY FROM HOMEPAGE
+function initMobileNavigation() {
+    const hamburgerMenu = document.getElementById('hamburgerMenu');
+    const mobileNav = document.getElementById('mobileNav');
+    const closeMobileNav = document.getElementById('closeMobileNav');
+    
+    if (hamburgerMenu && mobileNav) {
+        hamburgerMenu.addEventListener('click', function() {
+            mobileNav.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            document.body.classList.add('modal-open');
+        });
+        
+        if (closeMobileNav) {
+            closeMobileNav.addEventListener('click', function() {
+                mobileNav.classList.remove('active');
+                document.body.style.overflow = '';
+                document.body.classList.remove('modal-open');
+            });
+        }
+        
+        // Expandable mobile menu sections
+        const mobileNavHeaders = document.querySelectorAll('.mobile-nav-header-link');
+        mobileNavHeaders.forEach(header => {
+            header.addEventListener('click', function() {
+                const section = this.getAttribute('data-section');
+                const submenu = document.getElementById(`${section}-submenu`);
+                const chevron = this.querySelector('.chevron-icon');
+                
+                // Toggle active class
+                this.classList.toggle('active');
+                
+                // Toggle submenu
+                if (submenu) {
+                    submenu.classList.toggle('active');
+                }
+                
+                // Rotate chevron icon
+                if (chevron) {
+                    chevron.style.transform = this.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0deg)';
+                }
+            });
+        });
+        
+        // Close mobile nav when clicking on links
+        const mobileNavLinks = document.querySelectorAll('.mobile-nav-links a');
+        mobileNavLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                mobileNav.classList.remove('active');
+                document.body.style.overflow = '';
+                document.body.classList.remove('modal-open');
+            });
+        });
+        
+        // Close mobile nav when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!hamburgerMenu.contains(e.target) && !mobileNav.contains(e.target) && mobileNav.classList.contains('active')) {
+                mobileNav.classList.remove('active');
+                document.body.style.overflow = '';
+                document.body.classList.remove('modal-open');
+            }
+        });
+        
+        // Close mobile nav with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && mobileNav.classList.contains('active')) {
+                mobileNav.classList.remove('active');
+                document.body.style.overflow = '';
+                document.body.classList.remove('modal-open');
+            }
+        });
+    }
+}
+
+// Initialize all modal functionality - EXACT COPY FROM HOMEPAGE
+function initModals() {
+    // Close modal function - works for ALL modals
+    function closeAllModals() {
+        $('.modal').fadeOut(300);
+        document.body.style.overflow = '';
+        document.body.classList.remove('modal-open');
+    }
+
+    // Open modal function
+    function openModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            document.body.classList.add('modal-open');
+        }
+    }
+
+    // Close modal when clicking outside - works for ALL modals
+    $(document).on('click', function(e) {
+        if ($(e.target).hasClass('modal')) {
+            closeAllModals();
+        }
+    });
+
+    // Escape key to close modals - works for ALL modals
+    $(document).keyup(function(e) {
+        if (e.keyCode === 27) {
+            closeAllModals();
+        }
+    });
+
+    // ===== SPECIFIC MODAL FUNCTIONALITY =====
+
+    // Logout Modal
+    $('#logout-trigger').click(function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        openModal('logout-modal');
+    });
+    
+    $('#mobile-logout-trigger').click(function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        // First close mobile nav properly
+        const mobileNav = document.getElementById('mobileNav');
+        if (mobileNav) {
+            mobileNav.classList.remove('active');
+        }
+        // Then open logout modal
+        setTimeout(() => {
+            openModal('logout-modal');
+        }, 10);
+    });
+    
+    $('#cancel-logout').click(function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        closeAllModals();
+    });
+    
+    $('#close-logout-modal').click(function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        closeAllModals();
+    });
+    
+    $('#confirm-logout').click(function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const logoutUrl = document.body.getAttribute('data-logout-url');
+        if (logoutUrl) {
+            window.location.href = logoutUrl;
+        } else {
+            console.error('Logout URL not found');
+            window.location.href = "/logout";
+        }
+    });
+
+    // Success Modal
+    $('#closeSuccessModal').click(function() {
+        closeAllModals();
+    });
+
+    $('#close-success-modal').click(function() {
+        closeAllModals();
+    });
+}
+
+// Show loading screen - EXACT COPY FROM HOMEPAGE
+function showLoadingScreen(message) {
+    $('#loading-message').text(message);
+    $('#loading-screen').fadeIn();
+}
+
+// Hide loading screen - EXACT COPY FROM HOMEPAGE
+function hideLoadingScreen() {
+    $('#loading-screen').fadeOut();
+}
+
+// Show success modal - EXACT COPY FROM HOMEPAGE
+function showSuccessModal(message) {
+    $('#successMessage').text(message);
+    $('#successModal').fadeIn();
+    document.body.style.overflow = 'hidden';
+    document.body.classList.add('modal-open');
+}
 
 function initializeMaterialForm() {
     const typeSelect = document.getElementById('type-select');
@@ -214,6 +400,9 @@ function initializeFiltering() {
     if (clearFiltersBtn) {
         clearFiltersBtn.addEventListener('click', clearFilters);
     }
+    
+    // Initialize filters on page load
+    applyFilters();
 }
 
 function applyFilters() {

@@ -1,4 +1,17 @@
-/* ===== Global Font Consistency ===== */
+/* ===== Global Styles ===== */
+:root {
+    --tesda-blue: #003366;
+    --tesda-maroon: #800000;
+    --tesda-gold: #FFD700;
+    --tesda-white: #FFFFFF;
+    --tesda-light-blue: #E6F0FA;
+    --tesda-dark-blue: #002244;
+    --tesda-light-gray: #f8fafc;
+    --tesda-border: #e2e8f0;
+    --tesda-text: #333;
+    --tesda-text-light: #64748b;
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -7,82 +20,17 @@
 
 html, body {
     height: 100%;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f8fafc;
+    font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--tesda-light-gray);
     line-height: 1.6;
-    color: #333;
+    color: var(--tesda-text);
 }
 
-/* Font consistency with staff homepage */
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+body.modal-open {
+    overflow: hidden;
 }
 
-/* Ensure all text elements use the same font */
-h1, h2, h3, h4, h5, h6,
-p, span, div,
-.btn, .form-select, .form-control,
-table, th, td,
-.modal-title, .modal-body,
-.nav-link, .brand-name,
-.top-nav a,
-.courses-subnav a,
-.page-header h1,
-.subtitle,
-.flash,
-.class-table,
-.grade-value,
-.grade-na,
-button,
-.edit-btn,
-.profile-btn,
-.certificate-btn,
-.completion-btn,
-.bulk-actions h3,
-.quick-action-btn,
-.file-upload-label,
-#file-name,
-.modal-header h2,
-.close-btn,
-.form-group label,
-.form-input,
-#remarks,
-.save-btn,
-.cancel-btn,
-.close-profile-btn,
-.profile-header h3,
-.profile-info-section h4,
-.info-label,
-.info-value,
-.profile-section h4,
-#profileClassesTable,
-#profileCertificatesTable,
-#logout-modal .modal-header h3,
-#logout-modal .modal-body p,
-#logout-modal .btn {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-/* Specific styling for brand name to match staff homepage */
-.brand-name {
-    font-weight: 700;
-    font-size: 1.5rem;
-}
-
-/* ===== New Navigation Styles ===== */
-:root {
-    --tesda-blue: #003366;
-    --tesda-maroon: #800000;
-    --tesda-gold: #FFD700;
-    --tesda-white: #FFFFFF;
-    --tesda-light-blue: #E6F0FA;
-    --tesda-dark-blue: #002244;
-    --tesda-medium-gray: #dee2e6;
-    --tesda-dark-gray: #495057;
-    --tesda-light-gray: #f8f9fa;
-}
-
-/* Navigation Container */
+/* ===== Navigation Styles ===== */
 .nav-container {
     position: sticky;
     top: 0;
@@ -98,6 +46,7 @@ button,
     align-items: center;
     color: var(--tesda-white);
     height: 60px;
+    position: relative;
 }
 
 .nav-left, .nav-right {
@@ -121,6 +70,7 @@ button,
     transition: all 0.3s ease;
     position: relative;
     margin: 0 2px;
+    font-family: 'Poppins', sans-serif;
 }
 
 .top-nav a:hover {
@@ -139,8 +89,227 @@ button,
     font-size: 1rem;
 }
 
-/* Sub Navigation */
-.sub-nav {
+/* Hamburger Menu */
+.hamburger-menu {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    width: 30px;
+    height: 21px;
+    justify-content: space-between;
+    background: none;
+    border: none;
+    padding: 0;
+    margin-left: auto;
+}
+
+.hamburger-menu span {
+    display: block;
+    height: 3px;
+    width: 100%;
+    background-color: var(--tesda-white);
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+.hamburger-menu:hover span {
+    background-color: var(--tesda-gold);
+}
+
+/* Mobile Navigation */
+.mobile-nav {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 85%;
+    max-width: 320px;
+    height: 100vh;
+    background: linear-gradient(135deg, var(--tesda-blue) 0%, var(--tesda-dark-blue) 100%);
+    box-shadow: -5px 0 25px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease-in-out;
+    z-index: 1000;
+    padding: 2rem 1.5rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.mobile-nav.active {
+    right: 0;
+}
+
+.mobile-nav-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.mobile-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--tesda-white);
+    font-weight: 700;
+    font-size: 1.1rem;
+    font-family: 'Poppins', sans-serif;
+}
+
+.mobile-brand img {
+    height: 35px;
+    filter: brightness(0) invert(1);
+}
+
+.close-mobile-nav {
+    background: none;
+    border: none;
+    color: var(--tesda-white);
+    font-size: 1.5rem;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.close-mobile-nav:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.mobile-nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.mobile-nav-links a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 1rem 1rem;
+    color: var(--tesda-white);
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.mobile-nav-links a:hover,
+.mobile-nav-links a.active {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: translateX(5px);
+    color: var(--tesda-white);
+}
+
+.mobile-nav-links a i {
+    width: 20px;
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+/* Mobile Expandable Sections */
+.mobile-nav-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.mobile-nav-header-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 1rem 1rem;
+    color: var(--tesda-white);
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif;
+    background-color: rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+}
+
+.mobile-nav-header-link:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: translateX(5px);
+}
+
+.mobile-nav-header-link.active {
+    background-color: rgba(255, 255, 255, 0.25);
+}
+
+.mobile-nav-header-link .chevron-icon {
+    transition: transform 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.mobile-nav-header-link.active .chevron-icon {
+    transform: rotate(180deg);
+}
+
+.mobile-nav-submenu {
+    display: none;
+    flex-direction: column;
+    padding-left: 1.5rem;
+    margin-top: 0.25rem;
+    gap: 0.25rem;
+}
+
+.mobile-nav-submenu.active {
+    display: flex;
+}
+
+.mobile-nav-submenu a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0.75rem 1rem;
+    color: var(--tesda-white);
+    text-decoration: none;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    font-weight: 400;
+    font-size: 0.95rem;
+    font-family: 'Poppins', sans-serif;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.mobile-nav-submenu a:hover,
+.mobile-nav-submenu a.active {
+    background-color: rgba(255, 255, 255, 0.15);
+    transform: translateX(5px);
+}
+
+.mobile-nav-submenu a i {
+    width: 18px;
+    text-align: center;
+    font-size: 1rem;
+}
+
+.mobile-nav-divider {
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.3);
+    margin: 1rem 0;
+}
+
+.mobile-nav-links .logout-btn {
+    color: #ff6b6b !important;
+}
+
+.mobile-nav-links .logout-btn i {
+    color: #ff6b6b !important;
+}
+
+/* Brand Section */
+.brand-section {
     background: var(--tesda-white);
     padding: 15px 5%;
     display: flex;
@@ -149,7 +318,7 @@ button,
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-.brand-section {
+.brand-content {
     display: flex;
     align-items: center;
     gap: 30px;
@@ -161,6 +330,7 @@ button,
     color: var(--tesda-blue);
     display: flex;
     align-items: center;
+    font-family: 'Poppins', sans-serif;
 }
 
 .brand-name::before {
@@ -240,6 +410,7 @@ button,
     gap: 12px;
     transition: all 0.2s;
     text-decoration: none;
+    font-family: 'Poppins', sans-serif;
 }
 
 .dropdown-menu a:hover {
@@ -267,7 +438,7 @@ button,
     color: var(--tesda-maroon) !important;
 }
 
-/* Class Student Management Subnav */
+/* Class Student Management Subnav - HIDDEN ON MOBILE */
 .courses-subnav {
     background: var(--tesda-white);
     padding: 15px 5%;
@@ -288,7 +459,7 @@ button,
     border-radius: 4px;
     transition: all 0.3s ease;
     position: relative;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Poppins', sans-serif;
 }
 
 .courses-subnav .subnav-right a:hover {
@@ -313,24 +484,40 @@ button,
 }
 
 /* Main content styles */
+.content {
+    padding: 30px 5%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
 .container {
-    padding-top: 20px;
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
 }
 
 .page-header {
     margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e2e8f0;
 }
 
-h1 {
+.page-header h1 {
     color: var(--tesda-blue);
-    margin-bottom: 0.5rem;
-    font-size: 2rem;
-    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 28px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
 }
 
-.subtitle {
+.page-header .subtitle {
     color: #64748b;
-    font-size: 1.1rem;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
 }
 
 /* Flash messages */
@@ -346,7 +533,7 @@ h1 {
     display: flex;
     align-items: center;
     gap: 10px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Poppins', sans-serif;
 }
 
 .flash.success {
@@ -388,14 +575,14 @@ h1 {
     font-weight: 600;
     position: sticky;
     top: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Poppins', sans-serif;
 }
 
 .class-table td {
     padding: 12px 15px;
     border-bottom: 1px solid #e2e8f0;
     vertical-align: middle;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Poppins', sans-serif;
 }
 
 .class-table tr:hover {
@@ -410,6 +597,33 @@ h1 {
 .grade-na {
     color: #64748b;
     font-style: italic;
+}
+
+/* Remarks styles */
+.auto-remarks, .current-remarks {
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: inline-block;
+    text-transform: capitalize;
+    font-family: 'Poppins', sans-serif;
+}
+
+.auto-remarks.passed, .current-remarks.passed,
+.auto-remarks.completed, .current-remarks.completed {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.auto-remarks.failed, .current-remarks.failed {
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+
+.auto-remarks.incomplete, .current-remarks.incomplete {
+    background-color: #fef3c7;
+    color: #92400e;
 }
 
 /* Action buttons */
@@ -430,7 +644,7 @@ button {
     align-items: center;
     gap: 5px;
     font-size: 0.9rem;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Poppins', sans-serif;
 }
 
 button:hover {
@@ -523,7 +737,9 @@ button i {
     align-items: center;
     gap: 8px;
     transition: all 0.2s ease;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Poppins', sans-serif;
+    border: none;
+    cursor: pointer;
 }
 
 .quick-action-btn.primary {
@@ -566,7 +782,7 @@ button i {
     display: flex;
     align-items: center;
     gap: 5px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Poppins', sans-serif;
 }
 
 .file-upload-label:hover {
@@ -586,109 +802,119 @@ button i {
 #file-name {
     font-size: 0.9rem;
     color: #64748b;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Poppins', sans-serif;
 }
 
-/* ===== ENHANCED MODAL STYLES ===== */
-
-/* Base Modal Styles */
+/* ===== MODAL STYLES - UPDATED FOR CONSISTENCY ===== */
 .modal {
     display: none;
     position: fixed;
-    z-index: 1000;
-    left: 0;
     top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
     overflow-y: auto;
-    animation: fadeIn 0.3s ease-out;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    padding: 20px;
 }
 
 .modal-content {
-    background-color: white;
-    margin: 5% auto;
+    background-color: #fff;
+    margin: 0 auto;
     padding: 0;
-    border-radius: 12px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-    animation: modalSlideIn 0.3s ease-out;
+    width: 400px;
+    max-width: 100%;
+    max-height: 90vh;
+    border-radius: 8px;
     overflow: hidden;
-    border: 1px solid #e2e8f0;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    animation: modalFadeIn 0.3s ease-out;
+    display: flex;
+    flex-direction: column;
 }
 
-@keyframes modalSlideIn {
-    from { transform: translateY(-50px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .modal-header {
-    padding: 1.5rem 2rem;
-    background: linear-gradient(135deg, var(--tesda-blue), var(--tesda-dark-blue));
+    padding: 15px 20px;
+    background: linear-gradient(to right, var(--tesda-blue), var(--tesda-dark-blue));
     color: white;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 3px solid var(--tesda-gold);
+    border-radius: 8px 8px 0 0;
+    flex-shrink: 0;
 }
 
-.modal-header h2 {
+.modal-header h2, .modal-header h3 {
     margin: 0;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     display: flex;
     align-items: center;
     gap: 10px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Poppins', sans-serif;
     font-weight: 600;
 }
 
-.close-btn {
+.close-modal {
     background: none;
     border: none;
     color: white;
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     cursor: pointer;
-    padding: 0.5rem;
-    transition: all 0.3s ease;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    border-radius: 4px;
-    width: 40px;
-    height: 40px;
+    padding: 0 5px;
+    width: 30px;
+    height: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
 }
 
-.close-btn:hover {
+.close-modal:hover {
     background-color: rgba(255, 255, 255, 0.2);
-    transform: rotate(90deg);
 }
 
 .modal-body {
-    padding: 2rem;
-    max-height: 70vh;
+    padding: 20px;
+    border-bottom: 1px solid #eee;
     overflow-y: auto;
 }
 
-.modal-footer {
-    padding: 1.5rem 2rem;
-    background-color: #f8fafc;
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-    border-top: 1px solid #e2e8f0;
+.modal-body p {
+    margin: 0;
+    font-size: 1rem;
+    color: #333;
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
 }
 
-/* ===== SPECIFIC MODAL ENHANCEMENTS ===== */
+/* ===== UPDATED MODAL FOOTER FOR CONSISTENT BUTTON SIZES ===== */
+.modal-footer {
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    flex-shrink: 0;
+}
 
-/* Edit Grade Modal - Compact and Focused */
+/* Edit Grade Modal - WIDER SIZE */
 .edit-grade-modal .modal-content {
-    width: 90%;
-    max-width: 480px;
+    width: 600px;
 }
 
 .edit-grade-content .modal-body {
@@ -704,6 +930,7 @@ button i {
     color: var(--tesda-dark-blue);
     margin-bottom: 0.5rem;
     display: block;
+    font-family: 'Poppins', sans-serif;
 }
 
 .edit-grade-content .form-input {
@@ -713,6 +940,8 @@ button i {
     font-size: 1rem;
     transition: all 0.3s ease;
     background-color: #fafafa;
+    width: 100%;
+    font-family: 'Poppins', sans-serif;
 }
 
 .edit-grade-content .form-input:focus {
@@ -722,19 +951,117 @@ button i {
     outline: none;
 }
 
-/* Profile Modal - Enhanced Layout */
-.profile-modal .modal-content {
-    width: 90%;
-    max-width: 950px;
+/* Auto Remarks Display */
+.auto-remarks-display {
+    padding: 1rem;
+    border-radius: 6px;
+    margin-top: 0.5rem;
+    font-weight: 600;
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
 }
 
-.profile-modal-content .modal-body {
-    padding: 2.5rem;
+.auto-remarks-display.passed {
+    background-color: #d1fae5;
+    color: #065f46;
+    border: 2px solid #a7f3d0;
+}
+
+.auto-remarks-display.failed {
+    background-color: #fee2e2;
+    color: #b91c1c;
+    border: 2px solid #fecaca;
+}
+
+.auto-remarks-display.incomplete {
+    background-color: #fef3c7;
+    color: #92400e;
+    border: 2px solid #fde68a;
+}
+
+.auto-remarks-display.neutral {
+    background-color: #f1f5f9;
+    color: #475569;
+    border: 2px solid #e2e8f0;
+}
+
+/* Toggle Switch */
+.toggle-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 0.5rem;
+}
+
+.toggle-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+}
+
+.toggle-text {
+    font-weight: 500;
+    color: #374151;
+}
+
+.toggle-switch {
+    width: 50px;
+    height: 24px;
+    background-color: #d1d5db;
+    border-radius: 12px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.toggle-switch::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: white;
+    border-radius: 50%;
+    top: 2px;
+    left: 2px;
+    transition: all 0.3s ease;
+}
+
+#useAutoRemarks:checked + .toggle-label .toggle-switch {
+    background-color: var(--tesda-blue);
+}
+
+#useAutoRemarks:checked + .toggle-label .toggle-switch::after {
+    transform: translateX(26px);
+}
+
+/* Profile Modal - UPDATED FOR SCROLL FIX AND SINGLE CLOSE BUTTON */
+.profile-modal .modal-content {
+    width: 800px;
+    max-height: 90vh;
+}
+
+.user-details-modal {
+    width: 800px;
+    max-height: 90vh;
+}
+
+.user-details-modal .modal-body {
+    padding: 2rem;
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+.user-details-modal .modal-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    flex-shrink: 0;
 }
 
 .profile-header {
     text-align: center;
-    margin-bottom: 2.5rem;
+    margin-bottom: 2rem;
     padding-bottom: 1.5rem;
     border-bottom: 2px solid #f1f5f9;
 }
@@ -754,16 +1081,18 @@ button i {
     margin: 0 0 0.5rem 0;
     font-weight: 700;
     font-size: 1.5rem;
+    font-family: 'Poppins', sans-serif;
 }
 
 .profile-email {
     color: #64748b;
     font-size: 1rem;
     margin: 0;
+    font-family: 'Poppins', sans-serif;
 }
 
 .profile-info-section {
-    margin-bottom: 2.5rem;
+    margin-bottom: 2rem;
     background: #f8fafc;
     padding: 1.5rem;
     border-radius: 8px;
@@ -778,6 +1107,7 @@ button i {
     gap: 8px;
     font-weight: 600;
     font-size: 1.1rem;
+    font-family: 'Poppins', sans-serif;
 }
 
 .info-grid {
@@ -802,7 +1132,7 @@ button i {
     display: flex;
     align-items: center;
     gap: 8px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Poppins', sans-serif;
     margin-bottom: 0.25rem;
     font-size: 0.9rem;
 }
@@ -810,12 +1140,12 @@ button i {
 .info-value {
     color: #1e293b;
     font-weight: 500;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Poppins', sans-serif;
     font-size: 1rem;
 }
 
 .profile-section {
-    margin-bottom: 2.5rem;
+    margin-bottom: 2rem;
 }
 
 .profile-section h4 {
@@ -826,6 +1156,7 @@ button i {
     gap: 8px;
     font-weight: 600;
     font-size: 1.1rem;
+    font-family: 'Poppins', sans-serif;
     padding-bottom: 0.5rem;
     border-bottom: 2px solid #f1f5f9;
 }
@@ -846,12 +1177,14 @@ button i {
     text-align: left;
     font-weight: 600;
     font-size: 0.9rem;
+    font-family: 'Poppins', sans-serif;
 }
 
 .profile-table td {
     padding: 12px 15px;
     border-bottom: 1px solid #e2e8f0;
     font-size: 0.9rem;
+    font-family: 'Poppins', sans-serif;
 }
 
 .profile-table tr:hover {
@@ -865,247 +1198,7 @@ button i {
     border: 1px solid #e2e8f0;
 }
 
-/* Logout Modal - Centered and Prominent */
-.logout-modal .modal-content {
-    width: 90%;
-    max-width: 420px;
-    text-align: center;
-}
-
-.logout-modal-content .modal-header {
-    justify-content: center;
-    padding: 1.5rem 2rem;
-}
-
-.logout-modal-content .modal-header h3 {
-    margin: 0;
-    font-size: 1.3rem;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.logout-modal-content .modal-body {
-    padding: 2rem;
-}
-
-.logout-icon {
-    font-size: 3rem;
-    color: var(--tesda-maroon);
-    margin-bottom: 1rem;
-}
-
-.logout-modal-content .modal-body p {
-    font-size: 1.1rem;
-    color: #475569;
-    margin: 0;
-    line-height: 1.5;
-}
-
-.logout-modal-content .modal-footer {
-    justify-content: center;
-    gap: 1rem;
-    padding: 1.5rem 2rem;
-}
-
-/* Enhanced Button Styles */
-.save-btn {
-    background: linear-gradient(135deg, #166534, #14532d);
-    color: white;
-    padding: 0.75rem 1.5rem;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    border: none;
-    border-radius: 6px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.save-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(22, 101, 52, 0.3);
-}
-
-.cancel-btn {
-    background-color: #f1f5f9;
-    color: #475569;
-    padding: 0.75rem 1.5rem;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    border: 1px solid #cbd5e1;
-    border-radius: 6px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.cancel-btn:hover {
-    background-color: #e2e8f0;
-    transform: translateY(-2px);
-}
-
-.close-profile-btn {
-    background: linear-gradient(135deg, var(--tesda-blue), var(--tesda-dark-blue));
-    color: white;
-    padding: 0.75rem 1.5rem;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    border: none;
-    border-radius: 6px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.close-profile-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 51, 102, 0.3);
-}
-
-/* Logout Modal Buttons */
-#logout-modal .btn {
-    padding: 0.75rem 1.5rem;
-    border-radius: 6px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s;
-    min-width: 100px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    border: none;
-}
-
-#logout-modal .btn-yes {
-    background: linear-gradient(135deg, var(--tesda-maroon), #6b0000);
-    color: white;
-}
-
-#logout-modal .btn-yes:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(128, 0, 0, 0.3);
-}
-
-#logout-modal .btn-no {
-    background-color: #f1f5f9;
-    color: #475569;
-    border: 1px solid #cbd5e1;
-}
-
-#logout-modal .btn-no:hover {
-    background-color: #e2e8f0;
-    transform: translateY(-2px);
-}
-
-/* Certificate Action Styles */
-.cert-action-link {
-    color: var(--tesda-blue);
-    text-decoration: none;
-    font-weight: 500;
-    padding: 4px 8px;
-    border-radius: 4px;
-    transition: all 0.3s ease;
-}
-
-.cert-action-link:hover {
-    background-color: var(--tesda-light-blue);
-    text-decoration: underline;
-}
-
-.cert-action-btn {
-    background-color: var(--tesda-blue);
-    color: white;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 4px;
-    font-size: 0.85rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.cert-action-btn:hover {
-    background-color: var(--tesda-dark-blue);
-    transform: translateY(-1px);
-}
-
-/* Responsive styles */
-@media (max-width: 768px) {
-    .action-buttons {
-        flex-direction: column;
-        gap: 5px;
-    }
-    
-    .bulk-actions-container {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    
-    .upload-form {
-        width: 100%;
-    }
-    
-    .modal-content {
-        width: 95%;
-        margin: 2% auto;
-    }
-    
-    .edit-grade-modal .modal-content,
-    .profile-modal .modal-content,
-    .logout-modal .modal-content {
-        width: 95%;
-        margin: 2% auto;
-    }
-    
-    .info-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .modal-footer {
-        flex-direction: column;
-    }
-    
-    .modal-footer button {
-        width: 100%;
-    }
-
-    .courses-subnav .subnav-right {
-        flex-direction: column;
-        width: 100%;
-    }
-    
-    .courses-subnav .subnav-right a.active:after {
-        bottom: 0;
-        left: -10px;
-        width: 3px;
-        height: 100%;
-        border-radius: 0 3px 3px 0;
-    }
-    
-    .modal-body {
-        padding: 1.5rem;
-    }
-    
-    .profile-modal-content .modal-body {
-        padding: 1.5rem;
-    }
-    
-    .profile-header {
-        margin-bottom: 1.5rem;
-    }
-    
-    #profilePicture {
-        width: 80px;
-        height: 80px;
-    }
-}
-
+/* ===== UPDATED BUTTON STYLES FOR CONSISTENT MODAL BUTTON SIZES ===== */
 .btn {
     padding: 10px 20px;
     border: none;
@@ -1116,7 +1209,45 @@ button i {
     flex: 1;
     text-align: center;
     font-size: 1rem;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Poppins', sans-serif;
+}
+
+.btn-success {
+    background-color: #065f46;
+    color: white;
+    border: none;
+}
+
+.btn-success:hover {
+    background-color: #064e3b;
+}
+
+.btn-danger {
+    background-color: #b91c1c;
+    color: white;
+    border: none;
+}
+
+.btn-danger:hover {
+    background-color: #991b1b;
+}
+
+.btn-secondary {
+    background-color: #f1f5f9;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+}
+
+.btn-secondary:hover {
+    background-color: #e2e8f0;
+}
+
+/* Logout Modal Buttons - CENTERED TEXT */
+.btn-yes, .btn-no {
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    align-items: center;
 }
 
 .btn-yes {
@@ -1138,8 +1269,178 @@ button i {
     background-color: #e2e8f0;
 }
 
+/* Profile Modal Single Close Button */
+.close-profile-full {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+/* Certificate Action Styles */
+.cert-action-link {
+    color: var(--tesda-blue);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    font-family: 'Poppins', sans-serif;
+}
+
+.cert-action-link:hover {
+    background-color: var(--tesda-light-blue);
+    text-decoration: underline;
+}
+
+.cert-action-btn {
+    background-color: var(--tesda-blue);
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Poppins', sans-serif;
+}
+
+.cert-action-btn:hover {
+    background-color: var(--tesda-dark-blue);
+    transform: translateY(-1px);
+}
+
+/* Loading Screen */
+#loading-screen {
+    z-index: 3000;
+}
+
+#loading-screen .modal-content {
+    width: 300px;
+    text-align: center;
+}
+
+#loading-screen .modal-body {
+    padding: 2rem;
+}
+
+.loading-spinner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    color: #64748b;
+    font-family: 'Poppins', sans-serif;
+}
+
+.spinner {
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(0, 51, 160, 0.1);
+    border-top-color: var(--tesda-blue);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .top-nav {
+        padding: 0 3%;
+    }
+    
+    .nav-left {
+        display: none;
+    }
+    
+    .hamburger-menu {
+        display: flex;
+    }
+    
+    .brand-section {
+        padding: 10px 3%;
+    }
+    
+    .content {
+        padding: 20px 3%;
+    }
+    
+    .container {
+        padding: 20px;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .bulk-actions-container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .upload-form {
+        width: 100%;
+    }
+    
+    .modal-content {
+        width: 95%;
+        margin: 2% auto;
+    }
+    
+    .edit-grade-modal .modal-content,
+    .user-details-modal,
+    .logout-modal .modal-content {
+        width: 95%;
+        margin: 2% auto;
+    }
+    
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .modal-footer {
+        flex-direction: column;
+    }
+    
+    .modal-footer button {
+        width: 100%;
+    }
+
+    /* HIDE SUBNAV ON MOBILE */
+    .courses-subnav {
+        display: none;
+    }
+    
+    .modal-body {
+        padding: 1.5rem;
+    }
+    
+    .user-details-modal .modal-body {
+        padding: 1.5rem;
+    }
+    
+    .profile-header {
+        margin-bottom: 1.5rem;
+    }
+    
+    #profilePicture {
+        width: 80px;
+        height: 80px;
+    }
+}
+
 @media (max-width: 480px) {
-    .modal-header h2 {
+    .modal-header h2, .modal-header h3 {
         font-size: 1.2rem;
     }
     
@@ -1148,7 +1449,7 @@ button i {
     }
     
     .edit-grade-content .modal-body,
-    .profile-modal-content .modal-body,
+    .user-details-modal .modal-body,
     .logout-modal-content .modal-body {
         padding: 1rem;
     }

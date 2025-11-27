@@ -125,7 +125,7 @@
             
             <div class="user-section">
                 <div class="profile-dropdown">
-                    <img src="{{ url_for('static', filename='uploads/profile_pictures/default.png') }}" alt="Profile" class="profile-img">
+                    <img src="{{ url_for('static', filename='uploads/profile_pictures/' + (profile_picture or 'default.png')) }}" alt="Profile" class="profile-img">
                     <div class="dropdown-menu">
                         <a href="{{ url_for('admin_profile') }}"><i class="fas fa-user-circle"></i> My Profile</a>
                         <a href="#"><i class="fas fa-bookmark"></i> Contact Us</a>

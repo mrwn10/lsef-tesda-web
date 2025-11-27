@@ -1,6 +1,207 @@
 // Global variable to track current auto remarks
 let currentAutoRemarks = '';
 
+// Show loading screen
+function showLoadingScreen(message) {
+    $('#loading-message').text(message);
+    $('#loading-screen').fadeIn();
+}
+
+// Hide loading screen
+function hideLoadingScreen() {
+    $('#loading-screen').fadeOut();
+}
+
+// Initialize all functionality
+function init() {
+    initMobileNavigation();
+    initModals();
+    
+    // File upload display
+    document.getElementById('file-upload').addEventListener('change', function(e) {
+        const fileName = e.target.files[0] ? e.target.files[0].name : 'No file chosen';
+        document.getElementById('file-name').textContent = fileName;
+    });
+
+    // Event listeners for auto remarks toggle
+    const useAutoRemarks = document.getElementById('useAutoRemarks');
+    if (useAutoRemarks) {
+        useAutoRemarks.addEventListener('change', toggleRemarksSelect);
+    }
+}
+
+// Mobile Navigation Functionality
+function initMobileNavigation() {
+    const hamburgerMenu = document.getElementById('hamburgerMenu');
+    const mobileNav = document.getElementById('mobileNav');
+    const closeMobileNav = document.getElementById('closeMobileNav');
+    
+    if (hamburgerMenu && mobileNav) {
+        hamburgerMenu.addEventListener('click', function() {
+            mobileNav.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        
+        if (closeMobileNav) {
+            closeMobileNav.addEventListener('click', function() {
+                mobileNav.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        }
+        
+        // Expandable mobile menu sections
+        const mobileNavHeaders = document.querySelectorAll('.mobile-nav-header-link');
+        mobileNavHeaders.forEach(header => {
+            header.addEventListener('click', function() {
+                const section = this.getAttribute('data-section');
+                const submenu = document.getElementById(`${section}-submenu`);
+                const chevron = this.querySelector('.chevron-icon');
+                
+                // Toggle active class
+                this.classList.toggle('active');
+                
+                // Toggle submenu
+                if (submenu) {
+                    submenu.classList.toggle('active');
+                }
+                
+                // Rotate chevron icon
+                if (chevron) {
+                    chevron.style.transform = this.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0deg)';
+                }
+            });
+        });
+        
+        // Close mobile nav when clicking on links
+        const mobileNavLinks = document.querySelectorAll('.mobile-nav-links a');
+        mobileNavLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                mobileNav.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        });
+        
+        // Close mobile nav when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!hamburgerMenu.contains(e.target) && !mobileNav.contains(e.target) && mobileNav.classList.contains('active')) {
+                mobileNav.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+        
+        // Close mobile nav with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && mobileNav.classList.contains('active')) {
+                mobileNav.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+    }
+}
+
+// Initialize all modal functionality
+function initModals() {
+    // Close modal function - works for ALL modals
+    function closeAllModals() {
+        $('.modal').fadeOut(300);
+        document.body.style.overflow = '';
+        document.body.classList.remove('modal-open');
+    }
+
+    // Open modal function
+    function openModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            document.body.classList.add('modal-open');
+        }
+    }
+
+    // Close modal when clicking outside - works for ALL modals
+    $(document).on('click', function(e) {
+        if ($(e.target).hasClass('modal')) {
+            closeAllModals();
+        }
+    });
+
+    // Escape key to close modals - works for ALL modals
+    $(document).keyup(function(e) {
+        if (e.keyCode === 27) {
+            closeAllModals();
+        }
+    });
+
+    // ===== SPECIFIC MODAL FUNCTIONALITY =====
+
+    // Logout Modal
+    $('#logout-trigger').click(function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        openModal('logout-modal');
+    });
+    
+    $('#mobile-logout-trigger').click(function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        // First close mobile nav properly
+        const mobileNav = document.getElementById('mobileNav');
+        if (mobileNav) {
+            mobileNav.classList.remove('active');
+        }
+        // Then open logout modal
+        setTimeout(() => {
+            openModal('logout-modal');
+        }, 10);
+    });
+    
+    $('#cancel-logout').click(function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        closeAllModals();
+    });
+    
+    $('#close-logout-modal').click(function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        closeAllModals();
+    });
+    
+    $('#confirm-logout').click(function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const logoutUrl = document.body.getAttribute('data-logout-url');
+        if (logoutUrl) {
+            window.location.href = logoutUrl;
+        } else {
+            console.error('Logout URL not found');
+            window.location.href = "/logout";
+        }
+    });
+
+    // Edit Grade Modal
+    $('#cancel-edit').click(function() {
+        closeAllModals();
+    });
+
+    $('#close-edit-modal').click(function() {
+        closeAllModals();
+    });
+
+    $('#save-grade-changes').click(function() {
+        submitGradeEdit();
+    });
+
+    // Profile Modal
+    $('#close-profile-details').click(function() {
+        closeAllModals();
+    });
+
+    $('#close-profile-modal').click(function() {
+        closeAllModals();
+    });
+}
+
 function openEditModal(enrollmentId, prelim, midterm, finalGrade, remarks, autoRemarks) {
     document.getElementById('editEnrollmentId').value = enrollmentId;
     document.getElementById('prelimGrade').value = prelim || '';
@@ -16,7 +217,9 @@ function openEditModal(enrollmentId, prelim, midterm, finalGrade, remarks, autoR
     document.getElementById('useAutoRemarks').checked = true;
     toggleRemarksSelect();
     
-    document.getElementById('editGradeModal').style.display = 'block';
+    document.getElementById('editGradeModal').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    document.body.classList.add('modal-open');
 }
 
 function calculateAutoRemarks() {
@@ -31,6 +234,8 @@ function calculateAutoRemarks() {
         return;
     }
     
+    showLoadingScreen('Calculating remarks...');
+    
     // Send request to calculate auto remarks
     fetch('/staff_student/get_auto_remarks', {
         method: 'POST',
@@ -43,6 +248,7 @@ function calculateAutoRemarks() {
     })
     .then(response => response.json())
     .then(data => {
+        hideLoadingScreen();
         if (data.success) {
             currentAutoRemarks = data.auto_remarks;
             updateAutoRemarksDisplay();
@@ -54,6 +260,7 @@ function calculateAutoRemarks() {
         }
     })
     .catch(error => {
+        hideLoadingScreen();
         console.error('Error calculating auto remarks:', error);
         currentAutoRemarks = 'Error calculating remarks';
         updateAutoRemarksDisplay();
@@ -105,17 +312,31 @@ function submitGradeEdit() {
 
     // Validate grades
     if (prelim && (prelim < 0 || prelim > 100)) {
-        alert('Prelim grade must be between 0 and 100');
+        Swal.fire({
+            icon: 'error',
+            title: 'Invalid Grade',
+            text: 'Prelim grade must be between 0 and 100'
+        });
         return;
     }
     if (midterm && (midterm < 0 || midterm > 100)) {
-        alert('Midterm grade must be between 0 and 100');
+        Swal.fire({
+            icon: 'error',
+            title: 'Invalid Grade',
+            text: 'Midterm grade must be between 0 and 100'
+        });
         return;
     }
     if (finalGrade && (finalGrade < 0 || finalGrade > 100)) {
-        alert('Final grade must be between 0 and 100');
+        Swal.fire({
+            icon: 'error',
+            title: 'Invalid Grade',
+            text: 'Final grade must be between 0 and 100'
+        });
         return;
     }
+
+    showLoadingScreen('Saving grade changes...');
 
     fetch('/staff_student/edit_grade', {
         method: 'POST',
@@ -131,6 +352,7 @@ function submitGradeEdit() {
     })
     .then(response => response.json())
     .then(data => {
+        hideLoadingScreen();
         Swal.fire({
             icon: 'success',
             title: 'Success!',
@@ -138,10 +360,12 @@ function submitGradeEdit() {
             timer: 2000,
             showConfirmButton: false
         }).then(() => {
+            closeModal('editGradeModal');
             location.reload();
         });
     })
     .catch(error => {
+        hideLoadingScreen();
         console.error('Error:', error);
         Swal.fire({
             icon: 'error',
@@ -152,6 +376,8 @@ function submitGradeEdit() {
 }
 
 function openProfileModal(userId) {
+    showLoadingScreen('Loading student profile...');
+    
     fetch(`/staff_student_profile/${userId}`)
         .then(response => {
             if (!response.ok) {
@@ -160,6 +386,7 @@ function openProfileModal(userId) {
             return response.json();
         })
         .then(data => {
+            hideLoadingScreen();
             if (!data.success) {
                 throw new Error(data.error || 'Failed to load profile');
             }
@@ -169,11 +396,11 @@ function openProfileModal(userId) {
             document.getElementById('profileName').innerText = 
                 `${profile.first_name} ${profile.middle_name || ''} ${profile.last_name}`;
             document.getElementById('profileEmail').innerText = profile.email;
-            document.getElementById('profileContact').innerText = profile.contact_number;
-            document.getElementById('profileDOB').innerText = profile.date_of_birth;
-            document.getElementById('profileGender').innerText = profile.gender;
+            document.getElementById('profileContact').innerText = profile.contact_number || 'Not provided';
+            document.getElementById('profileDOB').innerText = profile.date_of_birth || 'Not specified';
+            document.getElementById('profileGender').innerText = profile.gender || 'Not specified';
             document.getElementById('profileAddress').innerText = 
-                `${profile.baranggay}, ${profile.municipality}, ${profile.province}`;
+                profile.baranggay ? `${profile.baranggay}, ${profile.municipality}, ${profile.province}` : 'Not provided';
             document.getElementById('profilePicture').src = 
                 profile.profile_picture ? `/static/uploads/profile_pictures/${profile.profile_picture}` : '/static/img/tesda_logo.png';
 
@@ -237,9 +464,12 @@ function openProfileModal(userId) {
                 row.insertCell(4).appendChild(downloadBtn);
             });
 
-            document.getElementById('viewProfileModal').style.display = 'block';
+            document.getElementById('viewProfileModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            document.body.classList.add('modal-open');
         })
         .catch(error => {
+            hideLoadingScreen();
             console.error('Error:', error);
             Swal.fire({
                 icon: 'error',
@@ -251,6 +481,8 @@ function openProfileModal(userId) {
 
 function closeModal(modalId) {
     document.getElementById(modalId).style.display = 'none';
+    document.body.style.overflow = '';
+    document.body.classList.remove('modal-open');
 }
 
 function confirmGenerateCertificate(enrollmentId, studentName, remarks) {
@@ -278,6 +510,8 @@ function confirmGenerateCertificate(enrollmentId, studentName, remarks) {
 }
 
 function generateCertificate(enrollmentId) {
+    showLoadingScreen('Generating certificate...');
+    
     fetch('/generate', {
         method: 'POST',
         headers: {
@@ -292,6 +526,7 @@ function generateCertificate(enrollmentId) {
         return response.json();
     })
     .then(data => {
+        hideLoadingScreen();
         if (data.success) {
             Swal.fire({
                 icon: 'success',
@@ -307,6 +542,7 @@ function generateCertificate(enrollmentId) {
         }
     })
     .catch(error => {
+        hideLoadingScreen();
         console.error('Error:', error);
         Swal.fire({
             icon: 'error',
@@ -341,6 +577,8 @@ function confirmGenerateCompletion(enrollment_id, student_name, remarks) {
 }
 
 function generateCompletionCertificate(enrollment_id) {
+    showLoadingScreen('Generating completion certificate...');
+    
     fetch('/generate-completion', {
         method: 'POST',
         headers: {
@@ -350,6 +588,7 @@ function generateCompletionCertificate(enrollment_id) {
     })
     .then(response => response.json())
     .then(data => {
+        hideLoadingScreen();
         if (data.success) {
             Swal.fire({
                 icon: 'success',
@@ -371,6 +610,7 @@ function generateCompletionCertificate(enrollment_id) {
         }
     })
     .catch(error => {
+        hideLoadingScreen();
         console.error('Error:', error);
         Swal.fire({
             icon: 'error',
@@ -380,23 +620,7 @@ function generateCompletionCertificate(enrollment_id) {
     });
 }
 
-// Event listeners for auto remarks toggle
+// Initialize everything when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
-    const useAutoRemarks = document.getElementById('useAutoRemarks');
-    if (useAutoRemarks) {
-        useAutoRemarks.addEventListener('change', toggleRemarksSelect);
-    }
+    init();
 });
-
-// Close modal when clicking outside
-window.onclick = function(event) {
-    const editModal = document.getElementById('editGradeModal');
-    const profileModal = document.getElementById('viewProfileModal');
-    
-    if (event.target === editModal) {
-        closeModal('editGradeModal');
-    }
-    if (event.target === profileModal) {
-        closeModal('viewProfileModal');
-    }
-}

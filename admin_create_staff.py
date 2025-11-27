@@ -11,27 +11,44 @@ def create_staff():
     if 'user_id' not in session or session.get('role') != 'admin':
         flash('Unauthorized access', 'danger')
         return redirect(url_for('auth.login'))
-    
+
+    # Get admin profile picture for the template
+    db = get_db()
+    cursor = db.cursor()
+    profile_picture = None
+    try:
+        cursor.execute("""
+            SELECT pi.profile_picture 
+            FROM personal_information pi 
+            WHERE pi.user_id = %s
+        """, (session['user_id'],))
+        result = cursor.fetchone()
+        profile_picture = result[0] if result else None
+    except Exception as e:
+        profile_picture = None
+    finally:
+        cursor.close()
+
     if request.method == 'POST':
         # Get form data
         username = request.form.get('username', '').strip()
         email = request.form.get('email', '').strip()
         password = request.form.get('password', '')
         confirm_password = request.form.get('confirm_password', '')
-        
+
         errors = []
-        
+
         # Validation
         if not username:
             errors.append("Username is required")
         elif len(username) < 3:
             errors.append("Username must be at least 3 characters long")
-        
+
         if not email:
             errors.append("Email is required")
         elif not EMAIL_REGEX.match(email):
             errors.append("Invalid email format")
-        
+
         # Password validation
         password_validation = {
             'min_length': len(password) >= 8,
@@ -40,43 +57,49 @@ def create_staff():
             'has_number': any(c.isdigit() for c in password),
             'has_special': any(not c.isalnum() for c in password)
         }
-        
+
         if not all(password_validation.values()):
             errors.append("Password must contain: 8+ characters, uppercase, lowercase, number, and special character")
-        
+
         if password != confirm_password:
             errors.append("Passwords do not match")
-        
+
         if errors:
             for error in errors:
                 flash(error, 'danger')
-            return render_template('admin/admin_create_staff.html', 
-                                 form_data=request.form,
-                                 password_errors=password_validation)
-        
-        db = get_db()
+            return render_template(
+                'admin/admin_create_staff.html',
+                form_data=request.form,
+                password_errors=password_validation,
+                profile_picture=profile_picture
+            )
+
         cursor = db.cursor()
-        
         try:
             # Check if username or email already exists
-            cursor.execute("SELECT user_id FROM login WHERE username = %s OR email = %s", 
-                          (username, email))
+            cursor.execute(
+                "SELECT user_id FROM login WHERE username = %s OR email = %s",
+                (username, email)
+            )
             existing_user = cursor.fetchone()
-            
+
             if existing_user:
                 flash("Username or email already exists", 'danger')
-                return render_template('admin/admin_create_staff.html', 
-                                     form_data=request.form)
-            
+                return render_template(
+                    'admin/admin_create_staff.html',
+                    form_data=request.form,
+                    profile_picture=profile_picture
+                )
+
             # Create staff account
             cursor.execute(
                 "INSERT INTO login (username, password, email, role, account_status, verified) VALUES (%s, %s, %s, %s, %s, %s)",
                 (username, password, email, 'staff', 'active', 'verified')
             )
-            
+
             # Get the new user_id
             user_id = cursor.lastrowid
-            
+
             # Create basic personal information record with default values
             cursor.execute(
                 """INSERT INTO personal_information 
@@ -86,22 +109,33 @@ def create_staff():
                 (user_id, 'Not set', 'Not set', 'Not set', 'Not set', 
                  'Staff', '', 'Member', '2000-01-01', 'other', 1)
             )
-            
+
             db.commit()
             flash(f"Staff account created successfully! Username: {username}", 'success')
-            return render_template('admin/admin_create_staff.html', 
-                                 form_data={},
-                                 creation_success=True)
-            
+            return render_template(
+                'admin/admin_create_staff.html',
+                form_data={},
+                creation_success=True,
+                profile_picture=profile_picture
+            )
+
         except Exception as e:
             db.rollback()
             flash(f"Failed to create staff account: {str(e)}", 'danger')
-            return render_template('admin/admin_create_staff.html', 
-                                 form_data=request.form)
+            return render_template(
+                'admin/admin_create_staff.html',
+                form_data=request.form,
+                profile_picture=profile_picture
+            )
         finally:
             cursor.close()
-    
-    return render_template('admin/admin_create_staff.html', form_data={})
+
+    return render_template(
+        'admin/admin_create_staff.html',
+        form_data={},
+        profile_picture=profile_picture
+    )
+
 
 @admin_create_staff_bp.route('/check_staff_username', methods=['POST'])
 def check_staff_username():

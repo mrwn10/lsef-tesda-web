@@ -30,7 +30,27 @@ def view_requirements():
         flash("Unauthorized access. Admin only.", "error")
         return redirect(url_for("auth.login"))
 
-    return render_template("admin/admin_verified_req.html")
+    # Get admin profile picture for the template
+    db = get_db()
+    cursor = db.cursor()
+    try:
+        cursor.execute("""
+            SELECT pi.profile_picture
+            FROM personal_information pi
+            WHERE pi.user_id = %s
+        """, (session['user_id'],))
+        result = cursor.fetchone()
+        profile_picture = result[0] if result else None
+    except Exception as e:
+        profile_picture = None
+    finally:
+        cursor.close()
+
+    return render_template(
+        "admin/admin_verified_req.html",
+        profile_picture=profile_picture
+    )
+
 
 
 # -----------------------------

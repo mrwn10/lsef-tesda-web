@@ -461,6 +461,7 @@ def staff_materials():
             profile_picture = user['profile_picture']
     return render_template("staffs/staff_materials.html", profile_picture=profile_picture)
 
+
 # @app.route('/class_certificates')
 # def staff_class_certificates():
 #     return render_template('staffs/staff_class_certificates.html')

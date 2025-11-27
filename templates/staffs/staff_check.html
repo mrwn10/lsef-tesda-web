@@ -1,524 +1,408 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Check Submissions - {{ material.title }}</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <style>
-    body { 
-        font-family: Arial, sans-serif; 
-        margin: 0;
-        padding: 20px;
-        background-color: #f8f9fa;
-    }
-    .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        background: white;
-        padding: 25px;
-        border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-    .header {
-        border-bottom: 3px solid #007bff;
-        padding-bottom: 20px;
-        margin-bottom: 25px;
-    }
-    .material-info {
-        background: linear-gradient(135deg, #e9ecef 0%, #f8f9fa 100%);
-        padding: 20px;
-        border-radius: 8px;
-        margin-bottom: 25px;
-        border-left: 4px solid #007bff;
-    }
-    .btn-back {
-        background: #6c757d;
-        color: white;
-        padding: 10px 20px;
-        text-decoration: none;
-        border-radius: 6px;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        margin-bottom: 20px;
-        transition: all 0.3s ease;
-    }
-    .btn-back:hover {
-        background: #5a6268;
-        color: white;
-        text-decoration: none;
-        transform: translateY(-2px);
-    }
-    .badge {
-        padding: 8px 16px;
-        border-radius: 6px;
-        font-size: 0.9em;
-        font-weight: 500;
-    }
-    .table th {
-        background: #007bff;
-        color: white;
-        font-weight: 600;
-        border: none;
-    }
-    .table td {
-        vertical-align: middle;
-        border-color: #dee2e6;
-    }
-    .progress {
-        height: 25px;
-        border-radius: 6px;
-    }
-    .progress-bar {
-        font-weight: 600;
-    }
-    .summary-card {
-        background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-        color: white;
-        border-radius: 10px;
-        padding: 20px;
-        margin-bottom: 20px;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Submissions - {{ material.title }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/staff/staff_check.css') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/lsef_logo.png') }}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     
-    /* Preview Modal Styles */
-    .preview-modal {
-        display: none;
-        position: fixed;
-        z-index: 1050;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.7);
-        backdrop-filter: blur(5px);
-    }
-    .preview-modal-content {
-        position: relative;
-        background-color: #fff;
-        margin: 2% auto;
-        padding: 0;
-        width: 90%;
-        max-width: 1000px;
-        border-radius: 12px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        max-height: 90vh;
-        display: flex;
-        flex-direction: column;
-    }
-    .preview-modal-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 15px 20px;
-        border-bottom: 1px solid #dee2e6;
-        background: #f8f9fa;
-        border-radius: 12px 12px 0 0;
-    }
-    .preview-modal-body {
-        padding: 20px;
-        flex: 1;
-        overflow: auto;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        min-height: 400px;
-    }
-    .preview-modal-footer {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 15px 20px;
-        border-top: 1px solid #dee2e6;
-        background: #f8f9fa;
-        border-radius: 0 0 12px 12px;
-    }
-    .close-btn {
-        background: none;
-        border: none;
-        font-size: 24px;
-        cursor: pointer;
-        color: #6c757d;
-        transition: color 0.3s;
-    }
-    .close-btn:hover {
-        color: #dc3545;
-    }
-    .preview-iframe {
-        width: 100%;
-        height: 500px;
-        border: 1px solid #dee2e6;
-        border-radius: 8px;
-    }
-    .preview-image {
-        max-width: 100%;
-        max-height: 70vh;
-        border-radius: 8px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    }
-    .file-info {
-        background: #e9ecef;
-        padding: 10px 15px;
-        border-radius: 6px;
-        margin-bottom: 15px;
-        width: 100%;
-    }
-    .preview-actions {
-        display: flex;
-        gap: 10px;
-    }
-    .preview-not-supported {
-        text-align: center;
-        padding: 40px 20px;
-    }
-    .preview-not-supported i {
-        font-size: 4rem;
-        color: #6c757d;
-        margin-bottom: 20px;
-    }
-    
-    /* File type badges */
-    .file-type-badge {
-        font-size: 0.75rem;
-        padding: 3px 8px;
-        border-radius: 4px;
-        margin-left: 8px;
-    }
-    .file-pdf { background: #dc3545; color: white; }
-    .file-image { background: #28a745; color: white; }
-    .file-doc { background: #007bff; color: white; }
-    .file-ppt { background: #fd7e14; color: white; }
-    .file-xls { background: #20c997; color: white; }
-    .file-other { background: #6c757d; color: white; }
-    
-    /* Action buttons */
-    .btn-preview {
-        background: #17a2b8;
-        color: white;
-        border: none;
-        padding: 5px 10px;
-        border-radius: 4px;
-        font-size: 0.875rem;
-        transition: all 0.3s;
-    }
-    .btn-preview:hover {
-        background: #138496;
-        transform: translateY(-1px);
-    }
-    .btn-download {
-        background: #28a745;
-        color: white;
-        border: none;
-        padding: 5px 10px;
-        border-radius: 4px;
-        font-size: 0.875rem;
-        transition: all 0.3s;
-    }
-    .btn-download:hover {
-        background: #218838;
-        transform: translateY(-1px);
-    }
-    .file-actions {
-        display: flex;
-        gap: 5px;
-    }
-  </style>
+    <!-- Define URLs for JavaScript -->
+    <script>
+        window.appUrls = {
+            logoutUrl: "{{ url_for('login.logout') }}"
+        };
+    </script>
 </head>
-<body>
-    <div class="container">
-        <a href="{{ url_for('staff_materials.materials') }}" class="btn-back">
-            <i class="fas fa-arrow-left"></i> Back to Materials
-        </a>
-
-        <div class="header">
-            <h1 class="text-primary mb-4">
-                <i class="fas fa-tasks me-2"></i> Check Submissions
-            </h1>
-            <div class="material-info">
-                <h3 class="text-primary">{{ material.title }}</h3>
-                <div class="row mt-3">
-                    <div class="col-md-6">
-                        <p><strong><i class="fas fa-users me-2"></i>Class:</strong> {{ material.class_title or 'All Classes' }}</p>
-                        <p><strong><i class="fas fa-calendar me-2"></i>Date Assigned:</strong> {{ material.date_uploaded.strftime('%Y-%m-%d %H:%M') if material.date_uploaded is string else material.date_uploaded }}</p>
-                    </div>
-                    <div class="col-md-6">
-                        {% if material.submission_start_formatted and material.submission_end_formatted %}
-                            <p><strong><i class="fas fa-clock me-2"></i>Submission Period:</strong></p>
-                            <p>{{ material.submission_start_formatted.replace('T', ' ') }} to {{ material.submission_end_formatted.replace('T', ' ') }}</p>
-                        {% endif %}
-                    </div>
-                </div>
-                {% if material.description %}
-                    <p class="mt-3"><strong><i class="fas fa-file-alt me-2"></i>Description:</strong> {{ material.description }}</p>
-                {% endif %}
+<body data-logout-url="{{ url_for('login.logout') }}">
+    <!-- Navigation Container -->
+    <div class="nav-container">
+        <!-- Top Navigation -->
+        <div class="top-nav">
+            <div class="nav-left">
+                <a href="{{ url_for('staff_homepage') }}"><i class="fas fa-home"></i> Home</a>
+                <a href="{{ url_for('staff_class_management') }}"><i class="fas fa-users"></i> Class Management</a>
+                <a href="{{ url_for('staff_courses_creation') }}"><i class="fas fa-book-open"></i> Courses</a>
+                <a href="{{ url_for('staff_materials.materials') }}" class="active"><i class="fas fa-tasks"></i> Materials</a>
+            </div>
+            <div class="nav-right"></div>
+            
+            <!-- Mobile Hamburger Menu -->
+            <div class="hamburger-menu" id="hamburgerMenu">
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
         </div>
-
-        <!-- Summary Statistics -->
-        {% set submitted_count = students|selectattr('submitted')|list|length %}
-        {% set total_count = students|length %}
-        {% set submission_rate = (submitted_count / total_count * 100) if total_count > 0 else 0 %}
         
-        <div class="summary-card"> 
-          <h5 class="mb-3"><i class="fas fa-chart-bar me-2"></i>Submission Summary</h5>
-          <div class="row text-center">
-              <div class="col-md-4">
-                  <h3 class="mb-1">{{ submitted_count }}</h3>
-                  <p class="mb-0">Submitted</p>
-              </div>
-              <div class="col-md-4">
-                  <h3 class="mb-1">{{ total_count - submitted_count }}</h3>
-                  <p class="mb-0">Not Submitted</p>
-              </div>
-              <div class="col-md-4">
-                  <h3 class="mb-1">{{ total_count }}</h3>
-                  <p class="mb-0">Total Students</p>
-              </div>
-          </div>
-          <div class="progress mt-3">
-            <div class="progress-bar bg-success 
-                        {% if submission_rate %}w-{{ submission_rate|round(0) }}{% else %}w-0{% endif %}">
-                {{ submission_rate|round(1) }}%
+        <!-- Mobile Navigation Menu -->
+        <div class="mobile-nav" id="mobileNav">
+            <div class="mobile-nav-header">
+                <div class="mobile-brand">
+                    <img src="{{ url_for('static', filename='img/lsef_logo.png') }}" alt="LSEF Logo">
+                    <span>LSEF TESDA</span>
+                </div>
+                <button class="close-mobile-nav" id="closeMobileNav">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
-          </div>
+            <div class="mobile-nav-links">
+                <a href="{{ url_for('staff_homepage') }}"><i class="fas fa-home"></i> Home</a>
+                
+                <!-- Class Management Expandable Section -->
+                <div class="mobile-nav-section">
+                    <div class="mobile-nav-header-link" data-section="classes">
+                        <span><i class="fas fa-users"></i> Class Management</span>
+                        <i class="fas fa-chevron-down chevron-icon"></i>
+                    </div>
+                    <div class="mobile-nav-submenu" id="classes-submenu">
+                        <a href="{{ url_for('staff_class_management') }}"><i class="fas fa-users-cog"></i> Class Management</a>
+                        <a href="{{ url_for('staff_class_creation.create_class') }}"><i class="fas fa-plus-circle"></i> Class Creation</a>
+                        <a href="{{ url_for('staff_class_edit_req') }}"><i class="fas fa-edit"></i> Class Edit Request</a>
+                        <a href="{{ url_for('staff_enrollment_acceptance.view_enrollment_requests') }}"><i class="fas fa-user-check"></i> Enrollment Acceptance</a>
+                        <a href="{{ url_for('staff_class_student_management') }}"><i class="fas fa-user-graduate"></i> Student Management</a>
+                    </div>
+                </div>
+                
+                <!-- Courses Expandable Section -->
+                <div class="mobile-nav-section">
+                    <div class="mobile-nav-header-link" data-section="courses">
+                        <span><i class="fas fa-book-open"></i> Courses</span>
+                        <i class="fas fa-chevron-down chevron-icon"></i>
+                    </div>
+                    <div class="mobile-nav-submenu" id="courses-submenu">
+                        <a href="{{ url_for('staff_courses_creation') }}"><i class="fas fa-book"></i> Courses Creation</a>
+                        <a href="{{ url_for('staff_courses_edit_req.view_active_courses') }}"><i class="fas fa-edit"></i> Courses Edit Request</a>
+                        <a href="{{ url_for('staff_courses_view.view_staff_active_courses') }}"><i class="fas fa-eye"></i> Courses View</a>
+                    </div>
+                </div>
+                
+                <a href="{{ url_for('staff_materials.materials') }}" class="active"><i class="fas fa-tasks"></i> Materials</a>
+                
+                <div class="mobile-nav-divider"></div>
+                <a href="{{ url_for('staff_profile') }}"><i class="fas fa-user-circle"></i> My Profile</a>
+                <a href="#"><i class="fas fa-bookmark"></i> Contact Us</a>
+                <a href="#" class="logout-btn" id="mobile-logout-trigger"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </div>
+        
+        <!-- Brand Section -->
+        <div class="brand-section">
+            <div class="brand-content">
+                <div class="brand-name">LSEF TESDA</div>
+                <div class="logo-container">
+                    <img src="{{ url_for('static', filename='img/lsef_logo.png') }}" alt="LSEF Logo">
+                    <img src="{{ url_for('static', filename='img/tesda_logo.png') }}" alt="TESDA Logo">
+                </div>
+            </div>
+            
+            <div class="user-section">
+                <div class="profile-dropdown">
+                    <img src="{{ url_for('static', filename='uploads/profile_pictures/' + (profile_picture or 'default.png')) }}" alt="Profile" class="profile-img">
+                    <div class="dropdown-menu">
+                        <a href="{{ url_for('staff_profile') }}"><i class="fas fa-user-circle"></i> My Profile</a>
+                        <a href="#"><i class="fas fa-bookmark"></i> Contact Us</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="logout-btn" id="logout-trigger"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-      </div>
+    <!-- Logout Confirmation Modal - EXACT COPY FROM MATERIALS PAGE -->
+    <div class="modal" id="logout-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-sign-out-alt"></i> Confirm Logout</h3>
+                <button class="close-modal" id="close-logout-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to logout?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-yes" id="confirm-logout">Yes</button>
+                <button class="btn btn-no" id="cancel-logout">No</button>
+            </div>
+        </div>
+    </div>
 
-        <h2 class="mb-4"><i class="fas fa-list-check me-2"></i>Student Submissions</h2>
-        <div class="table-responsive">
-            <table class="table table-striped table-hover">
-                <thead>
-                    <tr>
-                        <th>Student Name</th>
-                        <th>Status</th>
-                        <th>Submitted File</th>
-                        <th>Date Submitted</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for s in students %}
-                    <tr>
-                        <td>
-                            <i class="fas fa-user me-2 text-muted"></i>
-                            {{ s.first_name }} {{ s.last_name }}
-                        </td>
-                        <td>
-                            {% if s.submitted %}
-                                <span class="badge bg-success">
-                                    <i class="fas fa-check me-1"></i> Submitted
-                                </span>
-                            {% else %}
-                                <span class="badge bg-danger">
-                                    <i class="fas fa-times me-1"></i> Not Submitted
-                                </span>
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if s.submitted %}
-                                <div class="d-flex align-items-center">
-                                    <i class="fas fa-file me-2 text-primary"></i>
-                                    <span class="me-2">{{ s.submission.original_filename }}</span>
-                                    {% if s.submission.stored_filename %}
-                                        {% set file_ext = s.submission.stored_filename.split('.')[-1].lower() %}
-                                        {% if file_ext in ['pdf'] %}
-                                            <span class="file-type-badge file-pdf">PDF</span>
-                                        {% elif file_ext in ['jpg', 'jpeg', 'png', 'gif', 'bmp'] %}
-                                            <span class="file-type-badge file-image">IMAGE</span>
-                                        {% elif file_ext in ['doc', 'docx'] %}
-                                            <span class="file-type-badge file-doc">DOC</span>
-                                        {% elif file_ext in ['ppt', 'pptx'] %}
-                                            <span class="file-type-badge file-ppt">PPT</span>
-                                        {% elif file_ext in ['xls', 'xlsx'] %}
-                                            <span class="file-type-badge file-xls">EXCEL</span>
-                                        {% else %}
-                                            <span class="file-type-badge file-other">{{ file_ext|upper }}</span>
-                                        {% endif %}
-                                    {% endif %}
-                                </div>
-                            {% else %}
-                                <span class="text-muted">
-                                    <i class="fas fa-file me-1"></i> No file submitted
-                                </span>
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if s.submitted %}
-                                <span class="text-success">
-                                    <i class="fas fa-clock me-1"></i>
-                                    {{ s.submission.date_submitted.strftime('%Y-%m-%d %H:%M') if s.submission.date_submitted is string else s.submission.date_submitted }}
-                                </span>
-                            {% else %}
-                                <span class="text-muted">-</span>
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if s.submitted %}
-                                <div class="file-actions">
-                                    <button class="btn-preview" onclick="openPreview('{{ s.submission.stored_filename }}', '{{ s.submission.original_filename }}', '{{ s.first_name }} {{ s.last_name }}')">
-                                        <i class="fas fa-eye me-1"></i> Preview
-                                    </button>
-                                    <a href="{{ url_for('static', filename='uploads/student_submissions/' ~ s.submission.stored_filename) }}" 
-                                       download 
-                                       class="btn-download text-decoration-none">
-                                        <i class="fas fa-download me-1"></i> Download
-                                    </a>
-                                </div>
-                            {% else %}
-                                <span class="text-muted">-</span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+    <!-- Success Modal - EXACT COPY FROM MATERIALS PAGE -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header success">
+                <h3><i class="fas fa-check-circle"></i> Success</h3>
+                <button class="close-modal" id="close-success-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="successMessage">Operation completed successfully.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success" id="closeSuccessModal">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Screen Modal - EXACT COPY FROM MATERIALS PAGE -->
+    <div id="loading-screen" class="modal" style="display: none; z-index: 3000;">
+        <div class="modal-content" style="width: 300px; text-align: center;">
+            <div class="modal-body">
+                <div class="loading-spinner" style="margin-bottom: 15px;">
+                    <div class="spinner" style="width: 40px; height: 40px; margin: 0 auto;"></div>
+                </div>
+                <p id="loading-message" style="margin: 0; font-size: 16px; color: #333;">Loading...</p>
+            </div>
         </div>
     </div>
 
     <!-- Preview Modal -->
-    <div id="previewModal" class="preview-modal">
-        <div class="preview-modal-content">
-            <div class="preview-modal-header">
-                <h5 class="mb-0" id="previewModalTitle">
-                    <i class="fas fa-file me-2"></i>File Preview
-                </h5>
-                <button class="close-btn" onclick="closePreview()">&times;</button>
+    <div id="previewModal" class="modal">
+        <div class="modal-content preview-modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-file"></i> File Preview</h3>
+                <button class="close-modal" id="close-preview-modal">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
-            <div class="preview-modal-body">
-                <div class="file-info">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <strong>File:</strong> <span id="previewFileName"></span>
-                        </div>
-                        <div class="col-md-6">
-                            <strong>Student:</strong> <span id="previewStudentName"></span>
-                        </div>
+            <div class="modal-body">
+                <div class="file-info-preview">
+                    <div class="file-detail">
+                        <strong>File:</strong> <span id="previewFileName"></span>
+                    </div>
+                    <div class="file-detail">
+                        <strong>Student:</strong> <span id="previewStudentName"></span>
                     </div>
                 </div>
-                <div id="previewContent" class="w-100 text-center">
+                <div id="previewContent" class="preview-content">
                     <!-- Preview content will be loaded here -->
                 </div>
             </div>
-            <div class="preview-modal-footer">
-                <div id="fileTypeInfo" class="text-muted">
-                    <!-- File type info will be shown here -->
-                </div>
+            <div class="modal-footer">
+                <div id="fileTypeInfo" class="file-type-info"></div>
                 <div class="preview-actions">
-                    <a id="downloadLink" href="#" download class="btn btn-success">
-                        <i class="fas fa-download me-1"></i> Download
+                    <a id="downloadLink" href="#" download class="btn btn-primary">
+                        <i class="fas fa-download"></i> Download
                     </a>
                     <button class="btn btn-secondary" onclick="closePreview()">
-                        <i class="fas fa-times me-1"></i> Close
+                        <i class="fas fa-times"></i> Close
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Preview modal functionality
-        function openPreview(storedFilename, originalFilename, studentName) {
-            const modal = document.getElementById('previewModal');
-            const previewContent = document.getElementById('previewContent');
-            const fileTypeInfo = document.getElementById('fileTypeInfo');
-            const downloadLink = document.getElementById('downloadLink');
-            
-            // Set modal information
-            document.getElementById('previewFileName').textContent = originalFilename;
-            document.getElementById('previewStudentName').textContent = studentName;
-            
-            // Set download link
-            downloadLink.href = `/static/uploads/student_submissions/${storedFilename}`;
-            
-            // Clear previous content
-            previewContent.innerHTML = '';
-            
-            // Get file extension
-            const fileExt = storedFilename.split('.').pop().toLowerCase();
-            
-            // Show appropriate preview based on file type
-            if (fileExt === 'pdf') {
-                fileTypeInfo.innerHTML = '<i class="fas fa-file-pdf me-1 text-danger"></i> PDF Document';
-                previewContent.innerHTML = `
-                    <iframe src="/static/uploads/student_submissions/${storedFilename}" 
-                            class="preview-iframe" 
-                            frameborder="0">
-                    </iframe>
-                `;
-            } else if (['jpg', 'jpeg', 'png', 'gif', 'bmp'].includes(fileExt)) {
-                fileTypeInfo.innerHTML = '<i class="fas fa-file-image me-1 text-success"></i> Image File';
-                previewContent.innerHTML = `
-                    <img src="/static/uploads/student_submissions/${storedFilename}" 
-                         alt="${originalFilename}" 
-                         class="preview-image">
-                `;
-            } else if (['doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx'].includes(fileExt)) {
-                fileTypeInfo.innerHTML = `<i class="fas fa-file me-1 text-primary"></i> ${fileExt.toUpperCase()} File`;
-                previewContent.innerHTML = `
-                    <div class="preview-not-supported">
-                        <i class="fas fa-file"></i>
-                        <h4>Preview Not Available</h4>
-                        <p class="text-muted">Preview for ${fileExt.toUpperCase()} files is not supported in the browser.</p>
-                        <p>Please download the file to view it.</p>
+    <!-- Main Content -->
+    <main class="content">
+        <div class="container">
+            <div class="page-header">
+                <h1><i class="fas fa-list-check"></i> Check Submissions</h1>
+                <p class="subtitle">Review student submissions for {{ material.title }}</p>
+            </div>
+
+            <a href="{{ url_for('staff_materials.materials') }}" class="btn-back">
+                <i class="fas fa-arrow-left"></i> Back to Materials
+            </a>
+
+            <!-- Material Info Card -->
+            <div class="material-info-card">
+                <div class="material-header">
+                    <h3>{{ material.title }}</h3>
+                    <div class="material-badges">
+                        <span class="badge bg-primary">Classwork</span>
+                        {% if not material.class_title %}
+                            <span class="badge bg-secondary">All Classes</span>
+                        {% endif %}
                     </div>
-                `;
-            } else {
-                fileTypeInfo.innerHTML = `<i class="fas fa-file me-1 text-secondary"></i> ${fileExt.toUpperCase()} File`;
-                previewContent.innerHTML = `
-                    <div class="preview-not-supported">
-                        <i class="fas fa-file"></i>
-                        <h4>Preview Not Available</h4>
-                        <p class="text-muted">Preview for this file type is not supported.</p>
-                        <p>Please download the file to view it.</p>
+                </div>
+                <div class="material-details">
+                    <div class="detail-row">
+                        <div class="detail-item">
+                            <i class="fas fa-users"></i>
+                            <strong>Class:</strong> {{ material.class_title or 'All Classes' }}
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-calendar"></i>
+                            <strong>Date Assigned:</strong> {{ material.date_uploaded.strftime('%Y-%m-%d %H:%M') if material.date_uploaded is string else material.date_uploaded }}
+                        </div>
                     </div>
-                `;
-            }
+                    {% if material.submission_start_formatted and material.submission_end_formatted %}
+                    <div class="detail-row">
+                        <div class="detail-item full-width">
+                            <i class="fas fa-clock"></i>
+                            <strong>Submission Period:</strong> 
+                            {{ material.submission_start_formatted.replace('T', ' ') }} to {{ material.submission_end_formatted.replace('T', ' ') }}
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if material.description %}
+                    <div class="detail-row">
+                        <div class="detail-item full-width">
+                            <i class="fas fa-file-alt"></i>
+                            <strong>Description:</strong> {{ material.description }}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Summary Statistics -->
+            {% set submitted_count = students|selectattr('submitted')|list|length %}
+            {% set total_count = students|length %}
+            {% set submission_rate = (submitted_count / total_count * 100) if total_count > 0 else 0 %}
             
-            // Show modal
-            modal.style.display = 'block';
-        }
-        
-        function closePreview() {
-            document.getElementById('previewModal').style.display = 'none';
-        }
-        
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('previewModal');
-            if (event.target === modal) {
-                closePreview();
-            }
-        }
-        
-        // Close modal with Escape key
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                closePreview();
-            }
-        });
-        
-        // Auto-adjust iframe height for PDFs
-        function adjustIframeHeight() {
-            const iframe = document.querySelector('.preview-iframe');
-            if (iframe) {
-                iframe.onload = function() {
-                    try {
-                        // Try to adjust height based on content
-                        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                        iframe.style.height = iframeDoc.body.scrollHeight + 'px';
-                    } catch (e) {
-                        // Cross-origin restriction, use default height
-                        console.log('Cannot adjust iframe height due to cross-origin restrictions');
-                    }
-                };
-            }
-        }
-        
-        // Call adjustIframeHeight when modal is opened
-        document.getElementById('previewModal').addEventListener('shown.bs.modal', adjustIframeHeight);
-    </script>
+            <div class="summary-section">
+                <h2><i class="fas fa-chart-bar"></i> Submission Summary</h2>
+                <div class="summary-cards">
+                    <div class="summary-card submitted">
+                        <div class="summary-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="summary-content">
+                            <div class="summary-number">{{ submitted_count }}</div>
+                            <div class="summary-label">Submitted</div>
+                        </div>
+                    </div>
+                    <div class="summary-card not-submitted">
+                        <div class="summary-icon">
+                            <i class="fas fa-times-circle"></i>
+                        </div>
+                        <div class="summary-content">
+                            <div class="summary-number">{{ total_count - submitted_count }}</div>
+                            <div class="summary-label">Not Submitted</div>
+                        </div>
+                    </div>
+                    <div class="summary-card total">
+                        <div class="summary-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="summary-content">
+                            <div class="summary-number">{{ total_count }}</div>
+                            <div class="summary-label">Total Students</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-info">
+                        <span>Submission Rate: <span id="submission-rate-text">{{ submission_rate|round(1) }}</span>%</span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar" id="submission-progress-bar"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Student Submissions Table -->
+            <div class="submissions-section">
+                <h2><i class="fas fa-list-check"></i> Student Submissions</h2>
+                <div class="table-container">
+                    <table class="submissions-table">
+                        <thead>
+                            <tr>
+                                <th>Student Name</th>
+                                <th>Status</th>
+                                <th>Submitted File</th>
+                                <th>Date Submitted</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for s in students %}
+                            <tr>
+                                <td class="student-name">
+                                    <i class="fas fa-user"></i>
+                                    {{ s.first_name }} {{ s.last_name }}
+                                </td>
+                                <td>
+                                    {% if s.submitted %}
+                                        <span class="status-badge status-submitted">
+                                            <i class="fas fa-check"></i> Submitted
+                                        </span>
+                                    {% else %}
+                                        <span class="status-badge status-not-submitted">
+                                            <i class="fas fa-times"></i> Not Submitted
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td class="file-info">
+                                    {% if s.submitted %}
+                                        <div class="file-details">
+                                            <i class="fas fa-file"></i>
+                                            <span class="file-name" title="{{ s.submission.original_filename }}">
+                                                {% if s.submission.original_filename|length > 10 %}
+                                                    {{ s.submission.original_filename[:10] }}...
+                                                {% else %}
+                                                    {{ s.submission.original_filename }}
+                                                {% endif %}
+                                            </span>
+                                            {% if s.submission.stored_filename %}
+                                                {% set file_ext = s.submission.stored_filename.split('.')[-1].lower() %}
+                                                {% if file_ext in ['pdf'] %}
+                                                    <span class="file-type-badge file-pdf">PDF</span>
+                                                {% elif file_ext in ['jpg', 'jpeg', 'png', 'gif', 'bmp'] %}
+                                                    <span class="file-type-badge file-image">IMAGE</span>
+                                                {% elif file_ext in ['doc', 'docx'] %}
+                                                    <span class="file-type-badge file-doc">DOC</span>
+                                                {% elif file_ext in ['ppt', 'pptx'] %}
+                                                    <span class="file-type-badge file-ppt">PPT</span>
+                                                {% elif file_ext in ['xls', 'xlsx'] %}
+                                                    <span class="file-type-badge file-xls">EXCEL</span>
+                                                {% else %}
+                                                    <span class="file-type-badge file-other">{{ file_ext|upper }}</span>
+                                                {% endif %}
+                                            {% endif %}
+                                        </div>
+                                    {% else %}
+                                        <span class="no-file">
+                                            <i class="fas fa-file"></i> No file submitted
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td class="submission-date">
+                                    {% if s.submitted %}
+                                        <span class="date-text">
+                                            <i class="fas fa-clock"></i>
+                                            {% if s.submission.date_submitted is string %}
+                                                {{ s.submission.date_submitted }}
+                                            {% else %}
+                                                {{ s.submission.date_submitted_formatted }}
+                                            {% endif %}
+                                        </span>
+                                    {% else %}
+                                        <span class="no-date">-</span>
+                                    {% endif %}
+                                </td>
+                                <td class="actions">
+                                    {% if s.submitted %}
+                                        <div class="action-buttons">
+                                            <button class="btn btn-preview" onclick="openPreview('{{ s.submission.stored_filename }}', '{{ s.submission.original_filename }}', '{{ s.first_name }} {{ s.last_name }}')">
+                                                <i class="fas fa-eye"></i> Preview
+                                            </button>
+                                            <a href="{{ url_for('static', filename='uploads/student_submissions/' ~ s.submission.stored_filename) }}" 
+                                               download 
+                                               class="btn btn-download">
+                                                <i class="fas fa-download"></i> Download
+                                            </a>
+                                        </div>
+                                    {% else %}
+                                        <span class="no-actions">-</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/staff/staff_check.js') }}"></script>
 </body>
 </html>
